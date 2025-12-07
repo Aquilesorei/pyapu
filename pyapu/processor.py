@@ -1,6 +1,8 @@
 import os
 import mimetypes
 from typing import Any, Optional
+
+from .documents import get_mime_type
 from .types import Schema
 from .adapters import SchemaAdapter
 
@@ -38,13 +40,7 @@ class DocumentProcessor:
             raise FileNotFoundError(f"File not found: {file_path}")
 
         # Automatic MIME Type detection
-        # mimetypes guesses the type based on extension (.pdf -> application/pdf, .png -> image/png)
-        mime_type, _ = mimetypes.guess_type(file_path)
-
-        if not mime_type:
-            # Safety fallback: assume it's a PDF if unknown
-            # Or we could raise an error depending on desired strictness
-            mime_type = "application/pdf"
+        mime_type, _ = get_mime_type(file_path)
 
         if self.provider == "google":
             return self._process_google(file_path, prompt, schema, mime_type)
