@@ -2,9 +2,12 @@
 name = "pyapu"
 version = "0.2.0"
 description = "Structured AI document processing with robust fallback strategies."
-authors = ["aquiles <achillezongo07@gmail.com>", "Justine <saloujustine01@gmail.com>", "Wendbenindo <internetdg27@gmail.com>"]
+authors = ["aquiles <achillezongo07@gmail.com>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
+homepage = "https://github.com/Aquilesorei/pyapu"
+repository = "https://github.com/Aquilesorei/pyapu"
+keywords = ["pdf", "ai", "llm", "extraction", "json"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
