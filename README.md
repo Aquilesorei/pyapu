@@ -2,6 +2,7 @@
 
 > **py**thon **A**I **P**DF **U**tilities — Extract structured JSON from documents using LLMs
 
+[![CI](https://github.com/Aquilesorei/pyapu/actions/workflows/ci.yml/badge.svg)](https://github.com/Aquilesorei/pyapu/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI](https://img.shields.io/pypi/v/pyapu.svg)](https://pypi.org/project/pyapu/)
