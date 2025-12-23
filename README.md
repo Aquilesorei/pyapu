@@ -181,7 +181,7 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan.
 
 ## Documentation
 
-📚 **[Read the Docs](https://aquilesorei.github.io/pyapu/)**
+📚 **[Read the Docs](https://aquilesorei.github.io/pyapu/latest/)**
 
 ```bash
 # Install docs dependencies
