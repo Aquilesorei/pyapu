@@ -150,7 +150,15 @@ def demo_custom_plugin():
     from pyapu.plugins import SecurityPlugin, SecurityResult
     
     class CompanySecurityPolicy(SecurityPlugin):
-        """Custom security policy for a company."""
+        """Custom security policy for a company.
+        
+        v0.3.0+ attributes are inherited from SecurityPlugin:
+        - pyapu_plugin_version = "1.0"
+        - priority = 50
+        """
+        
+        # Override priority if you want this to run before other security plugins
+        priority = 80
         
         BLOCKED_TERMS = ["confidential", "internal only", "do not share"]
         

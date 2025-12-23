@@ -1,0 +1,66 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy (e.g., 0.3.0)"
+        required: true
+        default: "latest"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install Dependencies
+        run: poetry install --no-interaction --with docs
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy with mike
+        run: |
+          # Get version from tag or input
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"  # Remove 'v' prefix
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="dev"
+          fi
+
+          echo "Deploying version: $VERSION"
+
+          # Deploy with mike
+          if [[ "$VERSION" == "dev" ]]; then
+            poetry run mike deploy dev --push
+          else
+            poetry run mike deploy "$VERSION" latest --update-aliases --push
+            poetry run mike set-default latest --push
+          fi

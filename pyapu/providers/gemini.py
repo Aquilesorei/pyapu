@@ -8,10 +8,12 @@ from typing import Any, Optional
 from .base import Provider
 from ..types import Schema
 from ..adapters import SchemaAdapter
-from ..plugins.registry import register
 
 
-@register("provider", name="gemini")
+# Note: GeminiProvider is registered via entry point in pyproject.toml:
+# [tool.poetry.plugins."pyapu.providers"]
+# gemini = "pyapu.providers.gemini:GeminiProvider"
+
 class GeminiProvider(Provider):
     """
     Google Gemini provider for document extraction.
@@ -25,6 +27,10 @@ class GeminiProvider(Provider):
         result = provider.process(file_path, prompt, schema, mime_type)
     """
     
+    # Plugin v2 attributes
+    pyapu_plugin_version = "1.0"
+    priority = 50
+    cost = 1.0
     capabilities = ["vision"]
     
     def __init__(
@@ -102,10 +108,18 @@ class GeminiProvider(Provider):
         )
         
         return response.parsed
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """
+        Check if the Gemini provider is healthy.
+        
+        Returns True if the google-genai package is available.
+        Does not verify API key validity (would require an API call).
+        """
+        try:
+            from google import genai
+            return True
+        except ImportError:
+            return False
 
-
-# Also register with alternate names
-@register("provider", name="google")
-class GoogleProvider(GeminiProvider):
-    """Alias for GeminiProvider."""
-    pass

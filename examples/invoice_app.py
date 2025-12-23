@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
 """
-Invoice Processing App - Full pyapu Demo
+Invoice Processing App - Full pyapu Demo (v0.3.0)
 
 A complete example demonstrating all pyapu features working together:
 - Pydantic models for type-safe extraction
 - StructuredPrompt for organized prompts
 - Security layer for input/output protection
-- Custom plugins for business logic
+- Custom plugins with priority ordering
+- Pluggy hooks for pipeline extension
 - Plugin registry system
+
+NOTE: This example uses the @register decorator for demo simplicity.
+In production, use entry points in pyproject.toml instead:
+
+    [project.entry-points."pyapu.validators"]
+    invoice_validator = "my_package:InvoiceValidator"
 
 This simulates a real invoice processing pipeline.
 """
@@ -15,12 +22,17 @@ This simulates a real invoice processing pipeline.
 import os
 import sys
 import json
+import time
+import warnings
 from datetime import datetime
 from typing import List, Optional
 
 from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Suppress expected @register deprecation warnings (intentional for demo)
+warnings.filterwarnings("ignore", message="The @register decorator is deprecated")
 
 # =============================================================================
 # 1. PYDANTIC MODELS - Define your data structures
@@ -56,6 +68,8 @@ class Address(BaseModel):
 
 class Invoice(BaseModel):
     """Complete invoice data structure."""
+    model_config = {"extra": "ignore"}  # Pydantic V2 style
+    
     invoice_number: str = Field(description="Unique invoice identifier")
     date: str = Field(description="Invoice date in YYYY-MM-DD format")
     due_date: Optional[str] = Field(default=None, description="Payment due date")
@@ -71,9 +85,6 @@ class Invoice(BaseModel):
     
     currency: str = Field(default="EUR", description="Currency code")
     payment_terms: Optional[str] = Field(default=None, description="Payment terms")
-    
-    class Config:
-        extra = "ignore"
 
 
 # =============================================================================
@@ -90,6 +101,10 @@ from pyapu.plugins import (
 @register("validator", name="invoice_validator")
 class InvoiceValidator(Validator):
     """Validates extracted invoice data with business rules."""
+    
+    # v0.3.0+: Priority determines order when multiple validators exist
+    # Higher priority runs first (default is 50)
+    priority = 60
     
     def __init__(self, tolerance: float = 0.01):
         self.tolerance = tolerance
@@ -336,7 +351,72 @@ def create_security_chain(strict: bool = False) -> SecurityChain:
 
 
 # =============================================================================
-# 5. INVOICE PROCESSOR - Main application logic
+# 5. HOOKS - Pipeline extension (v0.3.0+)
+# =============================================================================
+
+from pyapu.plugins import hookimpl, register_hook_plugin
+from pyapu.plugins.hooks import PLUGGY_AVAILABLE
+
+
+class InvoiceProcessingHooks:
+    """Hook plugin for invoice processing metrics."""
+    
+    def __init__(self):
+        self.processed_count = 0
+        self.total_time = 0.0
+        self.errors = []
+    
+    @hookimpl
+    def pre_process(self, file_path, prompt, schema, mime_type, context):
+        """Track processing start time."""
+        context["invoice_start"] = time.time()
+        context["invoice_file"] = os.path.basename(file_path)
+        return None
+    
+    @hookimpl
+    def post_process(self, result, context):
+        """Track processing completion."""
+        elapsed = time.time() - context.get("invoice_start", time.time())
+        self.processed_count += 1
+        self.total_time += elapsed
+        
+        print(f"  [Hook] Processed {context.get('invoice_file')} in {elapsed:.2f}s")
+        return None
+    
+    @hookimpl
+    def on_error(self, error, file_path, context):
+        """Log errors for later analysis."""
+        self.errors.append({
+            "file": file_path,
+            "error": str(error),
+            "time": datetime.now().isoformat()
+        })
+        return None  # Don't recover, just log
+    
+    def get_stats(self):
+        """Get processing statistics."""
+        return {
+            "processed": self.processed_count,
+            "total_time": self.total_time,
+            "avg_time": self.total_time / max(1, self.processed_count),
+            "errors": len(self.errors)
+        }
+
+
+# Global hooks instance (register once)
+_invoice_hooks = None
+
+def get_invoice_hooks():
+    """Get or create the global hooks instance."""
+    global _invoice_hooks
+    if _invoice_hooks is None and PLUGGY_AVAILABLE:
+        _invoice_hooks = InvoiceProcessingHooks()
+        register_hook_plugin(_invoice_hooks)
+    return _invoice_hooks
+
+
+# =============================================================================
+# 6. INVOICE PROCESSOR - Main application logic
 # =============================================================================
 
 from pyapu import DocumentProcessor
@@ -446,7 +526,7 @@ class InvoiceProcessorApp:
 
 
 # =============================================================================
-# 6. DEMO / MAIN
+# 7. DEMO / MAIN
 # =============================================================================
 
 def demo_without_api():
@@ -520,6 +600,18 @@ def demo_without_api():
     result = pii_filter.validate_output(data_with_pii)
     print(f"Before: {data_with_pii}")
     print(f"After: {result.data}")
+    
+    # Test hooks (v0.3.0+)
+    print("\n--- Hooks Demo (v0.3.0+) ---")
+    if PLUGGY_AVAILABLE:
+        hooks = get_invoice_hooks()
+        if hooks:
+            print(f"Hooks registered: InvoiceProcessingHooks")
+            print(f"Stats: {hooks.get_stats()}")
+        else:
+            print("Hooks not yet initialized")
+    else:
+        print("Pluggy not installed - hooks unavailable")
     
     # Show Pydantic model
     print("\n--- Pydantic Model ---")

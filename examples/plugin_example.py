@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """
-Plugin system example.
+Plugin System v2 Example.
 
 Demonstrates:
-- Registering custom plugins
-- Using the plugin registry
-- Creating custom providers
-- Plugin discovery
+- Plugin API versioning and priorities
+- Lazy loading from entry points
+- Using the plugin registry and CLI
+- Creating v2-compliant plugins
+- Protocol-based type checking
+- Pluggy hooks for pipeline extension
 """
 
 import os
 import sys
+import warnings
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from pyapu.plugins import (
@@ -20,269 +24,381 @@ from pyapu.plugins import (
     Extractor,
     Validator,
     ValidationResult,
-    Postprocessor
+    Postprocessor,
+    # v2 additions
+    PLUGIN_API_VERSION,
+    ProviderProtocol,
+    check_plugin_version,
+    hookimpl,
+    register_hook_plugin,
+    call_hook,
 )
 from pyapu.types import Schema
 
 
-def demo_plugin_registry():
-    """Demonstrate basic registry operations."""
-    print("=" * 50)
-    print("PLUGIN REGISTRY BASICS")
-    print("=" * 50)
+def demo_v2_plugin_attributes():
+    """Demonstrate new v2 plugin attributes."""
+    print("=" * 60)
+    print("PLUGIN SYSTEM v2 - API VERSION & PRIORITY")
+    print("=" * 60)
     
-    # Clear registry for demo
-    PluginRegistry.clear()
+    print(f"\nCurrent API Version: {PLUGIN_API_VERSION}")
     
-    # Manual registration
-    class MyPlugin:
-        pass
+    # Check built-in provider
+    PluginRegistry.discover()
+    gemini = PluginRegistry.get("provider", "gemini")
     
-    PluginRegistry.register("custom", "my_plugin", MyPlugin)
+    if gemini:
+        print(f"\nGeminiProvider attributes:")
+        print(f"  pyapu_plugin_version: {gemini.pyapu_plugin_version}")
+        print(f"  priority: {gemini.priority}")
+        print(f"  cost: {gemini.cost}")
+        print(f"  capabilities: {gemini.capabilities}")
+        print(f"  health_check(): {gemini.health_check()}")
     
-    # Retrieve
-    retrieved = PluginRegistry.get("custom", "my_plugin")
-    print(f"Retrieved: {retrieved}")
-    print(f"Same class: {retrieved is MyPlugin}")
-    
-    # List plugins
-    PluginRegistry.register("custom", "another_plugin", MyPlugin)
-    all_custom = PluginRegistry.list("custom")
-    print(f"\nAll custom plugins: {list(all_custom.keys())}")
-    
-    # List types
-    PluginRegistry.register("validator", "test", MyPlugin)
-    types = PluginRegistry.list_types()
-    print(f"Plugin types: {types}")
+    # Version compatibility check
+    print(f"\nVersion compatible: {check_plugin_version(gemini)}")
 
 
-def demo_decorator_registration():
-    """Demonstrate decorator-based registration."""
-    print("\n" + "=" * 50)
-    print("DECORATOR REGISTRATION")
-    print("=" * 50)
+def demo_lazy_loading():
+    """Demonstrate lazy loading from entry points."""
+    print("\n" + "=" * 60)
+    print("LAZY LOADING FROM ENTRY POINTS")
+    print("=" * 60)
     
     PluginRegistry.clear()
+    PluginRegistry.discover()
     
-    # Auto-name from class name
-    @register("provider")
-    class AutoNamedProvider(Provider):
-        def process(self, *args, **kwargs):
-            return {"source": "auto-named"}
+    # Get plugin info without loading
+    info = PluginRegistry.get_plugin_info("provider", "gemini")
+    print(f"\nBefore get() - loaded: {info.get('loaded', False)}")
     
-    # Explicit name
-    @register("provider", name="custom_gemini")
-    class MyGeminiProvider(Provider):
-        def process(self, *args, **kwargs):
-            return {"source": "custom-gemini"}
+    # Now load it
+    cls = PluginRegistry.get("provider", "gemini")
     
-    print(f"Auto-named: {PluginRegistry.get('provider', 'autonamedprovider')}")
-    print(f"Explicit name: {PluginRegistry.get('provider', 'custom_gemini')}")
-    print(f"All providers: {list(PluginRegistry.list('provider').keys())}")
+    # Check again
+    info = PluginRegistry.get_plugin_info("provider", "gemini")
+    print(f"After get() - loaded: {info.get('loaded', True)}")
+    print(f"Plugin info: {info}")
 
 
-def demo_custom_provider():
-    """Demonstrate creating a custom provider."""
-    print("\n" + "=" * 50)
-    print("CUSTOM PROVIDER")
-    print("=" * 50)
+def demo_plugin_listing():
+    """Demonstrate plugin listing methods."""
+    print("\n" + "=" * 60)
+    print("PLUGIN LISTING (CLI: pyapu plugins list)")
+    print("=" * 60)
     
-    PluginRegistry.clear()
+    PluginRegistry.discover()
     
-    @register("provider")
-    class MockProvider(Provider):
-        """A mock provider for testing."""
+    # List all types
+    print(f"\nPlugin types: {PluginRegistry.list_types()}")
+    
+    # List names without loading
+    print(f"Provider names: {PluginRegistry.list_names('provider')}")
+    
+    # Get detailed info
+    for name in PluginRegistry.list_names("provider"):
+        info = PluginRegistry.get_plugin_info("provider", name)
+        status = "●" if info.get("loaded") else "○"
+        version = info.get("version", "?")
+        priority = info.get("priority", "?")
+        print(f"  {status} {name:<20} v{version:<8} priority: {priority}")
+
+
+def demo_v2_compliant_provider():
+    """Demonstrate creating a v2-compliant provider."""
+    print("\n" + "=" * 60)
+    print("V2-COMPLIANT PROVIDER (Entry Points Recommended)")
+    print("=" * 60)
+    
+    # Modern v2 provider - would normally be in a separate package
+    # and registered via entry points in pyproject.toml:
+    #
+    # [project.entry-points."pyapu.providers"]
+    # my_provider = "my_package:MyProvider"
+    
+    class MockV2Provider(Provider):
+        """A v2-compliant mock provider."""
         
-        capabilities = ["mock", "testing"]
+        # These are OPTIONAL overrides - inherited defaults are:
+        #   pyapu_plugin_version = "1.0"  (from base class)
+        #   priority = 50                  (from base class)
+        #   cost = 1.0                     (from base class)
+        #
+        # Override only if you need custom values:
+        priority = 75  # Higher priority = preferred in waterfall
+        cost = 0.5     # Lower cost = cheaper option
+        capabilities = ["mock", "testing", "batch"]
         
         def __init__(self, response_data: dict = None):
             self.response_data = response_data or {"mock": True}
         
         def process(self, file_path, prompt, schema, mime_type, **kwargs):
-            print(f"  MockProvider processing: {file_path}")
-            print(f"  MIME type: {mime_type}")
             return self.response_data
-    
-    # Use the provider
-    provider = MockProvider(response_data={"invoice_number": "MOCK-001"})
-    
-    print(f"Capabilities: {provider.capabilities}")
-    print(f"Has 'mock': {provider.has_capability('mock')}")
-    print(f"Has 'vision': {provider.has_capability('vision')}")
-    
-    result = provider.process("test.pdf", "Extract data", None, "application/pdf")
-    print(f"Result: {result}")
-
-
-def demo_custom_extractor():
-    """Demonstrate creating a custom extractor."""
-    print("\n" + "=" * 50)
-    print("CUSTOM EXTRACTOR")
-    print("=" * 50)
-    
-    @register("extractor")
-    class MarkdownExtractor(Extractor):
-        """Extracts text from markdown files."""
         
-        supported_mime_types = ["text/markdown", "text/x-markdown"]
+        @classmethod
+        def health_check(cls) -> bool:
+            """Check if provider is ready."""
+            return True  # Always ready for mock
+    
+    # Verify protocol compliance
+    provider = MockV2Provider()
+    is_compliant = isinstance(provider, ProviderProtocol)
+    print(f"\nProtocol compliant: {is_compliant}")
+    print(f"Version check: {check_plugin_version(MockV2Provider)}")
+    print(f"Health check: {MockV2Provider.health_check()}")
+    
+    # Manual registration (entry points preferred for real plugins)
+    PluginRegistry.register("provider", "mock_v2", MockV2Provider)
+    
+    info = PluginRegistry.get_plugin_info("provider", "mock_v2")
+    print(f"\nRegistered plugin info: {info}")
+    
+    # MINIMAL provider - just implement process(), everything else inherited
+    print("\n--- Minimal Provider Example ---")
+    
+    class MinimalProvider(Provider):
+        """Minimal provider - only process() is required!"""
+        capabilities = ["text"]
         
-        def extract(self, file_path: str) -> str:
-            with open(file_path, "r") as f:
-                content = f.read()
-            
-            # Simple markdown stripping (just for demo)
-            import re
-            # Remove headers markers
-            content = re.sub(r'^#+\s*', '', content, flags=re.MULTILINE)
-            # Remove bold/italic
-            content = re.sub(r'\*+([^*]+)\*+', r'\1', content)
-            
-            return content
+        def process(self, file_path, prompt, schema, mime_type, **kwargs):
+            return {"result": "minimal"}
     
-    extractor = MarkdownExtractor()
-    print(f"Supported types: {extractor.supported_mime_types}")
-    print(f"Can handle text/markdown: {extractor.can_handle('text/markdown')}")
-    print(f"Can handle application/pdf: {extractor.can_handle('application/pdf')}")
+    # Check inherited defaults
+    print(f"Inherited version: {MinimalProvider.pyapu_plugin_version}")
+    print(f"Inherited priority: {MinimalProvider.priority}")
+    print(f"Inherited cost: {MinimalProvider.cost}")
+    print(f"Inherited health_check: {MinimalProvider.health_check()}")
 
 
-def demo_custom_validator():
-    """Demonstrate creating a custom validator."""
-    print("\n" + "=" * 50)
-    print("CUSTOM VALIDATOR")
-    print("=" * 50)
+def demo_priority_sorting():
+    """Demonstrate priority-based plugin ordering."""
+    print("\n" + "=" * 60)
+    print("PRIORITY-BASED ORDERING")
+    print("=" * 60)
     
-    @register("validator")
+    PluginRegistry.clear()
+    
+    class LowPriorityProvider(Provider):
+        pyapu_plugin_version = "1.0"
+        priority = 20
+        cost = 0.1
+        capabilities = []
+        def process(self, *args, **kwargs): pass
+    
+    class MediumPriorityProvider(Provider):
+        pyapu_plugin_version = "1.0"
+        priority = 50
+        cost = 1.0
+        capabilities = []
+        def process(self, *args, **kwargs): pass
+    
+    class HighPriorityProvider(Provider):
+        pyapu_plugin_version = "1.0"
+        priority = 80
+        cost = 2.0
+        capabilities = []
+        def process(self, *args, **kwargs): pass
+    
+    PluginRegistry.register("provider", "low", LowPriorityProvider)
+    PluginRegistry.register("provider", "medium", MediumPriorityProvider)
+    PluginRegistry.register("provider", "high", HighPriorityProvider)
+    
+    # Get all and sort by priority
+    providers = PluginRegistry.list("provider")
+    sorted_providers = sorted(
+        providers.items(),
+        key=lambda x: x[1].priority,
+        reverse=True  # Higher priority first
+    )
+    
+    print("\nProviders sorted by priority (high to low):")
+    for name, cls in sorted_providers:
+        print(f"  {name}: priority={cls.priority}, cost={cls.cost}")
+
+
+def demo_hooks():
+    """Demonstrate pluggy hooks for pipeline extension."""
+    print("\n" + "=" * 60)
+    print("PLUGGY HOOKS")
+    print("=" * 60)
+    
+    class LoggingPlugin:
+        """Plugin that logs pre/post processing."""
+        
+        @hookimpl
+        def pyapu_pre_process(self, file_path, prompt, schema, mime_type, context):
+            import time
+            context["start_time"] = time.time()
+            print(f"  [Hook] Pre-process: {file_path}")
+            return None  # Don't modify inputs
+        
+        @hookimpl
+        def pyapu_post_process(self, result, context):
+            import time
+            elapsed = time.time() - context.get("start_time", 0)
+            print(f"  [Hook] Post-process: elapsed={elapsed:.3f}s")
+            return None  # Don't modify result
+    
+    try:
+        # Register hook plugin
+        plugin = LoggingPlugin()
+        register_hook_plugin(plugin)
+        
+        # Call hooks manually (normally done by DocumentProcessor)
+        context = {}
+        call_hook("pyapu_pre_process",
+            file_path="test.pdf",
+            prompt="Extract data",
+            schema=None,
+            mime_type="application/pdf",
+            context=context
+        )
+        
+        import time
+        time.sleep(0.1)  # Simulate processing
+        
+        call_hook("pyapu_post_process",
+            result={"extracted": True},
+            context=context
+        )
+        
+        print("\n  Hooks executed successfully!")
+        
+    except RuntimeError as e:
+        print(f"\n  Note: {e}")
+
+
+def demo_deprecated_decorator():
+    """Demonstrate the deprecated @register decorator with warning."""
+    print("\n" + "=" * 60)
+    print("DEPRECATED @register DECORATOR")
+    print("=" * 60)
+    
+    print("\nThe @register decorator is deprecated in v0.3.0.")
+    print("Use entry points in pyproject.toml instead:")
+    print()
+    print('  [project.entry-points."pyapu.providers"]')
+    print('  my_provider = "my_package:MyProvider"')
+    print()
+    
+    # Show the deprecation warning
+    PluginRegistry.clear()
+    
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        
+        @register("provider", name="deprecated_example")
+        class DeprecatedStyleProvider(Provider):
+            pyapu_plugin_version = "1.0"
+            priority = 50
+            cost = 1.0
+            capabilities = []
+            def process(self, *args, **kwargs): pass
+        
+        if w:
+            print(f"DeprecationWarning raised: {len(w)} warning(s)")
+            print(f"Message excerpt: ...Use entry points in pyproject.toml...")
+
+
+def demo_cli_commands():
+    """Show available CLI commands."""
+    print("\n" + "=" * 60)
+    print("CLI COMMANDS (pyapu plugins ...)")
+    print("=" * 60)
+    
+    print("""
+Available commands:
+
+  pyapu plugins list
+      List all discovered plugins with health status
+      
+  pyapu plugins list --type provider
+      Filter by plugin type
+      
+  pyapu plugins list --json
+      Output as JSON for scripting
+      
+  pyapu plugins info gemini --type provider
+      Show detailed info for a specific plugin
+      
+  pyapu plugins refresh
+      Re-scan entry points and refresh cache
+      
+  pyapu plugins cache
+      Show cache status
+      
+  pyapu plugins cache --clear
+      Clear the discovery cache
+""")
+
+
+def demo_custom_validator_v2():
+    """Demonstrate a v2-compliant validator."""
+    print("\n" + "=" * 60)
+    print("V2-COMPLIANT VALIDATOR")
+    print("=" * 60)
+    
     class InvoiceValidator(Validator):
         """Validates invoice data with business rules."""
+        
+        pyapu_plugin_version = "1.0"
+        priority = 60
         
         def validate(self, data, schema=None):
             issues = []
             
-            # Check required fields
             if not data.get("invoice_number"):
                 issues.append("Missing invoice number")
             
-            # Check total is positive
             total = data.get("total", 0)
             if total <= 0:
                 issues.append(f"Invalid total: {total}")
             
-            # Verify line items sum
             items = data.get("items", [])
             if items:
                 items_total = sum(item.get("total", 0) for item in items)
                 if abs(items_total - total) > 0.01:
-                    issues.append(f"Line items total ({items_total}) != invoice total ({total})")
+                    issues.append(f"Sum mismatch: items={items_total}, total={total}")
             
             return ValidationResult(
                 valid=len(issues) == 0,
                 data=data,
                 issues=issues
             )
+        
+        @classmethod
+        def health_check(cls) -> bool:
+            return True
     
     validator = InvoiceValidator()
     
-    # Valid data
+    # Test valid data
     valid_data = {
         "invoice_number": "INV-001",
         "total": 100.00,
-        "items": [{"total": 100.00}]
+        "items": [{"total": 60.00}, {"total": 40.00}]
     }
     result = validator.validate(valid_data)
-    print(f"Valid data: {result.valid}, Issues: {result.issues}")
+    print(f"\nValid data: {result.valid}")
     
-    # Invalid data
-    invalid_data = {
-        "invoice_number": "",
-        "total": -50,
-        "items": []
-    }
+    # Test invalid data
+    invalid_data = {"total": -50}
     result = validator.validate(invalid_data)
-    print(f"Invalid data: {result.valid}")
-    print(f"Issues: {result.issues}")
-
-
-def demo_custom_postprocessor():
-    """Demonstrate creating a custom postprocessor."""
-    print("\n" + "=" * 50)
-    print("CUSTOM POSTPROCESSOR")
-    print("=" * 50)
-    
-    @register("postprocessor")
-    class DateNormalizer(Postprocessor):
-        """Normalizes date formats to ISO 8601."""
-        
-        def __init__(self, date_fields: list = None):
-            self.date_fields = date_fields or ["date", "invoice_date", "due_date"]
-        
-        def process(self, data):
-            import re
-            
-            result = data.copy()
-            
-            for field in self.date_fields:
-                if field in result and result[field]:
-                    # Convert DD.MM.YYYY to YYYY-MM-DD
-                    match = re.match(r'(\d{2})\.(\d{2})\.(\d{4})', str(result[field]))
-                    if match:
-                        d, m, y = match.groups()
-                        result[field] = f"{y}-{m}-{d}"
-            
-            return result
-    
-    normalizer = DateNormalizer()
-    
-    data = {
-        "invoice_number": "INV-001",
-        "date": "15.01.2024",
-        "due_date": "30.01.2024"
-    }
-    
-    normalized = normalizer.process(data)
-    print(f"Original date: {data['date']}")
-    print(f"Normalized date: {normalized['date']}")
-    print(f"Original due_date: {data['due_date']}")
-    print(f"Normalized due_date: {normalized['due_date']}")
-
-
-def demo_using_with_processor():
-    """Show how to use custom providers with DocumentProcessor."""
-    print("\n" + "=" * 50)
-    print("USING WITH DOCUMENT PROCESSOR")
-    print("=" * 50)
-    
-    from pyapu import DocumentProcessor
-    
-    PluginRegistry.clear()
-    
-    # Register a mock provider
-    @register("provider", name="test_provider")
-    class TestProvider(Provider):
-        def __init__(self, api_key=None, model=None):
-            self.api_key = api_key
-            self.model = model
-        
-        def process(self, file_path, prompt, schema, mime_type, **kwargs):
-            return {
-                "invoice_number": "TEST-001",
-                "total": 999.99
-            }
-    
-    # Use by name
-    processor = DocumentProcessor(provider="test_provider")
-    print("Created processor with custom provider by name")
-    
-    # Or pass instance directly
-    provider = TestProvider()
-    processor2 = DocumentProcessor(provider=provider)
-    print("Created processor with provider instance")
+    print(f"Invalid data: {result.valid}, Issues: {result.issues}")
 
 
 if __name__ == "__main__":
-    demo_plugin_registry()
-    demo_decorator_registration()
-    demo_custom_provider()
-    demo_custom_extractor()
-    demo_custom_validator()
-    demo_custom_postprocessor()
-    demo_using_with_processor()
+    demo_v2_plugin_attributes()
+    demo_lazy_loading()
+    demo_plugin_listing()
+    demo_v2_compliant_provider()
+    demo_priority_sorting()
+    demo_hooks()
+    demo_deprecated_decorator()
+    demo_cli_commands()
+    demo_custom_validator_v2()
+    
+    print("\n" + "=" * 60)
+    print("Done! See docs for more: poetry run mkdocs serve")
+    print("=" * 60)

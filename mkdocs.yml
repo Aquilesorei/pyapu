@@ -39,11 +39,14 @@ nav:
       - Schema Types: schema-types.md
       - Prompt Builder: prompt-builder.md
       - Pydantic Support: pydantic.md
+      - CLI Commands: cli.md
   - Architecture:
       - Plugin System: plugins.md
+      - Hooks: hooks.md
       - Security Layer: security.md
       - Providers: providers.md
   - API Reference: api-reference.md
+  - Changelog: changelog.md
 
 plugins:
   - search
@@ -88,6 +91,9 @@ markdown_extensions:
       permalink: true
 
 extra:
+  version:
+    provider: mike
+    default: latest
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Aquilesorei/pyapu

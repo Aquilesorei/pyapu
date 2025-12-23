@@ -46,10 +46,10 @@ class TestPluginRegistry:
         class P2:
             pass
         
-        PluginRegistry.register("provider", "p1", P1)
-        PluginRegistry.register("provider", "p2", P2)
+        PluginRegistry.register("test_type", "p1", P1)
+        PluginRegistry.register("test_type", "p2", P2)
         
-        plugins = PluginRegistry.list("provider")
+        plugins = PluginRegistry.list("test_type")
         assert len(plugins) == 2
         assert plugins["p1"] == P1
         assert plugins["p2"] == P2
@@ -80,16 +80,19 @@ class TestPluginRegistry:
         assert PluginRegistry.get("validator", "v") == P
     
     def test_clear_all(self):
-        """Test clearing all plugins."""
+        """Test clearing all manually registered plugins."""
         class P:
             pass
         
-        PluginRegistry.register("provider", "p", P)
-        PluginRegistry.register("validator", "v", P)
+        PluginRegistry.register("test_provider", "p", P)
+        PluginRegistry.register("test_validator", "v", P)
         
         PluginRegistry.clear()
         
-        assert PluginRegistry.list_types() == []
+        # After clear, manual registrations are gone
+        # Note: list_types may still return entry point types on re-discovery
+        assert PluginRegistry.get("test_provider", "p") is None
+        assert PluginRegistry.get("test_validator", "v") is None
 
 
 class TestRegisterDecorator:

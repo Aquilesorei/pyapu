@@ -2,6 +2,9 @@
 
 Everything in pyapu is pluggable. Use defaults or register your own implementations.
 
+!!! note "New in v0.3.0"
+Plugin System v2 introduces lazy loading, entry points, priority-based ordering, and CLI tooling.
+
 ---
 
 ## Plugin Types
@@ -16,48 +19,141 @@ Everything in pyapu is pluggable. Use defaults or register your own implementati
 
 ---
 
-## Using the Registry
+## Quick Start
 
-### Register a Plugin
-
-=== "Decorator"
-
-    ```python
-    from pyapu.plugins import register, Provider
-
-    @register("provider", name="my_llm")
-    class MyProvider(Provider):
-        def process(self, file_path, prompt, schema, mime_type, **kwargs):
-            return {"result": "data"}
-    ```
-
-=== "Manual"
-
-    ```python
-    from pyapu.plugins import PluginRegistry
-
-    PluginRegistry.register("provider", "my_llm", MyProvider)
-    ```
-
-### Get a Plugin
+### Minimal Provider
 
 ```python
-provider_cls = PluginRegistry.get("provider", "gemini")
+from pyapu.plugins import Provider
+
+class MyProvider(Provider):
+    """All attributes are inherited from base class!"""
+    capabilities = ["vision"]
+
+    def process(self, file_path, prompt, schema, mime_type, **kwargs):
+        return {"result": "data"}
 ```
 
-### List Plugins
+The base class provides sensible defaults:
+
+- `pyapu_plugin_version = "1.0"` (inherited)
+- `priority = 50` (inherited)
+- `cost = 1.0` (inherited)
+- `health_check()` (inherited)
+
+Override only if you need custom values.
+
+---
+
+## Plugin Attributes (v0.3.0+)
+
+| Attribute              | Type    | Default | Description                                    |
+| ---------------------- | ------- | ------- | ---------------------------------------------- |
+| `pyapu_plugin_version` | `str`   | `"1.0"` | API version for compatibility                  |
+| `priority`             | `int`   | `50`    | Order in waterfall (0-100, higher = preferred) |
+| `cost`                 | `float` | `1.0`   | Cost hint (lower = cheaper)                    |
+| `capabilities`         | `list`  | `[]`    | Features this plugin supports                  |
+
+### Example with Custom Priority
 
 ```python
-all_providers = PluginRegistry.list("provider")
-print(all_providers.keys())  # ['gemini', 'geminiprovider', ...]
+class FastProvider(Provider):
+    priority = 80      # Preferred over default
+    cost = 0.5         # Cheaper option
+    capabilities = ["vision", "batch"]
+
+    def process(self, *args, **kwargs):
+        ...
 ```
 
-### Discover Installed Plugins
+---
+
+## Registration Methods
+
+### Recommended: Entry Points
+
+Register plugins in `pyproject.toml` for automatic discovery:
+
+```toml title="pyproject.toml"
+[project.entry-points."pyapu.providers"]
+my_provider = "my_package:MyProvider"
+
+[project.entry-points."pyapu.validators"]
+my_validator = "my_package:MyValidator"
+```
+
+Plugins are **lazy loaded** — only imported when first used.
+
+### Manual Registration
 
 ```python
-# Auto-discover from pip packages
-count = PluginRegistry.discover()
-print(f"Found {count} plugins")
+from pyapu.plugins import PluginRegistry
+
+PluginRegistry.register("provider", "my_provider", MyProvider)
+```
+
+### Decorator (Deprecated)
+
+!!! warning "Deprecated in v0.3.0"
+Use entry points instead. The decorator still works but emits a warning.
+
+```python
+@register("provider", name="my_provider")  # Deprecated
+class MyProvider(Provider):
+    ...
+```
+
+---
+
+## CLI Commands
+
+```bash
+# List all plugins
+pyapu plugins list
+
+# Filter by type
+pyapu plugins list --type provider
+
+# JSON output
+pyapu plugins list --json
+
+# Plugin details
+pyapu plugins info gemini --type provider
+
+# Refresh discovery cache
+pyapu plugins refresh
+```
+
+Example output:
+
+```
+PROVIDERS
+----------------------------------------
+  ✓ ● gemini               v1.0      priority: 50
+       └─ capabilities: vision
+```
+
+---
+
+## Lazy Loading
+
+Plugins are discovered but not loaded until first use:
+
+```python
+from pyapu.plugins import PluginRegistry
+
+PluginRegistry.discover()
+
+# Check plugin exists (not loaded yet)
+info = PluginRegistry.get_plugin_info("provider", "gemini")
+print(info["loaded"])  # False
+
+# Now load it
+cls = PluginRegistry.get("provider", "gemini")
+
+# Check again
+info = PluginRegistry.get_plugin_info("provider", "gemini")
+print(info["loaded"])  # True
 ```
 
 ---
@@ -67,28 +163,38 @@ print(f"Found {count} plugins")
 ### Custom Provider
 
 ```python
-from pyapu.plugins import Provider, register
+from pyapu.plugins import Provider
 
-@register("provider")
 class OllamaProvider(Provider):
+    # Optional overrides
+    priority = 60
     capabilities = ["local", "vision"]
 
-    def __init__(self, api_key=None, model="llama3"):
+    def __init__(self, model="llama3"):
         self.model = model
 
     def process(self, file_path, prompt, schema, mime_type, **kwargs):
-        # Call Ollama API
+        # Your implementation
         ...
+
+    @classmethod
+    def health_check(cls) -> bool:
+        """Optional: custom health check."""
+        try:
+            # Check if Ollama is running
+            return True
+        except:
+            return False
 ```
 
 ### Custom Validator
 
 ```python
-from pyapu.plugins import Validator, ValidationResult, register
+from pyapu.plugins import Validator, ValidationResult
 
-@register("validator")
 class SumValidator(Validator):
     """Verify line items sum to total."""
+    priority = 70  # Run before default validators
 
     def validate(self, data, schema=None):
         items_sum = sum(i.get("amount", 0) for i in data.get("items", []))
@@ -106,10 +212,9 @@ class SumValidator(Validator):
 ### Custom Postprocessor
 
 ```python
-from pyapu.plugins import Postprocessor, register
+from pyapu.plugins import Postprocessor
 import re
 
-@register("postprocessor")
 class DateNormalizer(Postprocessor):
     """Convert DD.MM.YYYY to YYYY-MM-DD."""
 
@@ -125,22 +230,45 @@ class DateNormalizer(Postprocessor):
 
 ---
 
-## Entry Point Discovery
+## Pluggy Hooks
 
-Publish plugins for pip installation:
-
-```toml title="pyproject.toml"
-[project.entry-points."pyapu.providers"]
-my_provider = "my_package:MyProvider"
-
-[project.entry-points."pyapu.validators"]
-my_validator = "my_package:MyValidator"
-```
-
-Users can then discover your plugins automatically:
+Extend the processing pipeline with hooks:
 
 ```python
-from pyapu.plugins import PluginRegistry
+from pyapu.plugins import hookimpl, register_hook_plugin
 
-PluginRegistry.discover()  # Finds my_provider, my_validator
+class LoggingPlugin:
+    @hookimpl
+    def pyapu_pre_process(self, file_path, prompt, schema, mime_type, context):
+        context["start_time"] = time.time()
+        print(f"Processing: {file_path}")
+
+    @hookimpl
+    def pyapu_post_process(self, result, context):
+        elapsed = time.time() - context["start_time"]
+        print(f"Completed in {elapsed:.2f}s")
+
+# Register the hook plugin
+register_hook_plugin(LoggingPlugin())
 ```
+
+Available hooks:
+
+| Hook                 | When              | Purpose                |
+| -------------------- | ----------------- | ---------------------- |
+| `pyapu_pre_process`  | Before extraction | Modify inputs, logging |
+| `pyapu_post_process` | After extraction  | Transform results      |
+| `pyapu_on_error`     | On failure        | Error recovery         |
+
+---
+
+## API Reference
+
+::: pyapu.plugins.PluginRegistry
+options:
+show_root_heading: true
+members: - register - get - list - discover
+
+::: pyapu.plugins.Provider
+options:
+show_root_heading: true

@@ -11,8 +11,9 @@
 
 ## Features
 
-- **Pluggable Architecture** — Everything is extensible with sensible defaults
-- **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, Ollama, and custom endpoints
+- **Plugin System v2** — Lazy loading, entry points, priority-based ordering
+- **CLI Tooling** — `pyapu plugins list|info|refresh` commands
+- **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, and custom endpoints
 - **Universal Document Support** — PDFs, images, Excel, and custom formats
 - **Schema-Driven Extraction** — Define your output structure, get consistent JSON
 - **Security First** — Built-in input sanitization and output validation
@@ -24,11 +25,17 @@
 ### Installation
 
 ```bash
-# Using pip
+# Core only
 pip install pyapu
 
-# Using Poetry
-poetry add pyapu
+# With CLI commands
+pip install pyapu[cli]
+
+# With OCR support
+pip install pyapu[ocr]
+
+# Everything
+pip install pyapu[all]
 ```
 
 ### Basic Usage
@@ -67,23 +74,72 @@ print(result["total"])           # 1250.00
 
 ---
 
+## CLI Commands (v0.3.0+)
+
+```bash
+# List all plugins
+pyapu plugins list
+
+# Filter by type
+pyapu plugins list --type provider
+
+# Get plugin details
+pyapu plugins info gemini --type provider
+
+# Refresh discovery cache
+pyapu plugins refresh
+```
+
+---
+
 ## Plugin System
 
-**Everything in pyapu is pluggable.** Use defaults or register your own implementations:
+**Everything is pluggable.** Register via entry points (recommended) or manually:
+
+### Entry Points (Recommended)
+
+Works with pip, Poetry, Flit, or any PEP 517 build tool:
+
+**pyproject.toml** (modern standard):
+
+```toml
+[project.entry-points."pyapu.providers"]
+my_provider = "my_package:MyProvider"
+```
+
+**setup.cfg** (setuptools):
+
+```ini
+[options.entry_points]
+pyapu.providers =
+    my_provider = my_package:MyProvider
+```
+
+**setup.py** (legacy):
 
 ```python
-from pyapu.plugins import register
+setup(
+    entry_points={
+        "pyapu.providers": [
+            "my_provider = my_package:MyProvider",
+        ],
+    },
+)
+```
 
-@register("provider")
-class MyCustomProvider(Provider):
-    def process(self, file, prompt, schema):
-        # Your custom LLM logic
-        ...
+```python
+from pyapu.plugins import Provider
 
-@register("postprocessor")
-class CurrencyNormalizer(Postprocessor):
-    def process(self, data: dict) -> dict:
-        # Normalize currency values
+class MyProvider(Provider):
+    # All attributes inherited from base class:
+    # pyapu_plugin_version = "1.0"
+    # priority = 50
+    # cost = 1.0
+
+    capabilities = ["vision"]
+
+    def process(self, file_path, prompt, schema, mime_type, **kwargs):
+        # Your LLM logic
         ...
 ```
 
@@ -96,7 +152,6 @@ class CurrencyNormalizer(Postprocessor):
 | `extractor`     | Document parsing        | PDF, Image OCR, Excel             |
 | `validator`     | Output validation       | Schema, sum checks, date formats  |
 | `postprocessor` | Data transformation     | Date/number normalization         |
-| `verifier`      | Quality assurance       | LLM self-correction               |
 
 ---
 
@@ -115,26 +170,31 @@ class CurrencyNormalizer(Postprocessor):
 
 See [ROADMAP.md](ROADMAP.md) for the full development plan.
 
-**Current priorities:**
+**Recent releases:**
 
-- [x] Plugin registry system (v0.2.0)
-- [x] Security plugin layer
-- [x] Pydantic model support
-- [ ] Additional providers (OpenAI, Anthropic, Ollama)
+- [x] v0.1.0 — Core functionality
+- [x] v0.2.0 — Plugin registry + Security layer
+- [x] v0.3.0 — Plugin System v2 (lazy loading, CLI, hooks)
+- [ ] v0.4.0 — Additional providers (OpenAI, Anthropic, Ollama)
 
 ---
 
 ## Documentation
 
+📚 **[Read the Docs](https://aquilesorei.github.io/pyapu/)**
+
 ```bash
-# Serve locally (live reload)
-poetry run mkdocs serve
+# Install docs dependencies
+pip install mkdocs mkdocs-material mkdocstrings[python] mike
+
+# Serve locally
+mkdocs serve
 
 # Build static site
-poetry run mkdocs build
+mkdocs build
 
-# Deploy to GitHub Pages
-poetry run mkdocs gh-deploy
+# Deploy with versioning
+mike deploy 0.3.0 latest --push
 ```
 
 ---
@@ -143,13 +203,13 @@ poetry run mkdocs gh-deploy
 
 This project is licensed under the **GNU General Public License v3.0** — see [LICENSE](LICENSE) for details.
 
-For commercial or proprietary use, please [contact me](mailto:achillezongo07@gmail.com) for a separate license.
+For commercial use, please [contact me](mailto:achillezongo07@gmail.com).
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Priority areas:
+Contributions welcome! Priority areas:
 
 1. **New plugins** — Providers, extractors, validators
 2. **Documentation** — Examples and tutorials

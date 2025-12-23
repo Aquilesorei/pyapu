@@ -208,4 +208,5 @@ __marimo__/
 
 
 .idea
-poetry.lock
+poetry.lockdiffs/
+diffs/

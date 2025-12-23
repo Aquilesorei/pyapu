@@ -27,7 +27,7 @@ order_schema = Object(
 
 
 processor = DocumentProcessor(
-    provider="google",
+    provider="gemini",  # Use the registered entry point name
     model_name="gemini-2.5-flash",
     api_key= os.getenv('GEMINI_API_KEY')
 )

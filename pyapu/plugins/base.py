@@ -14,7 +14,22 @@ class Provider(ABC):
     
     All providers must implement the process method to handle
     document extraction via their specific LLM API.
+    
+    Attributes:
+        pyapu_plugin_version: API version for compatibility checks
+        priority: Ordering priority (0-100, higher = preferred)
+        cost: Cost hint for optimization (lower = cheaper)
+        capabilities: List of supported features
     """
+    
+    # Plugin API version (required for compatibility checks)
+    pyapu_plugin_version: str = "1.0"
+    
+    # Priority for waterfall ordering (0-100, higher = preferred)
+    priority: int = 50
+    
+    # Cost hint for optimization (lower = cheaper)
+    cost: float = 1.0
     
     # Declare capabilities (override in subclasses)
     capabilities: list = []
@@ -60,6 +75,18 @@ class Provider(ABC):
     def has_capability(self, capability: str) -> bool:
         """Check if this provider has a specific capability."""
         return capability.lower() in [c.lower() for c in self.capabilities]
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """
+        Check if this provider is healthy and ready to use.
+        
+        Override in subclasses for custom health checks (e.g., API connectivity).
+        
+        Returns:
+            True if healthy, False otherwise
+        """
+        return True
 
 
 class Extractor(ABC):
@@ -68,7 +95,18 @@ class Extractor(ABC):
     
     Extractors convert raw document bytes into text or structured
     content that can be sent to an LLM.
+    
+    Attributes:
+        pyapu_plugin_version: API version for compatibility checks
+        priority: Ordering priority for waterfall chains
+        supported_mime_types: List of MIME types this extractor handles
     """
+    
+    # Plugin API version
+    pyapu_plugin_version: str = "1.0"
+    
+    # Priority for waterfall ordering
+    priority: int = 50
     
     # MIME types this extractor handles
     supported_mime_types: list = []
@@ -89,6 +127,11 @@ class Extractor(ABC):
     def can_handle(self, mime_type: str) -> bool:
         """Check if this extractor can handle the given MIME type."""
         return mime_type in self.supported_mime_types
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """Check if this extractor is healthy and ready."""
+        return True
 
 
 class Validator(ABC):
@@ -97,7 +140,17 @@ class Validator(ABC):
     
     Validators check extracted data for correctness and can
     optionally fix issues.
+    
+    Attributes:
+        pyapu_plugin_version: API version for compatibility checks
+        priority: Ordering priority in validation chain
     """
+    
+    # Plugin API version
+    pyapu_plugin_version: str = "1.0"
+    
+    # Priority in validation chain
+    priority: int = 50
     
     @abstractmethod
     def validate(self, data: Dict[str, Any], schema: Optional[Schema] = None) -> "ValidationResult":
@@ -112,6 +165,11 @@ class Validator(ABC):
             ValidationResult with status and any issues
         """
         pass
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """Check if this validator is healthy and ready."""
+        return True
 
 
 class ValidationResult:
@@ -139,7 +197,17 @@ class Postprocessor(ABC):
     
     Postprocessors transform extracted data (e.g., normalize dates,
     convert currencies, standardize units).
+    
+    Attributes:
+        pyapu_plugin_version: API version for compatibility checks
+        priority: Ordering priority in postprocessing pipeline
     """
+    
+    # Plugin API version
+    pyapu_plugin_version: str = "1.0"
+    
+    # Priority in postprocessing pipeline
+    priority: int = 50
     
     @abstractmethod
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -153,6 +221,11 @@ class Postprocessor(ABC):
             Transformed data
         """
         pass
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """Check if this postprocessor is healthy and ready."""
+        return True
 
 
 class SecurityPlugin(ABC):
@@ -161,7 +234,17 @@ class SecurityPlugin(ABC):
     
     Security plugins can validate/sanitize input before sending
     to the LLM and validate output before returning to the user.
+    
+    Attributes:
+        pyapu_plugin_version: API version for compatibility checks
+        priority: Ordering priority in security chain
     """
+    
+    # Plugin API version
+    pyapu_plugin_version: str = "1.0"
+    
+    # Priority in security chain
+    priority: int = 50
     
     def validate_input(self, text: str) -> "SecurityResult":
         """
@@ -186,6 +269,11 @@ class SecurityPlugin(ABC):
             SecurityResult with clean data or rejection
         """
         return SecurityResult(valid=True, data=data)
+    
+    @classmethod
+    def health_check(cls) -> bool:
+        """Check if this security plugin is healthy and ready."""
+        return True
 
 
 class SecurityResult:
