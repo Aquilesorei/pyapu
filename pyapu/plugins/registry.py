@@ -418,18 +418,22 @@ class PluginRegistry:
 def register(
     plugin_type: str,
     name: Optional[str] = None,
-    deprecated: bool = True
 ) -> Callable[[Type], Type]:
     """
-    Decorator to register a plugin class.
+    Decorator to register a plugin class at runtime.
     
-    Note: This decorator is maintained for backwards compatibility.
-    For new plugins, prefer using entry points in pyproject.toml.
+    Use this decorator for:
+    - Runtime/dynamic registration based on config
+    - Prototyping plugins without packaging
+    - Plugins in the same codebase (not installed separately)
+    - Conditional loading based on environment or feature flags
+    
+    For distributable third-party plugin packages, use entry points
+    in pyproject.toml instead.
     
     Args:
-        plugin_type: Type of plugin (e.g., "provider", "security")
+        plugin_type: Type of plugin (e.g., "provider", "security", "validator")
         name: Optional name. If not provided, uses lowercase class name.
-        deprecated: If True, emit deprecation warning (default: True)
         
     Usage:
         @register("provider")
@@ -439,21 +443,42 @@ def register(
         @register("provider", name="custom_name")
         class AnotherProvider(Provider):
             ...
+    
+    See Also:
+        Entry points in pyproject.toml for distributable packages:
+        
+            [project.entry-points."pyapu.providers"]
+            my_provider = "my_package:MyProvider"
     """
     def decorator(cls: Type) -> Type:
         plugin_name = name if name else cls.__name__.lower()
-        
-        if deprecated:
-            warnings.warn(
-                f"The @register decorator is deprecated. "
-                f"Use entry points in pyproject.toml instead:\n\n"
-                f'[project.entry-points."pyapu.{plugin_type}s"]\n'
-                f'{plugin_name} = "{cls.__module__}:{cls.__name__}"',
-                DeprecationWarning,
-                stacklevel=2
-            )
-        
         PluginRegistry.register(plugin_type, plugin_name, cls)
         return cls
     
     return decorator
+
+
+# Convenience decorators for each plugin type
+def provider(name: Optional[str] = None) -> Callable[[Type], Type]:
+    """Register a provider plugin. See `register` for details."""
+    return register("provider", name)
+
+
+def extractor(name: Optional[str] = None) -> Callable[[Type], Type]:
+    """Register an extractor plugin. See `register` for details."""
+    return register("extractor", name)
+
+
+def validator(name: Optional[str] = None) -> Callable[[Type], Type]:
+    """Register a validator plugin. See `register` for details."""
+    return register("validator", name)
+
+
+def postprocessor(name: Optional[str] = None) -> Callable[[Type], Type]:
+    """Register a postprocessor plugin. See `register` for details."""
+    return register("postprocessor", name)
+
+
+def security(name: Optional[str] = None) -> Callable[[Type], Type]:
+    """Register a security plugin. See `register` for details."""
+    return register("security", name)

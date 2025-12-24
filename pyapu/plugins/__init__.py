@@ -25,7 +25,15 @@ Example:
     ...     def process(self, ...): ...
 """
 
-from .registry import PluginRegistry, register
+from .registry import (
+    PluginRegistry,
+    register,
+    provider,
+    extractor,
+    validator,
+    postprocessor,
+    security,
+)
 from .base import (
     Provider,
     Extractor,
@@ -37,7 +45,6 @@ from .base import (
 )
 from .protocol import (
     PLUGIN_API_VERSION,
-    PluginType,
     PLUGIN_PROTOCOLS,
     ProviderProtocol,
     ExtractorProtocol,
@@ -56,10 +63,19 @@ from .hooks import (
     call_hook,
 )
 
+from  .plugin_type import  PluginType
+
 __all__ = [
     # Registry
     "PluginRegistry",
     "register",
+    
+    # Convenience decorators
+    "provider",
+    "extractor",
+    "validator",
+    "postprocessor",
+    "security",
     
     # Base classes
     "Provider",

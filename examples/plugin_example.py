@@ -3,10 +3,11 @@
 Plugin System v2 Example.
 
 Demonstrates:
+- Auto-registration via inheritance
 - Plugin API versioning and priorities
+- Class arguments for customization (name=, priority=, register=)
+- Using decorators for aliases
 - Lazy loading from entry points
-- Using the plugin registry and CLI
-- Creating v2-compliant plugins
 - Protocol-based type checking
 - Pluggy hooks for pipeline extension
 """
@@ -71,15 +72,19 @@ def demo_lazy_loading():
     
     # Get plugin info without loading
     info = PluginRegistry.get_plugin_info("provider", "gemini")
-    print(f"\nBefore get() - loaded: {info.get('loaded', False)}")
-    
-    # Now load it
-    cls = PluginRegistry.get("provider", "gemini")
-    
-    # Check again
-    info = PluginRegistry.get_plugin_info("provider", "gemini")
-    print(f"After get() - loaded: {info.get('loaded', True)}")
-    print(f"Plugin info: {info}")
+    if info:
+        print(f"\nBefore get() - loaded: {info.get('loaded', False)}")
+        
+        # Now load it
+        cls = PluginRegistry.get("provider", "gemini")
+        
+        # Check again
+        info = PluginRegistry.get_plugin_info("provider", "gemini")
+        print(f"After get() - loaded: {info.get('loaded', True)}")
+        print(f"Plugin info: {info}")
+    else:
+        print("\nNo entry point plugins discovered (gemini not installed as package)")
+        print("This is expected when running from source.")
 
 
 def demo_plugin_listing():
@@ -105,27 +110,19 @@ def demo_plugin_listing():
         print(f"  {status} {name:<20} v{version:<8} priority: {priority}")
 
 
-def demo_v2_compliant_provider():
-    """Demonstrate creating a v2-compliant provider."""
+def demo_auto_registration():
+    """Demonstrate auto-registration via inheritance."""
     print("\n" + "=" * 60)
-    print("V2-COMPLIANT PROVIDER (Entry Points Recommended)")
+    print("AUTO-REGISTRATION VIA INHERITANCE")
     print("=" * 60)
     
-    # Modern v2 provider - would normally be in a separate package
-    # and registered via entry points in pyproject.toml:
-    #
-    # [project.entry-points."pyapu.providers"]
-    # my_provider = "my_package:MyProvider"
+    PluginRegistry.clear()
     
+    # Simply inherit from Provider - auto-registered as "mockv2provider"
     class MockV2Provider(Provider):
-        """A v2-compliant mock provider."""
+        """A v2-compliant mock provider - auto-registered!"""
         
-        # These are OPTIONAL overrides - inherited defaults are:
-        #   pyapu_plugin_version = "1.0"  (from base class)
-        #   priority = 50                  (from base class)
-        #   cost = 1.0                     (from base class)
-        #
-        # Override only if you need custom values:
+        # Optional overrides (defaults inherited from base class)
         priority = 75  # Higher priority = preferred in waterfall
         cost = 0.5     # Lower cost = cheaper option
         capabilities = ["mock", "testing", "batch"]
@@ -138,37 +135,48 @@ def demo_v2_compliant_provider():
         
         @classmethod
         def health_check(cls) -> bool:
-            """Check if provider is ready."""
-            return True  # Always ready for mock
+            return True
+    
+    print(f"\nAuto-registered: {PluginRegistry.list_names('provider')}")
+    print(f"MockV2Provider found: {PluginRegistry.get('provider', 'mockv2provider') is not None}")
+    
+    # Customize with class arguments
+    print("\n--- Custom Name ---")
+    
+    class FastProvider(Provider, name="fast"):
+        """Registered as 'fast' with custom priority"""
+        priority = 90  # Priority is a class attribute, not a class argument
+        cost = 0.1
+        capabilities = ["fast"]
+        
+        def process(self, *args, **kwargs):
+            return {"fast": True}
+    
+    print(f"Registered as 'fast': {PluginRegistry.get('provider', 'fast') is not None}")
+    print(f"Priority: {FastProvider.priority}")
+    
+    # Opt-out with register=False
+    print("\n--- Opt-out of Registration ---")
+    
+    class BasePdfProvider(Provider, register=False):
+        """NOT registered - intermediate base class"""
+        def common_pdf_logic(self):
+            return "shared logic"
+    
+    class AdobeProvider(BasePdfProvider):
+        """Registered as 'adobeprovider'"""
+        def process(self, *args, **kwargs):
+            return self.common_pdf_logic()
+    
+    print(f"BasePdfProvider registered: {PluginRegistry.get('provider', 'basepdfprovider') is not None}")
+    print(f"AdobeProvider registered: {PluginRegistry.get('provider', 'adobeprovider') is not None}")
     
     # Verify protocol compliance
+    print("\n--- Protocol Compliance ---")
     provider = MockV2Provider()
     is_compliant = isinstance(provider, ProviderProtocol)
-    print(f"\nProtocol compliant: {is_compliant}")
+    print(f"Protocol compliant: {is_compliant}")
     print(f"Version check: {check_plugin_version(MockV2Provider)}")
-    print(f"Health check: {MockV2Provider.health_check()}")
-    
-    # Manual registration (entry points preferred for real plugins)
-    PluginRegistry.register("provider", "mock_v2", MockV2Provider)
-    
-    info = PluginRegistry.get_plugin_info("provider", "mock_v2")
-    print(f"\nRegistered plugin info: {info}")
-    
-    # MINIMAL provider - just implement process(), everything else inherited
-    print("\n--- Minimal Provider Example ---")
-    
-    class MinimalProvider(Provider):
-        """Minimal provider - only process() is required!"""
-        capabilities = ["text"]
-        
-        def process(self, file_path, prompt, schema, mime_type, **kwargs):
-            return {"result": "minimal"}
-    
-    # Check inherited defaults
-    print(f"Inherited version: {MinimalProvider.pyapu_plugin_version}")
-    print(f"Inherited priority: {MinimalProvider.priority}")
-    print(f"Inherited cost: {MinimalProvider.cost}")
-    print(f"Inherited health_check: {MinimalProvider.health_check()}")
 
 
 def demo_priority_sorting():
@@ -269,36 +277,31 @@ def demo_hooks():
         print(f"\n  Note: {e}")
 
 
-def demo_deprecated_decorator():
-    """Demonstrate the deprecated @register decorator with warning."""
+def demo_aliases_with_decorator():
+    """Demonstrate using decorators to create aliases."""
     print("\n" + "=" * 60)
-    print("DEPRECATED @register DECORATOR")
+    print("DECORATORS FOR ALIASES")
     print("=" * 60)
     
-    print("\nThe @register decorator is deprecated in v0.3.0.")
-    print("Use entry points in pyproject.toml instead:")
-    print()
-    print('  [project.entry-points."pyapu.providers"]')
-    print('  my_provider = "my_package:MyProvider"')
-    print()
-    
-    # Show the deprecation warning
     PluginRegistry.clear()
     
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
+    print("\nUse decorators to register the same plugin under multiple names:")
+    
+    # A provider registered via inheritance AND decorator
+    @register("provider", name="premium")
+    class PremiumProvider(Provider, name="pro"):
+        """Accessible as both 'pro' AND 'premium'"""
+        priority = 95
+        cost = 2.0
+        capabilities = ["premium"]
         
-        @register("provider", name="deprecated_example")
-        class DeprecatedStyleProvider(Provider):
-            pyapu_plugin_version = "1.0"
-            priority = 50
-            cost = 1.0
-            capabilities = []
-            def process(self, *args, **kwargs): pass
-        
-        if w:
-            print(f"DeprecationWarning raised: {len(w)} warning(s)")
-            print(f"Message excerpt: ...Use entry points in pyproject.toml...")
+        def process(self, *args, **kwargs):
+            return {"premium": True}
+    
+    print(f"\nRegistered names: {PluginRegistry.list_names('provider')}")
+    print(f"'pro' found: {PluginRegistry.get('provider', 'pro') is not None}")
+    print(f"'premium' found: {PluginRegistry.get('provider', 'premium') is not None}")
+    print(f"Same class? {PluginRegistry.get('provider', 'pro') is PluginRegistry.get('provider', 'premium')}")
 
 
 def demo_cli_commands():
@@ -334,15 +337,16 @@ Available commands:
 
 
 def demo_custom_validator_v2():
-    """Demonstrate a v2-compliant validator."""
+    """Demonstrate a v2-compliant validator with auto-registration."""
     print("\n" + "=" * 60)
-    print("V2-COMPLIANT VALIDATOR")
+    print("V2-COMPLIANT VALIDATOR (Auto-Registered)")
     print("=" * 60)
     
+    PluginRegistry.clear('validator')
+    
+    # Auto-registered as 'invoicevalidator'
     class InvoiceValidator(Validator):
-        """Validates invoice data with business rules."""
-        
-        pyapu_plugin_version = "1.0"
+        """Validates invoice data with business rules - auto-registered!"""
         priority = 60
         
         def validate(self, data, schema=None):
@@ -366,10 +370,8 @@ def demo_custom_validator_v2():
                 data=data,
                 issues=issues
             )
-        
-        @classmethod
-        def health_check(cls) -> bool:
-            return True
+    
+    print(f"\nAuto-registered validators: {PluginRegistry.list_names('validator')}")
     
     validator = InvoiceValidator()
     
@@ -392,10 +394,10 @@ if __name__ == "__main__":
     demo_v2_plugin_attributes()
     demo_lazy_loading()
     demo_plugin_listing()
-    demo_v2_compliant_provider()
+    demo_auto_registration()
     demo_priority_sorting()
     demo_hooks()
-    demo_deprecated_decorator()
+    demo_aliases_with_decorator()
     demo_cli_commands()
     demo_custom_validator_v2()
     

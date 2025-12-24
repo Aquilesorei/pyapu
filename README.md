@@ -11,7 +11,7 @@
 
 ## Features
 
-- **Plugin System v2** — Lazy loading, entry points, priority-based ordering
+- **Plugin System v2** — Auto-registration via inheritance, lazy loading, entry points
 - **CLI Tooling** — `pyapu plugins list|info|refresh` commands
 - **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, and custom endpoints
 - **Universal Document Support** — PDFs, images, Excel, and custom formats
@@ -94,53 +94,35 @@ pyapu plugins refresh
 
 ## Plugin System
 
-**Everything is pluggable.** Register via entry points (recommended) or manually:
-
-### Entry Points (Recommended)
-
-Works with pip, Poetry, Flit, or any PEP 517 build tool:
-
-**pyproject.toml** (modern standard):
-
-```toml
-[project.entry-points."pyapu.providers"]
-my_provider = "my_package:MyProvider"
-```
-
-**setup.cfg** (setuptools):
-
-```ini
-[options.entry_points]
-pyapu.providers =
-    my_provider = my_package:MyProvider
-```
-
-**setup.py** (legacy):
-
-```python
-setup(
-    entry_points={
-        "pyapu.providers": [
-            "my_provider = my_package:MyProvider",
-        ],
-    },
-)
-```
+**Everything is pluggable.** Just inherit from a base class:
 
 ```python
 from pyapu.plugins import Provider
 
 class MyProvider(Provider):
-    # All attributes inherited from base class:
-    # pyapu_plugin_version = "1.0"
-    # priority = 50
-    # cost = 1.0
-
+    """Auto-registered as 'myprovider'"""
     capabilities = ["vision"]
 
     def process(self, file_path, prompt, schema, mime_type, **kwargs):
         # Your LLM logic
         ...
+
+# Customize with class arguments
+class FastProvider(Provider, name="fast"):
+    """Registered as 'fast' with high priority"""
+    priority = 90  # Class attribute
+    cost = 0.5
+
+    def process(self, ...): ...
+```
+
+### For Distributable Packages
+
+Use entry points in `pyproject.toml`:
+
+```toml
+[project.entry-points."pyapu.providers"]
+my_provider = "my_package:MyProvider"
 ```
 
 ### Plugin Types

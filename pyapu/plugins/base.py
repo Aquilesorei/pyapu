@@ -1,11 +1,63 @@
 """
 Abstract base classes for all plugin types.
+
+Subclassing these base classes auto-registers plugins with the PluginRegistry.
+Abstract classes (with unimplemented @abstractmethod) are NOT registered.
+
+Example:
+    >>> class MyProvider(Provider):
+    ...     def process(self, ...): ...
+    # Auto-registered as "myprovider"
+    
+    >>> class CustomProvider(Provider, name="custom", priority=90):
+    ...     def process(self, ...): ...
+    # Auto-registered as "custom" with priority 90
+    
+    >>> class BaseProvider(Provider, register=False):
+    ...     pass
+    # NOT registered (explicit opt-out)
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
+from .plugin_type import PluginType
 from ..types import Schema
+
+
+def _auto_register(
+    cls,
+    plugin_type: str,
+    name: Optional[str] = None,
+    register: bool = True,
+    **kwargs
+) -> None:
+    """
+    Helper to auto-register a plugin class via __init_subclass__.
+    
+    Skips registration if:
+    - register=False (explicit opt-out)
+    - Class still has abstract methods (intermediate base class)
+    """
+    if not register:
+        return
+    
+    # Check if class is still abstract by looking for unimplemented abstract methods.
+    # We can't use __abstractmethods__ directly because it's not set yet when
+    # __init_subclass__ is called. Instead, we check if any parent's abstract
+    # methods are NOT overridden in this class's own __dict__.
+    for base in cls.__mro__[1:]:  # Skip cls itself
+        for attr_name in getattr(base, "__abstractmethods__", ()):
+            # Check if this class provides its own implementation
+            if attr_name not in cls.__dict__:
+                # Still abstract - don't register
+                return
+    
+    # Import here to avoid circular imports
+    from .registry import PluginRegistry
+    
+    plugin_name = name or cls.__name__.lower()
+    PluginRegistry.register(plugin_type, plugin_name, cls)
 
 
 class Provider(ABC):
@@ -14,6 +66,11 @@ class Provider(ABC):
     
     All providers must implement the process method to handle
     document extraction via their specific LLM API.
+    
+    Subclassing auto-registers the plugin. Use class arguments to customize:
+    
+        class MyProvider(Provider, name="custom", priority=90):
+            ...
     
     Attributes:
         pyapu_plugin_version: API version for compatibility checks
@@ -32,7 +89,16 @@ class Provider(ABC):
     cost: float = 1.0
     
     # Declare capabilities (override in subclasses)
-    capabilities: list = []
+    capabilities: List[str] = []
+    
+    def __init_subclass__(
+        cls,
+        name: Optional[str] = None,
+        register: bool = True,
+        **kwargs
+    ) -> None:
+        super().__init_subclass__(**kwargs)
+        _auto_register(cls, PluginType.PROVIDER, name=name, register=register)
     
     @abstractmethod
     def process(
@@ -96,6 +162,8 @@ class Extractor(ABC):
     Extractors convert raw document bytes into text or structured
     content that can be sent to an LLM.
     
+    Subclassing auto-registers the plugin.
+    
     Attributes:
         pyapu_plugin_version: API version for compatibility checks
         priority: Ordering priority for waterfall chains
@@ -109,7 +177,16 @@ class Extractor(ABC):
     priority: int = 50
     
     # MIME types this extractor handles
-    supported_mime_types: list = []
+    supported_mime_types: List[str] = []
+    
+    def __init_subclass__(
+        cls,
+        name: Optional[str] = None,
+        register: bool = True,
+        **kwargs
+    ) -> None:
+        super().__init_subclass__(**kwargs)
+        _auto_register(cls, PluginType.EXTRACTOR, name=name, register=register)
     
     @abstractmethod
     def extract(self, file_path: str) -> str:
@@ -141,6 +218,8 @@ class Validator(ABC):
     Validators check extracted data for correctness and can
     optionally fix issues.
     
+    Subclassing auto-registers the plugin.
+    
     Attributes:
         pyapu_plugin_version: API version for compatibility checks
         priority: Ordering priority in validation chain
@@ -151,6 +230,15 @@ class Validator(ABC):
     
     # Priority in validation chain
     priority: int = 50
+    
+    def __init_subclass__(
+        cls,
+        name: Optional[str] = None,
+        register: bool = True,
+        **kwargs
+    ) -> None:
+        super().__init_subclass__(**kwargs)
+        _auto_register(cls, PluginType.VALIDATOR, name=name, register=register)
     
     @abstractmethod
     def validate(self, data: Dict[str, Any], schema: Optional[Schema] = None) -> "ValidationResult":
@@ -198,6 +286,8 @@ class Postprocessor(ABC):
     Postprocessors transform extracted data (e.g., normalize dates,
     convert currencies, standardize units).
     
+    Subclassing auto-registers the plugin.
+    
     Attributes:
         pyapu_plugin_version: API version for compatibility checks
         priority: Ordering priority in postprocessing pipeline
@@ -208,6 +298,15 @@ class Postprocessor(ABC):
     
     # Priority in postprocessing pipeline
     priority: int = 50
+    
+    def __init_subclass__(
+        cls,
+        name: Optional[str] = None,
+        register: bool = True,
+        **kwargs
+    ) -> None:
+        super().__init_subclass__(**kwargs)
+        _auto_register(cls, PluginType.POSTPROCESSOR, name=name, register=register)
     
     @abstractmethod
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -235,6 +334,8 @@ class SecurityPlugin(ABC):
     Security plugins can validate/sanitize input before sending
     to the LLM and validate output before returning to the user.
     
+    Subclassing auto-registers the plugin.
+    
     Attributes:
         pyapu_plugin_version: API version for compatibility checks
         priority: Ordering priority in security chain
@@ -245,6 +346,15 @@ class SecurityPlugin(ABC):
     
     # Priority in security chain
     priority: int = 50
+    
+    def __init_subclass__(
+        cls,
+        name: Optional[str] = None,
+        register: bool = True,
+        **kwargs
+    ) -> None:
+        super().__init_subclass__(**kwargs)
+        _auto_register(cls, PluginType.SECURITY, name=name, register=register)
     
     def validate_input(self, text: str) -> "SecurityResult":
         """

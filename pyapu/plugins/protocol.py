@@ -14,27 +14,12 @@ Example:
 from enum import StrEnum
 from typing import Any, Dict, List, Optional, Protocol, TYPE_CHECKING, runtime_checkable
 
+from pyapu.plugins.plugin_type import PluginType
+
 # Plugin API version for compatibility checks
 PLUGIN_API_VERSION = "1.0"
 
 
-class PluginType(StrEnum):
-    """Enumeration of supported plugin types.
-    
-    Used for type-safe plugin type references throughout the codebase,
-    plugin registry lookups, entry point group names, and CLI commands.
-    
-    Example:
-        >>> PluginType.PROVIDER
-        'provider'
-        >>> PluginType.PROVIDER == "provider"
-        True
-    """
-    PROVIDER = "provider"
-    EXTRACTOR = "extractor"
-    VALIDATOR = "validator"
-    POSTPROCESSOR = "postprocessor"
-    SECURITY = "security"
 
 
 @runtime_checkable

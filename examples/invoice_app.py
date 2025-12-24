@@ -6,15 +6,9 @@ A complete example demonstrating all pyapu features working together:
 - Pydantic models for type-safe extraction
 - StructuredPrompt for organized prompts
 - Security layer for input/output protection
-- Custom plugins with priority ordering
+- Auto-registered plugins via inheritance
 - Pluggy hooks for pipeline extension
 - Plugin registry system
-
-NOTE: This example uses the @register decorator for demo simplicity.
-In production, use entry points in pyproject.toml instead:
-
-    [project.entry-points."pyapu.validators"]
-    invoice_validator = "my_package:InvoiceValidator"
 
 This simulates a real invoice processing pipeline.
 """
@@ -23,16 +17,12 @@ import os
 import sys
 import json
 import time
-import warnings
 from datetime import datetime
 from typing import List, Optional
 
 from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-# Suppress expected @register deprecation warnings (intentional for demo)
-warnings.filterwarnings("ignore", message="The @register decorator is deprecated")
 
 # =============================================================================
 # 1. PYDANTIC MODELS - Define your data structures
@@ -92,19 +82,18 @@ class Invoice(BaseModel):
 # =============================================================================
 
 from pyapu.plugins import (
-    register, PluginRegistry,
+    PluginRegistry,
     Validator, ValidationResult,
     Postprocessor
 )
 
 
-@register("validator", name="invoice_validator")
-class InvoiceValidator(Validator):
-    """Validates extracted invoice data with business rules."""
+class InvoiceValidator(Validator, name="invoice_validator"):
+    """Validates extracted invoice data with business rules.
     
-    # v0.3.0+: Priority determines order when multiple validators exist
-    # Higher priority runs first (default is 50)
-    priority = 60
+    Auto-registered as 'invoice_validator' with priority 60.
+    """
+    priority = 60  # Higher priority runs first (default is 50)
     
     def __init__(self, tolerance: float = 0.01):
         self.tolerance = tolerance
@@ -149,8 +138,7 @@ class InvoiceValidator(Validator):
         )
 
 
-@register("postprocessor", name="date_normalizer")
-class DateNormalizer(Postprocessor):
+class DateNormalizer(Postprocessor, name="date_normalizer"):
     """Normalizes date formats to ISO 8601."""
     
     DATE_FIELDS = ["date", "due_date", "order_date"]
@@ -179,8 +167,7 @@ class DateNormalizer(Postprocessor):
         return result
 
 
-@register("postprocessor", name="currency_normalizer")
-class CurrencyNormalizer(Postprocessor):
+class CurrencyNormalizer(Postprocessor, name="currency_normalizer"):
     """Normalizes currency values."""
     
     def process(self, data):
@@ -297,8 +284,7 @@ from pyapu.security import (
 from pyapu.plugins import SecurityPlugin, SecurityResult
 
 
-@register("security", name="pii_filter")
-class PIIFilter(SecurityPlugin):
+class PIIFilter(SecurityPlugin, name="pii_filter"):
     """Filters personally identifiable information from output."""
     
     def validate_output(self, data) -> SecurityResult:
