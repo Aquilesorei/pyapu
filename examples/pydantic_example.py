@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from pyapu import DocumentProcessor
+from strutex import DocumentProcessor
 
 
 # ===================
@@ -88,11 +88,11 @@ def main():
 
 def demo_mode():
     """Demonstrate schema conversion without API call."""
-    from pyapu import pydantic_to_schema, validate_with_pydantic
+    from strutex import pydantic_to_schema, validate_with_pydantic
     
     print("=== Schema Conversion Demo ===\n")
     
-    # Convert Pydantic model to pyapu schema
+    # Convert Pydantic model to strutex schema
     schema = pydantic_to_schema(Invoice)
     
     print(f"Schema type: {schema.type}")

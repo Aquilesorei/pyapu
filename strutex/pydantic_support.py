@@ -1,25 +1,25 @@
 """
-Pydantic model support for pyapu schemas.
+Pydantic model support for strutex schemas.
 
-Converts Pydantic BaseModel classes to pyapu Schema objects
+Converts Pydantic BaseModel classes to strutex Schema objects
 and validates extraction results against Pydantic models.
 """
 
 from typing import Any, Dict, Type, Union, get_type_hints, get_origin, get_args
 import inspect
 
-from .types import Schema, Type as PyapuType, String, Number, Integer, Boolean, Array, Object
+from .types import Schema, Type as StrutexType, String, Number, Integer, Boolean, Array, Object
 
 
 def pydantic_to_schema(model: Type) -> Schema:
     """
-    Convert a Pydantic BaseModel to a pyapu Schema.
+    Convert a Pydantic BaseModel to a strutex Schema.
     
     Args:
         model: A Pydantic BaseModel class
         
     Returns:
-        Equivalent pyapu Schema (Object)
+        Equivalent strutex Schema (Object)
         
     Example:
         from pydantic import BaseModel
@@ -71,7 +71,7 @@ def _python_type_to_schema(
     description: str = None,
     nullable: bool = False
 ) -> Schema:
-    """Convert a Python type annotation to a pyapu Schema."""
+    """Convert a Python type annotation to a strutex Schema."""
     try:
         from pydantic import BaseModel
     except ImportError:

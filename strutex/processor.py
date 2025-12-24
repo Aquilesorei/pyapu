@@ -1,7 +1,7 @@
 """
-Document processor - main entry point for pyapu extraction.
+Document processor - main entry point for strutex extraction.
 
-This module contains the core [`DocumentProcessor`][pyapu.processor.DocumentProcessor]
+This module contains the core [`DocumentProcessor`][strutex.processor.DocumentProcessor]
 class that orchestrates document extraction using pluggable LLM providers.
 """
 
@@ -30,7 +30,7 @@ class DocumentProcessor:
         Basic usage with schema:
 
         ```python
-        from pyapu import DocumentProcessor, Object, String, Number
+        from strutex import DocumentProcessor, Object, String, Number
 
         schema = Object(properties={
             "invoice_number": String(),
@@ -58,7 +58,7 @@ class DocumentProcessor:
         With security enabled:
 
         ```python
-        from pyapu.security import default_security_chain
+        from strutex.security import default_security_chain
 
         processor = DocumentProcessor(
             provider="gemini",
@@ -79,12 +79,12 @@ class DocumentProcessor:
 
         Args:
             provider: Provider name (e.g., "gemini", "openai") or a
-                [`Provider`][pyapu.plugins.base.Provider] instance.
+                [`Provider`][strutex.plugins.base.Provider] instance.
             model_name: LLM model name to use (only when provider is a string).
             api_key: API key for the provider. Falls back to environment variables
                 (e.g., `GOOGLE_API_KEY` for Gemini).
-            security: Optional [`SecurityPlugin`][pyapu.plugins.base.SecurityPlugin]
-                or [`SecurityChain`][pyapu.security.chain.SecurityChain] for
+            security: Optional [`SecurityPlugin`][strutex.plugins.base.SecurityPlugin]
+                or [`SecurityChain`][strutex.security.chain.SecurityChain] for
                 input/output validation. Security is opt-in.
 
         Raises:
@@ -96,7 +96,7 @@ class DocumentProcessor:
             processor = DocumentProcessor(provider="gemini")
 
             # Using provider instance
-            from pyapu.providers import GeminiProvider
+            from strutex.providers import GeminiProvider
             processor = DocumentProcessor(provider=GeminiProvider(api_key="..."))
             ```
         """
@@ -140,7 +140,7 @@ class DocumentProcessor:
         Args:
             file_path: Absolute path to the source file (PDF, Excel, or Image).
             prompt: Natural language instruction for extraction.
-            schema: A [`Schema`][pyapu.types.Schema] definition. Mutually exclusive
+            schema: A [`Schema`][strutex.types.Schema] definition. Mutually exclusive
                 with `model`.
             model: A Pydantic `BaseModel` class. Mutually exclusive with `schema`.
                 If provided, returns a validated Pydantic instance.
@@ -247,7 +247,7 @@ class SecurityError(Exception):
 
     Example:
         ```python
-        from pyapu.processor import SecurityError
+        from strutex.processor import SecurityError
 
         try:
             result = processor.process(file, prompt, schema, security=True)

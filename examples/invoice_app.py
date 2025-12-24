@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Invoice Processing App - Full pyapu Demo (v0.3.0)
+Invoice Processing App - Full strutex Demo (v0.3.0)
 
-A complete example demonstrating all pyapu features working together:
+A complete example demonstrating all strutex features working together:
 - Pydantic models for type-safe extraction
 - StructuredPrompt for organized prompts
 - Security layer for input/output protection
@@ -81,7 +81,7 @@ class Invoice(BaseModel):
 # 2. CUSTOM PLUGINS - Business logic extensions
 # =============================================================================
 
-from pyapu.plugins import (
+from strutex.plugins import (
     PluginRegistry,
     Validator, ValidationResult,
     Postprocessor
@@ -191,7 +191,7 @@ class CurrencyNormalizer(Postprocessor, name="currency_normalizer"):
 # 3. PROMPT BUILDER - Structured extraction instructions
 # =============================================================================
 
-from pyapu import StructuredPrompt
+from strutex import StructuredPrompt
 
 
 def build_invoice_prompt(language: str = "en") -> str:
@@ -275,13 +275,13 @@ def build_invoice_prompt(language: str = "en") -> str:
 # 4. SECURITY LAYER - Input/Output protection
 # =============================================================================
 
-from pyapu.security import (
+from strutex.security import (
     SecurityChain,
     InputSanitizer,
     PromptInjectionDetector,
     OutputValidator
 )
-from pyapu.plugins import SecurityPlugin, SecurityResult
+from strutex.plugins import SecurityPlugin, SecurityResult
 
 
 class PIIFilter(SecurityPlugin, name="pii_filter"):
@@ -341,8 +341,8 @@ def create_security_chain(strict: bool = False) -> SecurityChain:
 # 5. HOOKS - Pipeline extension (v0.3.0+)
 # =============================================================================
 
-from pyapu.plugins import hookimpl, register_hook_plugin
-from pyapu.plugins.hooks import PLUGGY_AVAILABLE
+from strutex.plugins import hookimpl, register_hook_plugin
+from strutex.plugins.hooks import PLUGGY_AVAILABLE
 
 
 class InvoiceProcessingHooks:
@@ -406,8 +406,8 @@ def get_invoice_hooks():
 # 6. INVOICE PROCESSOR - Main application logic
 # =============================================================================
 
-from pyapu import DocumentProcessor
-from pyapu.processor import SecurityError
+from strutex import DocumentProcessor
+from strutex.processor import SecurityError
 
 
 class InvoiceProcessorApp:

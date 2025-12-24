@@ -6,7 +6,7 @@ the installed Python packages. The cache is invalidated when
 packages are installed or removed.
 
 Example:
-    >>> from pyapu.plugins.discovery import PluginDiscovery
+    >>> from strutex.plugins.discovery import PluginDiscovery
     >>> 
     >>> # Discover with caching
     >>> plugins = PluginDiscovery.discover()
@@ -29,24 +29,24 @@ class PluginDiscovery:
     Caches discovery results based on a hash of installed distributions.
     This avoids expensive re-scanning of entry points on every import.
     
-    The cache is stored in ~/.cache/pyapu/plugins.json and is automatically
+    The cache is stored in ~/.cache/strutex/plugins.json and is automatically
     invalidated when packages are installed or removed.
     """
     
-    _cache_dir = Path.home() / ".cache" / "pyapu"
+    _cache_dir = Path.home() / ".cache" / "strutex"
     _cache_file = _cache_dir / "plugins.json"
     
     @classmethod
     def discover(
         cls,
-        group_prefix: str = "pyapu",
+        group_prefix: str = "strutex",
         force_refresh: bool = False
     ) -> Dict[str, List[Dict[str, str]]]:
         """
         Discover plugins with caching.
         
         Args:
-            group_prefix: Entry point group prefix (default: "pyapu")
+            group_prefix: Entry point group prefix (default: "strutex")
             force_refresh: Skip cache and re-discover
             
         Returns:

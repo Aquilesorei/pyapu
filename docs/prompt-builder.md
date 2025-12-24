@@ -7,7 +7,7 @@ Build structured, organized prompts with the `StructuredPrompt` fluent API.
 ## Basic Usage
 
 ```python
-from pyapu import StructuredPrompt
+from strutex import StructuredPrompt
 
 prompt = (
     StructuredPrompt()
@@ -96,7 +96,7 @@ prompt = StructuredPrompt(
 ## Complete Example
 
 ```python
-from pyapu import StructuredPrompt
+from strutex import StructuredPrompt
 
 prompt = (
     StructuredPrompt(
@@ -136,7 +136,7 @@ prompt = (
 ## Using with Processor
 
 ```python
-from pyapu import DocumentProcessor, StructuredPrompt
+from strutex import DocumentProcessor, StructuredPrompt
 
 prompt = (
     StructuredPrompt()

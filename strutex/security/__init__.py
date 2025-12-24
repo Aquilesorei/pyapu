@@ -1,5 +1,5 @@
 """
-Security layer for pyapu.
+Security layer for strutex.
 
 Provides pluggable security plugins for input sanitization,
 prompt injection detection, and output validation.

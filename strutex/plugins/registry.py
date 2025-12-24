@@ -1,7 +1,7 @@
 """
 Plugin registry with lazy loading and entry point discovery.
 
-This module provides the central registry for all pyapu plugins. It supports:
+This module provides the central registry for all strutex plugins. It supports:
 - Lazy loading: Plugins are only imported when first used
 - Entry points: Auto-discover plugins from installed packages
 - Decorator registration: Backwards-compatible @register decorator
@@ -14,7 +14,7 @@ Example:
     
     # List all discovered plugins
     >>> PluginRegistry.list("provider")
-    {'gemini': <class 'pyapu.providers.gemini.GeminiProvider'>}
+    {'gemini': <class 'strutex.providers.gemini.GeminiProvider'>}
 """
 
 import sys
@@ -150,7 +150,7 @@ class PluginRegistry:
             
             # Check API version compatibility
             if not check_plugin_version(plugin_cls):
-                version = getattr(plugin_cls, "pyapu_plugin_version", "unknown")
+                version = getattr(plugin_cls, "strutex_plugin_version", "unknown")
                 warnings.warn(
                     f"Plugin '{name}' has incompatible API version {version} "
                     f"(expected {PLUGIN_API_VERSION}). It may not work correctly.",
@@ -282,7 +282,7 @@ class PluginRegistry:
             plugin_cls = cls._loaded[plugin_type][name_lower]
             return {
                 "name": name_lower,
-                "version": getattr(plugin_cls, "pyapu_plugin_version", "unknown"),
+                "version": getattr(plugin_cls, "strutex_plugin_version", "unknown"),
                 "priority": getattr(plugin_cls, "priority", 50),
                 "cost": getattr(plugin_cls, "cost", 1.0),
                 "capabilities": getattr(plugin_cls, "capabilities", []),
@@ -331,29 +331,29 @@ class PluginRegistry:
             cls._discovered = False
     
     @classmethod
-    def discover(cls, group_prefix: str = "pyapu", force: bool = False) -> int:
+    def discover(cls, group_prefix: str = "strutex", force: bool = False) -> int:
         """
         Discover and register plugins from entry points.
         
         Scans for entry points matching the pattern:
-        - pyapu.providers
-        - pyapu.validators
-        - pyapu.postprocessors
-        - pyapu.security
+        - strutex.providers
+        - strutex.validators
+        - strutex.postprocessors
+        - strutex.security
         - etc.
         
         Entry points are stored for lazy loading - they are not imported
         until first use via get().
         
         Args:
-            group_prefix: Entry point group prefix (default: "pyapu")
+            group_prefix: Entry point group prefix (default: "strutex")
             force: Force re-discovery even if already discovered
             
         Returns:
             Number of entry points discovered
             
         Example pyproject.toml:
-            [project.entry-points."pyapu.providers"]
+            [project.entry-points."strutex.providers"]
             my_provider = "my_package:MyProvider"
         """
         if cls._discovered and not force:
@@ -390,7 +390,7 @@ class PluginRegistry:
         
         for group in groups:
             # Extract plugin type from group name
-            # e.g., "pyapu.providers" -> "provider"
+            # e.g., "strutex.providers" -> "provider"
             plugin_type = group.replace(f"{group_prefix}.", "").rstrip("s")
             
             if plugin_type not in cls._entry_points:
@@ -447,7 +447,7 @@ def register(
     See Also:
         Entry points in pyproject.toml for distributable packages:
         
-            [project.entry-points."pyapu.providers"]
+            [project.entry-points."strutex.providers"]
             my_provider = "my_package:MyProvider"
     """
     def decorator(cls: Type) -> Type:

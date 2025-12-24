@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Basic pyapu usage example.
+Basic strutex usage example.
 
 Demonstrates:
 - Schema definition with Object, String, Number, Array
@@ -12,7 +12,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu import DocumentProcessor, Object, String, Number, Array, Integer
+from strutex import DocumentProcessor, Object, String, Number, Array, Integer
 
 
 def main():

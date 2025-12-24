@@ -1,6 +1,6 @@
 # Plugin System
 
-Everything in pyapu is pluggable. Use defaults or register your own implementations.
+Everything in strutex is pluggable. Use defaults or register your own implementations.
 
 !!! note "New in v0.3.0"
 Plugin System v2 introduces auto-registration via inheritance, lazy loading, entry points, priority-based ordering, and CLI tooling.
@@ -20,7 +20,7 @@ Plugin System v2 introduces auto-registration via inheritance, lazy loading, ent
 The `PluginType` enum provides type-safe access to these types:
 
 ```python
-from pyapu.plugins import PluginType
+from strutex.plugins import PluginType
 
 PluginType.PROVIDER      # "provider"
 PluginType.EXTRACTOR     # "extractor"
@@ -38,7 +38,7 @@ PluginType.SECURITY      # "security"
 Simply inherit from a base class and your plugin is automatically registered:
 
 ```python
-from pyapu.plugins import Provider
+from strutex.plugins import Provider
 
 class MyProvider(Provider):
     """Auto-registered as 'myprovider'"""
@@ -90,7 +90,7 @@ Classes with unimplemented `@abstractmethod`s are automatically skipped - no nee
 
 | Attribute              | Type    | Default | Description                                    |
 | ---------------------- | ------- | ------- | ---------------------------------------------- |
-| `pyapu_plugin_version` | `str`   | `"1.0"` | API version for compatibility                  |
+| `strutex_plugin_version` | `str`   | `"1.0"` | API version for compatibility                  |
 | `priority`             | `int`   | `50`    | Order in waterfall (0-100, higher = preferred) |
 | `cost`                 | `float` | `1.0`   | Cost hint (lower = cheaper)                    |
 | `capabilities`         | `list`  | `[]`    | Features this plugin supports                  |
@@ -118,10 +118,10 @@ class MyProvider(Provider, name="custom"):
 For distributable packages, register in `pyproject.toml`:
 
 ```toml title="pyproject.toml"
-[project.entry-points."pyapu.providers"]
+[project.entry-points."strutex.providers"]
 my_provider = "my_package:MyProvider"
 
-[project.entry-points."pyapu.validators"]
+[project.entry-points."strutex.validators"]
 my_validator = "my_package:MyValidator"
 ```
 
@@ -132,7 +132,7 @@ Plugins are **lazy loaded** — only imported when first used.
 Use decorators to register the same plugin under multiple names:
 
 ```python
-from pyapu.plugins import register, Provider
+from strutex.plugins import register, Provider
 
 @register("provider", name="fast_v1")
 class FastProvider(Provider, name="fast"):
@@ -144,7 +144,7 @@ class FastProvider(Provider, name="fast"):
 ### 4. Manual Registration
 
 ```python
-from pyapu.plugins import PluginRegistry
+from strutex.plugins import PluginRegistry
 
 PluginRegistry.register("provider", "my_provider", MyProvider)
 ```
@@ -155,19 +155,19 @@ PluginRegistry.register("provider", "my_provider", MyProvider)
 
 ```bash
 # List all plugins
-pyapu plugins list
+strutex plugins list
 
 # Filter by type
-pyapu plugins list --type provider
+strutex plugins list --type provider
 
 # JSON output
-pyapu plugins list --json
+strutex plugins list --json
 
 # Plugin details
-pyapu plugins info gemini --type provider
+strutex plugins info gemini --type provider
 
 # Refresh discovery cache
-pyapu plugins refresh
+strutex plugins refresh
 ```
 
 Example output:
@@ -186,7 +186,7 @@ PROVIDERS
 Plugins are discovered but not loaded until first use:
 
 ```python
-from pyapu.plugins import PluginRegistry
+from strutex.plugins import PluginRegistry
 
 PluginRegistry.discover()
 
@@ -209,7 +209,7 @@ print(info["loaded"])  # True
 ### Custom Provider
 
 ```python
-from pyapu.plugins import Provider
+from strutex.plugins import Provider
 
 class OllamaProvider(Provider):
     # Optional overrides
@@ -236,7 +236,7 @@ class OllamaProvider(Provider):
 ### Custom Validator
 
 ```python
-from pyapu.plugins import Validator, ValidationResult
+from strutex.plugins import Validator, ValidationResult
 
 class SumValidator(Validator):
     """Verify line items sum to total."""
@@ -258,7 +258,7 @@ class SumValidator(Validator):
 ### Custom Postprocessor
 
 ```python
-from pyapu.plugins import Postprocessor
+from strutex.plugins import Postprocessor
 import re
 
 class DateNormalizer(Postprocessor):
@@ -281,16 +281,16 @@ class DateNormalizer(Postprocessor):
 Extend the processing pipeline with hooks:
 
 ```python
-from pyapu.plugins import hookimpl, register_hook_plugin
+from strutex.plugins import hookimpl, register_hook_plugin
 
 class LoggingPlugin:
     @hookimpl
-    def pyapu_pre_process(self, file_path, prompt, schema, mime_type, context):
+    def strutex_pre_process(self, file_path, prompt, schema, mime_type, context):
         context["start_time"] = time.time()
         print(f"Processing: {file_path}")
 
     @hookimpl
-    def pyapu_post_process(self, result, context):
+    def strutex_post_process(self, result, context):
         elapsed = time.time() - context["start_time"]
         print(f"Completed in {elapsed:.2f}s")
 
@@ -302,19 +302,19 @@ Available hooks:
 
 | Hook                 | When              | Purpose                |
 | -------------------- | ----------------- | ---------------------- |
-| `pyapu_pre_process`  | Before extraction | Modify inputs, logging |
-| `pyapu_post_process` | After extraction  | Transform results      |
-| `pyapu_on_error`     | On failure        | Error recovery         |
+| `strutex_pre_process`  | Before extraction | Modify inputs, logging |
+| `strutex_post_process` | After extraction  | Transform results      |
+| `strutex_on_error`     | On failure        | Error recovery         |
 
 ---
 
 ## API Reference
 
-::: pyapu.plugins.PluginRegistry
+::: strutex.plugins.PluginRegistry
 options:
 show_root_heading: true
 members: - register - get - list - discover
 
-::: pyapu.plugins.Provider
+::: strutex.plugins.Provider
 options:
 show_root_heading: true

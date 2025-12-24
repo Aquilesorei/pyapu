@@ -43,7 +43,7 @@ def _perform_ocr(file_path: str) -> str:
         logger.warning(
             f"Scanned document detected: {file_path}. "
             "OCR dependencies (pytesseract, pdf2image) are not installed. "
-            "To process this file, install 'pyapu[ocr]' and the Tesseract system binary."
+            "To process this file, install 'strutex[ocr]' and the Tesseract system binary."
         )
         return ""
 

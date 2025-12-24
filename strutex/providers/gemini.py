@@ -11,8 +11,8 @@ from ..adapters import SchemaAdapter
 
 
 # Note: GeminiProvider is registered via entry point in pyproject.toml:
-# [tool.poetry.plugins."pyapu.providers"]
-# gemini = "pyapu.providers.gemini:GeminiProvider"
+# [tool.poetry.plugins."strutex.providers"]
+# gemini = "strutex.providers.gemini:GeminiProvider"
 
 class GeminiProvider(Provider):
     """
@@ -28,7 +28,7 @@ class GeminiProvider(Provider):
     """
     
     # Plugin v2 attributes
-    pyapu_plugin_version = "1.0"
+    strutex_plugin_version = "1.0"
     priority = 50
     cost = 1.0
     capabilities = ["vision"]

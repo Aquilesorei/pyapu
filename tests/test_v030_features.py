@@ -1,5 +1,5 @@
 """
-Tests for pyapu v0.3.0 Plugin System v2 features.
+Tests for strutex v0.3.0 Plugin System v2 features.
 
 Tests:
 - Lazy loading
@@ -17,7 +17,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.plugins import (
+from strutex.plugins import (
     PluginRegistry,
     Provider,
     Validator,
@@ -28,7 +28,7 @@ from pyapu.plugins import (
     check_plugin_version,
     validate_plugin_protocol,
 )
-from pyapu.plugins.hooks import (
+from strutex.plugins.hooks import (
     hookimpl,
     get_plugin_manager,
     register_hook_plugin,
@@ -36,7 +36,7 @@ from pyapu.plugins.hooks import (
     call_hook,
     PLUGGY_AVAILABLE,
 )
-from pyapu.plugins.discovery import PluginDiscovery
+from strutex.plugins.discovery import PluginDiscovery
 
 
 class TestLazyLoading:
@@ -175,7 +175,7 @@ class TestProtocols:
     def test_check_plugin_version_valid(self):
         """check_plugin_version should return True for valid version."""
         class ValidPlugin(Provider):
-            pyapu_plugin_version = "1.0"
+            strutex_plugin_version = "1.0"
             capabilities = []
             def process(self, *args, **kwargs): pass
         
@@ -184,7 +184,7 @@ class TestProtocols:
     def test_check_plugin_version_invalid(self):
         """check_plugin_version should return False for invalid version."""
         class InvalidPlugin(Provider):
-            pyapu_plugin_version = "99.0"
+            strutex_plugin_version = "99.0"
             capabilities = []
             def process(self, *args, **kwargs): pass
         
@@ -209,7 +209,7 @@ class TestPluginAttributes:
             capabilities = []
             def process(self, *args, **kwargs): pass
         
-        assert TestProvider.pyapu_plugin_version == "1.0"
+        assert TestProvider.strutex_plugin_version == "1.0"
     
     def test_provider_inherits_priority(self):
         """Provider subclass should inherit default priority."""
@@ -321,7 +321,7 @@ class TestPluginInfo:
     def test_get_plugin_info_returns_dict(self):
         """get_plugin_info should return a dict."""
         class TestProvider(Provider):
-            pyapu_plugin_version = "1.0"
+            strutex_plugin_version = "1.0"
             priority = 60
             cost = 0.5
             capabilities = ["test"]
@@ -350,9 +350,9 @@ class TestSandbox:
     
     def test_probe_plugin_metadata_returns_dict(self):
         """probe_plugin_metadata should return a dict."""
-        from pyapu.plugins.sandbox import probe_plugin_metadata
+        from strutex.plugins.sandbox import probe_plugin_metadata
         
-        result = probe_plugin_metadata("pyapu.providers", "gemini", timeout=5.0)
+        result = probe_plugin_metadata("strutex.providers", "gemini", timeout=5.0)
         
         assert isinstance(result, dict)
         assert "name" in result
@@ -360,9 +360,9 @@ class TestSandbox:
     
     def test_is_plugin_safe_returns_bool(self):
         """is_plugin_safe should return a bool."""
-        from pyapu.plugins.sandbox import is_plugin_safe
+        from strutex.plugins.sandbox import is_plugin_safe
         
-        result = is_plugin_safe("pyapu.providers", "gemini")
+        result = is_plugin_safe("strutex.providers", "gemini")
         assert isinstance(result, bool)
 
 
@@ -375,7 +375,7 @@ class TestRegisterDecorator:
     def test_register_does_not_emit_deprecation_warning(self):
         """@register should NOT emit DeprecationWarning (no longer deprecated)."""
         import warnings
-        from pyapu.plugins import register
+        from strutex.plugins import register
         
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
@@ -391,7 +391,7 @@ class TestRegisterDecorator:
     
     def test_register_creates_alias(self):
         """@register should create an alias alongside auto-registration."""
-        from pyapu.plugins import register
+        from strutex.plugins import register
         
         @register("provider", name="my_alias")
         class MyProvider(Provider):

@@ -8,7 +8,7 @@ Use Pydantic models for type-safe document extraction with automatic validation.
 
 ```python
 from pydantic import BaseModel, Field
-from pyapu import DocumentProcessor
+from strutex import DocumentProcessor
 
 class Invoice(BaseModel):
     invoice_number: str = Field(description="Unique ID")
@@ -76,10 +76,10 @@ class Invoice(BaseModel):
 
 ## Manual Conversion
 
-You can also convert Pydantic models to pyapu schemas manually:
+You can also convert Pydantic models to strutex schemas manually:
 
 ```python
-from pyapu import pydantic_to_schema, validate_with_pydantic
+from strutex import pydantic_to_schema, validate_with_pydantic
 
 # Convert model to schema
 schema = pydantic_to_schema(Invoice)

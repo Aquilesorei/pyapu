@@ -1,18 +1,18 @@
-# pyapu
+# strutex
 
-> **py**thon **A**I **P**DF **U**tilities — Extract structured JSON from documents using LLMs
+> **Stru**ctured **T**ext **Ex**traction — Extract structured JSON from documents using LLMs
 
-[![CI](https://github.com/Aquilesorei/pyapu/actions/workflows/ci.yml/badge.svg)](https://github.com/Aquilesorei/pyapu/actions/workflows/ci.yml)
+[![CI](https://github.com/Aquilesorei/strutex/actions/workflows/ci.yml/badge.svg)](https://github.com/Aquilesorei/strutex/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/pypi/v/pyapu.svg)](https://pypi.org/project/pyapu/)
+[![PyPI](https://img.shields.io/pypi/v/strutex.svg)](https://pypi.org/project/strutex/)
 
 ---
 
 ## Features
 
 - **Plugin System v2** — Auto-registration via inheritance, lazy loading, entry points
-- **CLI Tooling** — `pyapu plugins list|info|refresh` commands
+- **CLI Tooling** — `strutex plugins list|info|refresh` commands
 - **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, and custom endpoints
 - **Universal Document Support** — PDFs, images, Excel, and custom formats
 - **Schema-Driven Extraction** — Define your output structure, get consistent JSON
@@ -26,22 +26,22 @@
 
 ```bash
 # Core only
-pip install pyapu
+pip install strutex
 
 # With CLI commands
-pip install pyapu[cli]
+pip install strutex[cli]
 
 # With OCR support
-pip install pyapu[ocr]
+pip install strutex[ocr]
 
 # Everything
-pip install pyapu[all]
+pip install strutex[all]
 ```
 
 ### Basic Usage
 
 ```python
-from pyapu import DocumentProcessor, Object, String, Number, Array
+from strutex import DocumentProcessor, Object, String, Number, Array
 
 # Define your output schema
 invoice_schema = Object(
@@ -78,16 +78,16 @@ print(result["total"])           # 1250.00
 
 ```bash
 # List all plugins
-pyapu plugins list
+strutex plugins list
 
 # Filter by type
-pyapu plugins list --type provider
+strutex plugins list --type provider
 
 # Get plugin details
-pyapu plugins info gemini --type provider
+strutex plugins info gemini --type provider
 
 # Refresh discovery cache
-pyapu plugins refresh
+strutex plugins refresh
 ```
 
 ---
@@ -97,7 +97,7 @@ pyapu plugins refresh
 **Everything is pluggable.** Just inherit from a base class:
 
 ```python
-from pyapu.plugins import Provider
+from strutex.plugins import Provider
 
 class MyProvider(Provider):
     """Auto-registered as 'myprovider'"""
@@ -121,7 +121,7 @@ class FastProvider(Provider, name="fast"):
 Use entry points in `pyproject.toml`:
 
 ```toml
-[project.entry-points."pyapu.providers"]
+[project.entry-points."strutex.providers"]
 my_provider = "my_package:MyProvider"
 ```
 
@@ -163,7 +163,7 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan.
 
 ## Documentation
 
-📚 **[Read the Docs](https://aquilesorei.github.io/pyapu/latest/)**
+📚 **[Read the Docs](https://aquilesorei.github.io/strutex/latest/)**
 
 ```bash
 # Install docs dependencies

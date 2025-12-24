@@ -1,22 +1,22 @@
 [tool.poetry]
-name = "pyapu"
+name = "strutex"
 version = "0.4.1"
 description = "Structured AI document processing with robust fallback strategies."
 authors = ["aquiles <achillezongo07@gmail.com>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-homepage = "https://github.com/Aquilesorei/pyapu"
-repository = "https://github.com/Aquilesorei/pyapu"
+homepage = "https://github.com/Aquilesorei/strutex"
+repository = "https://github.com/Aquilesorei/strutex"
 keywords = ["pdf", "ai", "llm", "extraction", "json"]
 
-[tool.poetry.plugins."pyapu.providers"]
-"gemini" = "pyapu.providers.gemini:GeminiProvider"
+[tool.poetry.plugins."strutex.providers"]
+"gemini" = "strutex.providers.gemini:GeminiProvider"
 
-[tool.poetry.plugins."pyapu.validators"]
-"gemini" = "pyapu.security.output.OutputValidator"
+[tool.poetry.plugins."strutex.validators"]
+"gemini" = "strutex.security.output.OutputValidator"
 
 [tool.poetry.scripts]
-pyapu = "pyapu.cli:main"
+strutex = "strutex.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.12"

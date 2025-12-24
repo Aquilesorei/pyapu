@@ -1,16 +1,16 @@
 """
 Pluggy hook specifications
 
-Provides hook specifications that define extension points in the pyapu
+Provides hook specifications that define extension points in the strutex
 processing pipeline. Plugins can implement these hooks to extend or
 modify behavior at various stages.
 
 Example:
-    >>> from pyapu.plugins.hooks import hookimpl
+    >>> from strutex.plugins.hooks import hookimpl
     >>> 
     >>> class MyPlugin:
     >>>     @hookimpl
-    >>>     def pyapu_post_process(self, result: dict) -> dict:
+    >>>     def strutex_post_process(self, result: dict) -> dict:
     >>>         return normalize_dates(result)
 """
 
@@ -38,12 +38,12 @@ except ImportError:
     
     pluggy = _StubPluggy()
 
-# Hook markers for pyapu
-hookspec = pluggy.HookspecMarker("pyapu")
-hookimpl = pluggy.HookimplMarker("pyapu")
+# Hook markers for strutex
+hookspec = pluggy.HookspecMarker("strutex")
+hookimpl = pluggy.HookimplMarker("strutex")
 
 
-class PyapuHookSpec:
+class StrutexHookSpec:
     """
     Hook specifications for the  plugin system.
     
@@ -64,7 +64,7 @@ class PyapuHookSpec:
         
         Example:
             @hookimpl
-            def pyapu_register_providers(self):
+            def strutex_register_providers(self):
                 return [MyProvider, AnotherProvider]
         """
         pass
@@ -136,7 +136,7 @@ class PyapuHookSpec:
         
         Example:
             @hookimpl
-            def pyapu_pre_process(self, file_path, prompt, schema, mime_type, context):
+            def strutex_pre_process(self, file_path, prompt, schema, mime_type, context):
                 context["start_time"] = time.time()
                 return {"prompt": prompt + "\\nAdditional instruction."}
         """
@@ -163,7 +163,7 @@ class PyapuHookSpec:
         
         Example:
             @hookimpl
-            def pyapu_post_process(self, result, context):
+            def strutex_post_process(self, result, context):
                 elapsed = time.time() - context.get("start_time", 0)
                 result["_processing_time"] = elapsed
                 return result
@@ -192,7 +192,7 @@ class PyapuHookSpec:
         
         Example:
             @hookimpl
-            def pyapu_on_error(self, error, file_path, context):
+            def strutex_on_error(self, error, file_path, context):
                 if isinstance(error, RateLimitError):
                     return self._cached_result(file_path)
                 return None
@@ -217,8 +217,8 @@ def get_plugin_manager() -> Optional["pluggy.PluginManager"]:
         return None
     
     if _plugin_manager is None:
-        _plugin_manager = pluggy.PluginManager("pyapu")
-        _plugin_manager.add_hookspecs(PyapuHookSpec)
+        _plugin_manager = pluggy.PluginManager("strutex")
+        _plugin_manager.add_hookspecs(StrutexHookSpec)
     
     return _plugin_manager
 

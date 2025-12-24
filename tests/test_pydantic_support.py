@@ -1,5 +1,5 @@
 """
-Tests for pyapu.pydantic_support module.
+Tests for strutex.pydantic_support module.
 """
 
 import pytest
@@ -12,8 +12,8 @@ pydantic = pytest.importorskip("pydantic")
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-from pyapu.pydantic_support import pydantic_to_schema, validate_with_pydantic
-from pyapu.types import Type
+from strutex.pydantic_support import pydantic_to_schema, validate_with_pydantic
+from strutex.types import Type
 
 
 class TestPydanticToSchema:

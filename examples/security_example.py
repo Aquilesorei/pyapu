@@ -13,7 +13,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.security import (
+from strutex.security import (
     SecurityChain,
     InputSanitizer,
     PromptInjectionDetector,
@@ -147,13 +147,13 @@ def demo_custom_plugin():
     print("CUSTOM SECURITY PLUGIN")
     print("=" * 50)
     
-    from pyapu.plugins import SecurityPlugin, SecurityResult
+    from strutex.plugins import SecurityPlugin, SecurityResult
     
     class CompanySecurityPolicy(SecurityPlugin):
         """Custom security policy for a company.
         
         v0.3.0+ attributes are inherited from SecurityPlugin:
-        - pyapu_plugin_version = "1.0"
+        - strutex_plugin_version = "1.0"
         - priority = 50
         """
         
@@ -201,8 +201,8 @@ def demo_processor_with_security():
     print("PROCESSOR WITH SECURITY")
     print("=" * 50)
     
-    from pyapu import DocumentProcessor
-    from pyapu.processor import SecurityError
+    from strutex import DocumentProcessor
+    from strutex.processor import SecurityError
     
     # Create processor with security enabled
     processor = DocumentProcessor(

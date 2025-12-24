@@ -1,5 +1,5 @@
 """
-Tests for pyapu.security module.
+Tests for strutex.security module.
 """
 
 import pytest
@@ -7,10 +7,10 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.security.sanitizer import InputSanitizer
-from pyapu.security.injection import PromptInjectionDetector
-from pyapu.security.output import OutputValidator
-from pyapu.security.chain import SecurityChain, default_security_chain
+from strutex.security.sanitizer import InputSanitizer
+from strutex.security.injection import PromptInjectionDetector
+from strutex.security.output import OutputValidator
+from strutex.security.chain import SecurityChain, default_security_chain
 
 
 class TestInputSanitizer:

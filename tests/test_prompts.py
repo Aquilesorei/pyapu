@@ -1,11 +1,11 @@
 """
-Tests for pyapu.prompts.builder module.
+Tests for strutex.prompts.builder module.
 """
 
 import pytest
 import os,sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from pyapu.prompts.builder import StructuredPrompt
+from strutex.prompts.builder import StructuredPrompt
 
 
 class TestStructuredPromptInit:

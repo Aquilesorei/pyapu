@@ -1,5 +1,5 @@
 """
-Tests for pyapu.plugins module.
+Tests for strutex.plugins module.
 """
 
 import pytest
@@ -7,8 +7,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.plugins.registry import PluginRegistry, register
-from pyapu.plugins.base import Provider, Extractor, Validator, Postprocessor, SecurityPlugin
+from strutex.plugins.registry import PluginRegistry, register
+from strutex.plugins.base import Provider, Extractor, Validator, Postprocessor, SecurityPlugin
 
 
 class TestPluginRegistry:
@@ -171,7 +171,7 @@ class TestConcreteProvider:
     
     def test_concrete_provider(self):
         """Test creating a concrete provider implementation."""
-        from pyapu.types import Schema, Type
+        from strutex.types import Schema, Type
         
         class TestProvider(Provider):
             capabilities = ["test"]

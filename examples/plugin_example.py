@@ -18,7 +18,7 @@ import warnings
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.plugins import (
+from strutex.plugins import (
     PluginRegistry,
     register,
     Provider,
@@ -34,7 +34,7 @@ from pyapu.plugins import (
     register_hook_plugin,
     call_hook,
 )
-from pyapu.types import Schema
+from strutex.types import Schema
 
 
 def demo_v2_plugin_attributes():
@@ -51,7 +51,7 @@ def demo_v2_plugin_attributes():
     
     if gemini:
         print(f"\nGeminiProvider attributes:")
-        print(f"  pyapu_plugin_version: {gemini.pyapu_plugin_version}")
+        print(f"  strutex_plugin_version: {gemini.strutex_plugin_version}")
         print(f"  priority: {gemini.priority}")
         print(f"  cost: {gemini.cost}")
         print(f"  capabilities: {gemini.capabilities}")
@@ -90,7 +90,7 @@ def demo_lazy_loading():
 def demo_plugin_listing():
     """Demonstrate plugin listing methods."""
     print("\n" + "=" * 60)
-    print("PLUGIN LISTING (CLI: pyapu plugins list)")
+    print("PLUGIN LISTING (CLI: strutex plugins list)")
     print("=" * 60)
     
     PluginRegistry.discover()
@@ -188,21 +188,21 @@ def demo_priority_sorting():
     PluginRegistry.clear()
     
     class LowPriorityProvider(Provider):
-        pyapu_plugin_version = "1.0"
+        strutex_plugin_version = "1.0"
         priority = 20
         cost = 0.1
         capabilities = []
         def process(self, *args, **kwargs): pass
     
     class MediumPriorityProvider(Provider):
-        pyapu_plugin_version = "1.0"
+        strutex_plugin_version = "1.0"
         priority = 50
         cost = 1.0
         capabilities = []
         def process(self, *args, **kwargs): pass
     
     class HighPriorityProvider(Provider):
-        pyapu_plugin_version = "1.0"
+        strutex_plugin_version = "1.0"
         priority = 80
         cost = 2.0
         capabilities = []
@@ -235,14 +235,14 @@ def demo_hooks():
         """Plugin that logs pre/post processing."""
         
         @hookimpl
-        def pyapu_pre_process(self, file_path, prompt, schema, mime_type, context):
+        def strutex_pre_process(self, file_path, prompt, schema, mime_type, context):
             import time
             context["start_time"] = time.time()
             print(f"  [Hook] Pre-process: {file_path}")
             return None  # Don't modify inputs
         
         @hookimpl
-        def pyapu_post_process(self, result, context):
+        def strutex_post_process(self, result, context):
             import time
             elapsed = time.time() - context.get("start_time", 0)
             print(f"  [Hook] Post-process: elapsed={elapsed:.3f}s")
@@ -255,7 +255,7 @@ def demo_hooks():
         
         # Call hooks manually (normally done by DocumentProcessor)
         context = {}
-        call_hook("pyapu_pre_process",
+        call_hook("strutex_pre_process",
             file_path="test.pdf",
             prompt="Extract data",
             schema=None,
@@ -266,7 +266,7 @@ def demo_hooks():
         import time
         time.sleep(0.1)  # Simulate processing
         
-        call_hook("pyapu_post_process",
+        call_hook("strutex_post_process",
             result={"extracted": True},
             context=context
         )
@@ -307,31 +307,31 @@ def demo_aliases_with_decorator():
 def demo_cli_commands():
     """Show available CLI commands."""
     print("\n" + "=" * 60)
-    print("CLI COMMANDS (pyapu plugins ...)")
+    print("CLI COMMANDS (strutex plugins ...)")
     print("=" * 60)
     
     print("""
 Available commands:
 
-  pyapu plugins list
+  strutex plugins list
       List all discovered plugins with health status
       
-  pyapu plugins list --type provider
+  strutex plugins list --type provider
       Filter by plugin type
       
-  pyapu plugins list --json
+  strutex plugins list --json
       Output as JSON for scripting
       
-  pyapu plugins info gemini --type provider
+  strutex plugins info gemini --type provider
       Show detailed info for a specific plugin
       
-  pyapu plugins refresh
+  strutex plugins refresh
       Re-scan entry points and refresh cache
       
-  pyapu plugins cache
+  strutex plugins cache
       Show cache status
       
-  pyapu plugins cache --clear
+  strutex plugins cache --clear
       Clear the discovery cache
 """)
 

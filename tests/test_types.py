@@ -1,11 +1,11 @@
 """
-Tests for pyapu.types module.
+Tests for strutex.types module.
 """
 
 import pytest
 import os,sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from pyapu.types import (
+from strutex.types import (
     Schema, Type, String, Number, Integer, Boolean, Array, Object
 )
 

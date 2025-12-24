@@ -1,5 +1,5 @@
 """
-Plugin system for pyapu extensibility.
+Plugin system for strutex extensibility.
 
 Provides the PluginRegistry for registering and discovering plugins,
 the @register decorator for easy plugin registration, and base classes
@@ -14,11 +14,11 @@ Plugin System v2 Features:
 
 Example:
     # Get a provider (lazy loaded)
-    >>> from pyapu.plugins import PluginRegistry
+    >>> from strutex.plugins import PluginRegistry
     >>> provider_cls = PluginRegistry.get("provider", "gemini")
     
     # Register your own plugin
-    >>> from pyapu.plugins import register, Provider
+    >>> from strutex.plugins import register, Provider
     >>> 
     >>> @register("provider")
     >>> class MyProvider(Provider):
@@ -57,7 +57,7 @@ from .protocol import (
 from .hooks import (
     hookspec,
     hookimpl,
-    PyapuHookSpec,
+    StrutexHookSpec,
     get_plugin_manager,
     register_hook_plugin,
     call_hook,
@@ -101,7 +101,7 @@ __all__ = [
     # Hooks
     "hookspec",
     "hookimpl",
-    "PyapuHookSpec",
+    "StrutexHookSpec",
     "get_plugin_manager",
     "register_hook_plugin",
     "call_hook",

@@ -2,8 +2,8 @@ import os
 
 from dotenv import load_dotenv
 
-from pyapu.processor import DocumentProcessor
-from pyapu.types import Object, String, Number, Array
+from strutex.processor import DocumentProcessor
+from strutex.types import Object, String, Number, Array
 
 load_dotenv()
 

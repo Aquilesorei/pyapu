@@ -1,8 +1,8 @@
-site_name: PyAPU Documentation
+site_name: Strutex Documentation
 site_description: Extract structured JSON from documents using LLMs
-site_url: https://pyapu.readthedocs.io/
-repo_url: https://github.com/Aquilesorei/pyapu
-repo_name: Aquilesorei/pyapu
+site_url: https://strutex.readthedocs.io/
+repo_url: https://github.com/Aquilesorei/strutex
+repo_name: Aquilesorei/strutex
 
 theme:
   name: material
@@ -96,4 +96,4 @@ extra:
     default: latest
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Aquilesorei/pyapu
+      link: https://github.com/Aquilesorei/strutex

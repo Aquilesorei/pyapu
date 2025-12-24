@@ -1,4 +1,4 @@
-# PyAPU
+# Strutex
 
 **Python AI PDF Utilities** — Extract structured JSON from documents using LLMs.
 
@@ -41,7 +41,7 @@
 === "With Schema"
 
     ```python
-    from pyapu import DocumentProcessor, Object, String, Number
+    from strutex import DocumentProcessor, Object, String, Number
 
     schema = Object(properties={
         "invoice_number": String(description="Invoice ID"),
@@ -58,7 +58,7 @@
 
     ```python
     from pydantic import BaseModel
-    from pyapu import DocumentProcessor
+    from strutex import DocumentProcessor
 
     class Invoice(BaseModel):
         invoice_number: str

@@ -5,7 +5,7 @@ Demonstrates the fluent API for building organized extraction prompts.
 The variadic argument support allows adding multiple rules in a single call.
 """
 
-from pyapu import StructuredPrompt, DocumentProcessor, Object, String, Number, Array
+from strutex import StructuredPrompt, DocumentProcessor, Object, String, Number, Array
 
 # ============================================================================
 # 1. Basic Usage - Simple Invoice Extraction

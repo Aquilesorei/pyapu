@@ -1,10 +1,10 @@
 # CLI Commands
 
-Manage plugins and inspect pyapu from the command line.
+Manage plugins and inspect strutex from the command line.
 
 !!! note "Requires cli extra"
 `bash
-    pip install pyapu[cli]
+    pip install strutex[cli]
     `
 
 ---
@@ -15,16 +15,16 @@ Manage plugins and inspect pyapu from the command line.
 
 ```bash
 # List all plugins
-pyapu plugins list
+strutex plugins list
 
 # Filter by type
-pyapu plugins list --type provider
+strutex plugins list --type provider
 
 # JSON output for scripting
-pyapu plugins list --json
+strutex plugins list --json
 
 # Only show loaded plugins
-pyapu plugins list --loaded-only
+strutex plugins list --loaded-only
 ```
 
 **Output:**
@@ -51,10 +51,10 @@ VALIDATORS
 
 ```bash
 # Get detailed info about a plugin
-pyapu plugins info gemini --type provider
+strutex plugins info gemini --type provider
 
 # JSON output
-pyapu plugins info gemini --type provider --json
+strutex plugins info gemini --type provider --json
 ```
 
 **Output:**
@@ -76,7 +76,7 @@ Plugin: gemini
 
 ```bash
 # Re-scan entry points and refresh cache
-pyapu plugins refresh
+strutex plugins refresh
 ```
 
 Use after:
@@ -91,16 +91,16 @@ Use after:
 
 ```bash
 # Show cache status
-pyapu plugins cache
+strutex plugins cache
 
 # Clear the cache
-pyapu plugins cache --clear
+strutex plugins cache --clear
 ```
 
 **Output:**
 
 ```
-Cache file: /home/user/.cache/pyapu/plugins.json
+Cache file: /home/user/.cache/strutex/plugins.json
 Cache valid: True
 Cached plugins: 5
 ```
@@ -112,19 +112,19 @@ Cached plugins: 5
 ### Find All Providers
 
 ```bash
-pyapu plugins list --type provider --json | jq '.provider[].name'
+strutex plugins list --type provider --json | jq '.provider[].name'
 ```
 
 ### Check Plugin Health
 
 ```bash
-pyapu plugins info gemini -t provider --json | jq '.healthy'
+strutex plugins info gemini -t provider --json | jq '.healthy'
 ```
 
 ### List High-Priority Plugins
 
 ```bash
-pyapu plugins list --json | jq '.provider | sort_by(.priority) | reverse'
+strutex plugins list --json | jq '.provider | sort_by(.priority) | reverse'
 ```
 
 ---
@@ -135,14 +135,14 @@ Every CLI command has a Python equivalent:
 
 | CLI                           | Python                                            |
 | ----------------------------- | ------------------------------------------------- |
-| `pyapu plugins list`          | `PluginRegistry.list_names("provider")`           |
-| `pyapu plugins info X`        | `PluginRegistry.get_plugin_info("provider", "X")` |
-| `pyapu plugins refresh`       | `PluginRegistry.discover(force=True)`             |
-| `pyapu plugins cache --clear` | `PluginDiscovery.clear_cache()`                   |
+| `strutex plugins list`          | `PluginRegistry.list_names("provider")`           |
+| `strutex plugins info X`        | `PluginRegistry.get_plugin_info("provider", "X")` |
+| `strutex plugins refresh`       | `PluginRegistry.discover(force=True)`             |
+| `strutex plugins cache --clear` | `PluginDiscovery.clear_cache()`                   |
 
 ```python
-from pyapu.plugins import PluginRegistry
-from pyapu.plugins.discovery import PluginDiscovery
+from strutex.plugins import PluginRegistry
+from strutex.plugins.discovery import PluginDiscovery
 
 # List all providers
 for name in PluginRegistry.list_names("provider"):

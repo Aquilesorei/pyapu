@@ -1,5 +1,5 @@
 """
-Contract tests for pyapu plugins.
+Contract tests for strutex plugins.
 
 These tests verify that all plugins conform to their respective protocols
 and meet the requirements of the plugin system v2.
@@ -10,7 +10,7 @@ Run with: poetry run pytest tests/test_plugin_contract.py -v
 import pytest
 from typing import Type
 
-from pyapu.plugins import (
+from strutex.plugins import (
     PluginRegistry,
     Provider,
     Extractor,
@@ -19,7 +19,7 @@ from pyapu.plugins import (
     SecurityPlugin,
     PLUGIN_API_VERSION,
 )
-from pyapu.plugins.protocol import (
+from strutex.plugins.protocol import (
     ProviderProtocol,
     ExtractorProtocol,
     ValidatorProtocol,
@@ -43,13 +43,13 @@ class TestProviderContract:
     
     def test_has_plugin_version(self, provider_class: Type[Provider]):
         """All providers must declare their API version."""
-        assert hasattr(provider_class, "pyapu_plugin_version")
-        assert isinstance(provider_class.pyapu_plugin_version, str)
+        assert hasattr(provider_class, "strutex_plugin_version")
+        assert isinstance(provider_class.strutex_plugin_version, str)
     
     def test_version_is_compatible(self, provider_class: Type[Provider]):
         """Provider version must be compatible with current API."""
         assert check_plugin_version(provider_class)
-        assert provider_class.pyapu_plugin_version == PLUGIN_API_VERSION
+        assert provider_class.strutex_plugin_version == PLUGIN_API_VERSION
     
     def test_has_priority(self, provider_class: Type[Provider]):
         """All providers must have a priority attribute."""
@@ -86,7 +86,7 @@ class TestBaseClassContracts:
     
     def test_provider_base_class(self):
         """Provider base has all required attributes."""
-        assert hasattr(Provider, "pyapu_plugin_version")
+        assert hasattr(Provider, "strutex_plugin_version")
         assert hasattr(Provider, "priority")
         assert hasattr(Provider, "cost")
         assert hasattr(Provider, "capabilities")
@@ -94,26 +94,26 @@ class TestBaseClassContracts:
     
     def test_extractor_base_class(self):
         """Extractor base has all required attributes."""
-        assert hasattr(Extractor, "pyapu_plugin_version")
+        assert hasattr(Extractor, "strutex_plugin_version")
         assert hasattr(Extractor, "priority")
         assert hasattr(Extractor, "supported_mime_types")
         assert hasattr(Extractor, "health_check")
     
     def test_validator_base_class(self):
         """Validator base has all required attributes."""
-        assert hasattr(Validator, "pyapu_plugin_version")
+        assert hasattr(Validator, "strutex_plugin_version")
         assert hasattr(Validator, "priority")
         assert hasattr(Validator, "health_check")
     
     def test_postprocessor_base_class(self):
         """Postprocessor base has all required attributes."""
-        assert hasattr(Postprocessor, "pyapu_plugin_version")
+        assert hasattr(Postprocessor, "strutex_plugin_version")
         assert hasattr(Postprocessor, "priority")
         assert hasattr(Postprocessor, "health_check")
     
     def test_security_plugin_base_class(self):
         """SecurityPlugin base has all required attributes."""
-        assert hasattr(SecurityPlugin, "pyapu_plugin_version")
+        assert hasattr(SecurityPlugin, "strutex_plugin_version")
         assert hasattr(SecurityPlugin, "priority")
         assert hasattr(SecurityPlugin, "health_check")
 
@@ -186,7 +186,7 @@ class TestSpecPlugin:
         class SpecProvider(Provider):
             """Minimal spec-compliant provider for testing."""
             
-            pyapu_plugin_version = "1.0"
+            strutex_plugin_version = "1.0"
             priority = 50
             cost = 1.0
             capabilities = ["text"]
@@ -200,7 +200,7 @@ class TestSpecPlugin:
         
         # Verify it passes all checks
         assert check_plugin_version(SpecProvider)
-        assert SpecProvider.pyapu_plugin_version == PLUGIN_API_VERSION
+        assert SpecProvider.strutex_plugin_version == PLUGIN_API_VERSION
         assert 0 <= SpecProvider.priority <= 100
         assert SpecProvider.cost >= 0
         assert isinstance(SpecProvider.capabilities, list)

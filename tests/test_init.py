@@ -1,5 +1,5 @@
 """
-Tests for pyapu package initialization and exports.
+Tests for strutex package initialization and exports.
 """
 
 import pytest
@@ -11,17 +11,17 @@ class TestPackageExports:
 
     def test_document_processor_export(self):
         """Test DocumentProcessor is exported."""
-        from pyapu import DocumentProcessor
+        from strutex import DocumentProcessor
         assert DocumentProcessor is not None
 
     def test_structured_prompt_export(self):
         """Test StructuredPrompt is exported."""
-        from pyapu import StructuredPrompt
+        from strutex import StructuredPrompt
         assert StructuredPrompt is not None
 
     def test_schema_types_export(self):
         """Test Schema types are exported."""
-        from pyapu import Schema, Type, String, Number, Integer, Boolean, Array, Object
+        from strutex import Schema, Type, String, Number, Integer, Boolean, Array, Object
         
         assert Schema is not None
         assert Type is not None
@@ -34,7 +34,7 @@ class TestPackageExports:
 
     def test_document_functions_export(self):
         """Test document utility functions are exported."""
-        from pyapu import (
+        from strutex import (
             pdf_to_text,
             get_mime_type,
             encode_bytes_to_base64,
@@ -50,7 +50,7 @@ class TestPackageExports:
 
     def test_all_exports_list(self):
         """Test __all__ contains expected exports."""
-        import pyapu
+        import strutex
         
         expected = [
             "DocumentProcessor",
@@ -71,7 +71,7 @@ class TestPackageExports:
         ]
         
         for item in expected:
-            assert item in pyapu.__all__, f"{item} missing from __all__"
+            assert item in strutex.__all__, f"{item} missing from __all__"
 
 
 if __name__ == "__main__":

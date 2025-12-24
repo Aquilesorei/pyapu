@@ -6,7 +6,7 @@ Complete reference for all public APIs.
 
 ## DocumentProcessor
 
-::: pyapu.processor.DocumentProcessor
+::: strutex.processor.DocumentProcessor
 options:
 show_root_heading: true
 members: - **init** - process
@@ -15,27 +15,27 @@ members: - **init** - process
 
 ## Schema Types
 
-::: pyapu.types.String
+::: strutex.types.String
 options:
 show_root_heading: true
 
-::: pyapu.types.Number
+::: strutex.types.Number
 options:
 show_root_heading: true
 
-::: pyapu.types.Integer
+::: strutex.types.Integer
 options:
 show_root_heading: true
 
-::: pyapu.types.Boolean
+::: strutex.types.Boolean
 options:
 show_root_heading: true
 
-::: pyapu.types.Array
+::: strutex.types.Array
 options:
 show_root_heading: true
 
-::: pyapu.types.Object
+::: strutex.types.Object
 options:
 show_root_heading: true
 
@@ -43,12 +43,12 @@ show_root_heading: true
 
 ## Plugin System
 
-::: pyapu.plugins.registry.PluginRegistry
+::: strutex.plugins.registry.PluginRegistry
 options:
 show_root_heading: true
 members: - register - get - list - discover
 
-::: pyapu.plugins.registry.register
+::: strutex.plugins.registry.register
 options:
 show_root_heading: true
 
@@ -56,19 +56,19 @@ show_root_heading: true
 
 ## Base Classes
 
-::: pyapu.plugins.base.Provider
+::: strutex.plugins.base.Provider
 options:
 show_root_heading: true
 
-::: pyapu.plugins.base.Validator
+::: strutex.plugins.base.Validator
 options:
 show_root_heading: true
 
-::: pyapu.plugins.base.Postprocessor
+::: strutex.plugins.base.Postprocessor
 options:
 show_root_heading: true
 
-::: pyapu.plugins.base.SecurityPlugin
+::: strutex.plugins.base.SecurityPlugin
 options:
 show_root_heading: true
 
@@ -76,19 +76,19 @@ show_root_heading: true
 
 ## Security
 
-::: pyapu.security.chain.SecurityChain
+::: strutex.security.chain.SecurityChain
 options:
 show_root_heading: true
 
-::: pyapu.security.sanitizer.InputSanitizer
+::: strutex.security.sanitizer.InputSanitizer
 options:
 show_root_heading: true
 
-::: pyapu.security.injection.PromptInjectionDetector
+::: strutex.security.injection.PromptInjectionDetector
 options:
 show_root_heading: true
 
-::: pyapu.security.output.OutputValidator
+::: strutex.security.output.OutputValidator
 options:
 show_root_heading: true
 
@@ -96,7 +96,7 @@ show_root_heading: true
 
 ## Prompts
 
-::: pyapu.prompts.builder.StructuredPrompt
+::: strutex.prompts.builder.StructuredPrompt
 options:
 show_root_heading: true
 members: - **init** - add_general_rule - add_field_rule - add_output_guideline - compile
@@ -105,11 +105,11 @@ members: - **init** - add_general_rule - add_field_rule - add_output_guideline -
 
 ## Pydantic Support
 
-::: pyapu.pydantic_support.pydantic_to_schema
+::: strutex.pydantic_support.pydantic_to_schema
 options:
 show_root_heading: true
 
-::: pyapu.pydantic_support.validate_with_pydantic
+::: strutex.pydantic_support.validate_with_pydantic
 options:
 show_root_heading: true
 
@@ -117,6 +117,6 @@ show_root_heading: true
 
 ## Exceptions
 
-::: pyapu.processor.SecurityError
+::: strutex.processor.SecurityError
 options:
 show_root_heading: true

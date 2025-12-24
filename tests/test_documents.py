@@ -1,5 +1,5 @@
 """
-Tests for pyapu.documents module.
+Tests for strutex.documents module.
 """
 
 import pytest
@@ -9,12 +9,12 @@ import base64
 import os,sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pyapu.documents.file_utils import (
+from strutex.documents.file_utils import (
     get_mime_type,
     read_file_as_bytes,
     encode_bytes_to_base64
 )
-from pyapu.documents.text import _is_text_usable
+from strutex.documents.text import _is_text_usable
 
 
 class TestGetMimeType:
@@ -190,7 +190,7 @@ class TestImports:
 
     def test_documents_package_exports(self):
         """Test documents package exports expected functions."""
-        from pyapu.documents import (
+        from strutex.documents import (
             pdf_to_text,
             get_mime_type,
             read_file_as_bytes,
@@ -205,8 +205,8 @@ class TestImports:
         assert callable(excel_to_csv_sheets)
 
     def test_main_package_exports(self):
-        """Test main pyapu package exports document functions."""
-        from pyapu import (
+        """Test main strutex package exports document functions."""
+        from strutex import (
             pdf_to_text,
             get_mime_type,
             encode_bytes_to_base64,

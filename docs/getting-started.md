@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-pip install pyapu
+pip install strutex
 ```
 
 ### Optional Dependencies
@@ -11,13 +11,13 @@ pip install pyapu
 === "OCR Support"
 
     ```bash
-    pip install pyapu[ocr]
+    pip install strutex[ocr]
     ```
 
 === "All Features"
 
     ```bash
-    pip install pyapu[ocr] pydantic
+    pip install strutex[ocr] pydantic
     ```
 
 ---
@@ -27,7 +27,7 @@ pip install pyapu
 ### 1. Define Your Schema
 
 ```python
-from pyapu import Object, String, Number, Array
+from strutex import Object, String, Number, Array
 
 schema = Object(
     description="Invoice data",
@@ -50,7 +50,7 @@ schema = Object(
 ### 2. Create a Processor
 
 ```python
-from pyapu import DocumentProcessor
+from strutex import DocumentProcessor
 
 processor = DocumentProcessor(
     provider="gemini",

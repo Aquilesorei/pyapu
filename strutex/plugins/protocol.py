@@ -1,12 +1,12 @@
 """
-Protocol-typed interfaces for pyapu plugins.
+Protocol-typed interfaces for strutex plugins.
 
 Provides runtime-checkable Protocol classes that define the expected interface
 for all plugin types. These enable mypy type checking and runtime validation
 of plugin compliance.
 
 Example:
-    >>> from pyapu.plugins.protocol import ProviderProtocol
+    >>> from strutex.plugins.protocol import ProviderProtocol
     >>> isinstance(my_provider, ProviderProtocol)
     True
 """
@@ -14,7 +14,7 @@ Example:
 from enum import StrEnum
 from typing import Any, Dict, List, Optional, Protocol, TYPE_CHECKING, runtime_checkable
 
-from pyapu.plugins.plugin_type import PluginType
+from strutex.plugins.plugin_type import PluginType
 
 # Plugin API version for compatibility checks
 PLUGIN_API_VERSION = "1.0"
@@ -26,16 +26,16 @@ PLUGIN_API_VERSION = "1.0"
 class ProviderProtocol(Protocol):
     """
     All provider plugins must implement this interface to be considered
-    compliant with the pyapu plugin system.
+    compliant with the strutex plugin system.
     
     Attributes:
-        pyapu_plugin_version: API version string (e.g., "1.0")
+        strutex_plugin_version: API version string (e.g., "1.0")
         priority: Ordering priority (0-100, higher = preferred)
         cost: Cost hint for optimization (lower = cheaper)
         capabilities: List of supported features (e.g., ["vision", "batch"])
     """
     
-    pyapu_plugin_version: str
+    strutex_plugin_version: str
     priority: int
     cost: float
     capabilities: List[str]
@@ -64,12 +64,12 @@ class ExtractorProtocol(Protocol):
     content that can be sent to an LLM.
     
     Attributes:
-        pyapu_plugin_version: API version string
+        strutex_plugin_version: API version string
         priority: Ordering priority for waterfall chains
         supported_mime_types: List of MIME types this extractor handles
     """
     
-    pyapu_plugin_version: str
+    strutex_plugin_version: str
     priority: int
     supported_mime_types: List[str]
     
@@ -94,11 +94,11 @@ class ValidatorProtocol(Protocol):
     optionally fix issues.
     
     Attributes:
-        pyapu_plugin_version: API version string
+        strutex_plugin_version: API version string
         priority: Ordering priority in validation chain
     """
     
-    pyapu_plugin_version: str
+    strutex_plugin_version: str
     priority: int
     
     def validate(
@@ -122,11 +122,11 @@ class PostprocessorProtocol(Protocol):
     convert currencies, standardize units).
     
     Attributes:
-        pyapu_plugin_version: API version string
+        strutex_plugin_version: API version string
         priority: Ordering priority in postprocessing pipeline
     """
     
-    pyapu_plugin_version: str
+    strutex_plugin_version: str
     priority: int
     
     def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -146,11 +146,11 @@ class SecurityPluginProtocol(Protocol):
     to the LLM and validate output before returning to the user.
     
     Attributes:
-        pyapu_plugin_version: API version string
+        strutex_plugin_version: API version string
         priority: Ordering priority in security chain
     """
     
-    pyapu_plugin_version: str
+    strutex_plugin_version: str
     priority: int
     
     def validate_input(self, text: str) -> Any:
@@ -177,7 +177,7 @@ def check_plugin_version(plugin: Any) -> bool:
     Returns:
         True if compatible, False otherwise
     """
-    version = getattr(plugin, "pyapu_plugin_version", None)
+    version = getattr(plugin, "strutex_plugin_version", None)
     if version is None:
         return False
     

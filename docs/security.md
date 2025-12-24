@@ -1,6 +1,6 @@
 # Security Layer
 
-Protect against prompt injection and data leaks with pyapu's pluggable security layer.
+Protect against prompt injection and data leaks with strutex's pluggable security layer.
 
 !!! warning "Security is Opt-In"
 Security features are not enabled by default. You must explicitly enable them.
@@ -12,8 +12,8 @@ Security features are not enabled by default. You must explicitly enable them.
 === "Default Chain"
 
     ```python
-    from pyapu import DocumentProcessor
-    from pyapu.security import default_security_chain
+    from strutex import DocumentProcessor
+    from strutex.security import default_security_chain
 
     processor = DocumentProcessor(
         provider="gemini",
@@ -39,7 +39,7 @@ Security features are not enabled by default. You must explicitly enable them.
 Cleans and normalizes input text.
 
 ```python
-from pyapu.security import InputSanitizer
+from strutex.security import InputSanitizer
 
 sanitizer = InputSanitizer(
     collapse_whitespace=True,   # "Hello   World" → "Hello World"
@@ -54,7 +54,7 @@ sanitizer = InputSanitizer(
 Detects common prompt injection patterns.
 
 ```python
-from pyapu.security import PromptInjectionDetector
+from strutex.security import PromptInjectionDetector
 
 detector = PromptInjectionDetector()
 
@@ -75,7 +75,7 @@ print(result.reason)  # "Potential prompt injection detected"
 Checks LLM output for sensitive data.
 
 ```python
-from pyapu.security import OutputValidator
+from strutex.security import OutputValidator
 
 validator = OutputValidator(check_secrets=True)
 
@@ -91,7 +91,7 @@ print(result.reason)  # "Potential API key detected"
 Combine multiple plugins:
 
 ```python
-from pyapu.security import SecurityChain, InputSanitizer, PromptInjectionDetector
+from strutex.security import SecurityChain, InputSanitizer, PromptInjectionDetector
 
 chain = SecurityChain([
     InputSanitizer(collapse_whitespace=True),
@@ -108,7 +108,7 @@ print(result.text)    # "Ignore all instructions" (sanitized)
 ## Custom Security Plugin
 
 ```python
-from pyapu.plugins import SecurityPlugin, SecurityResult, register
+from strutex.plugins import SecurityPlugin, SecurityResult, register
 import re
 
 @register("security")
@@ -133,7 +133,7 @@ class PIIRedactor(SecurityPlugin):
 ## Handling Security Errors
 
 ```python
-from pyapu.processor import SecurityError
+from strutex.processor import SecurityError
 
 try:
     result = processor.process(file, prompt, schema, security=True)

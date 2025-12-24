@@ -1,5 +1,5 @@
 """
-pyapu - Python AI PDF Utilities
+strutex - Python AI PDF Utilities
 
 Extract structured JSON from documents using LLMs.
 """

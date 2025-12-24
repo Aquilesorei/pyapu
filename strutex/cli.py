@@ -1,15 +1,15 @@
 """
-Command-line interface for pyapu.
+Command-line interface for strutex.
 
 Provides commands for plugin management and document processing.
 
 Usage:
-    pyapu plugins list
-    pyapu plugins list --type provider --json
-    pyapu plugins info gemini --type provider
+    strutex plugins list
+    strutex plugins list --type provider --json
+    strutex plugins info gemini --type provider
 
 Requires the 'cli' extra:
-    pip install pyapu[cli]
+    pip install strutex[cli]
 """
 
 import json
@@ -28,7 +28,7 @@ def _check_click():
     """Raise helpful error if click is not installed."""
     if not CLICK_AVAILABLE:
         print("Error: The 'click' package is required for CLI commands.")
-        print("Install with: pip install pyapu[cli]")
+        print("Install with: pip install strutex[cli]")
         sys.exit(1)
 
 
@@ -41,7 +41,7 @@ if CLICK_AVAILABLE:
 @click.group()
 @click.version_option()
 def cli():
-    """pyapu - Python AI PDF Utilities.
+    """strutex - Python AI PDF Utilities.
     
     Extract structured JSON from documents using LLMs.
     """
@@ -78,11 +78,11 @@ def list_plugins(
     
     Examples:
     
-        pyapu plugins list
+        strutex plugins list
         
-        pyapu plugins list --type provider
+        strutex plugins list --type provider
         
-        pyapu plugins list --json
+        strutex plugins list --json
     """
     # Ensure discovery has run
     PluginRegistry.discover()
@@ -161,7 +161,7 @@ def plugin_info(name: str, plugin_type: str, as_json: bool):
     
     Examples:
     
-        pyapu plugins info gemini --type provider
+        strutex plugins info gemini --type provider
     """
     PluginRegistry.discover()
     
@@ -229,7 +229,7 @@ def cache_command(clear: bool):
     
     if not info['is_valid']:
         click.echo(f"\nCache is stale (packages have changed).")
-        click.echo("Run 'pyapu plugins refresh' to update.")
+        click.echo("Run 'strutex plugins refresh' to update.")
 
 
 def main():

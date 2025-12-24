@@ -73,14 +73,14 @@ class Provider(ABC):
             ...
     
     Attributes:
-        pyapu_plugin_version: API version for compatibility checks
+        strutex_plugin_version: API version for compatibility checks
         priority: Ordering priority (0-100, higher = preferred)
         cost: Cost hint for optimization (lower = cheaper)
         capabilities: List of supported features
     """
     
     # Plugin API version (required for compatibility checks)
-    pyapu_plugin_version: str = "1.0"
+    strutex_plugin_version: str = "1.0"
     
     # Priority for waterfall ordering (0-100, higher = preferred)
     priority: int = 50
@@ -165,13 +165,13 @@ class Extractor(ABC):
     Subclassing auto-registers the plugin.
     
     Attributes:
-        pyapu_plugin_version: API version for compatibility checks
+        strutex_plugin_version: API version for compatibility checks
         priority: Ordering priority for waterfall chains
         supported_mime_types: List of MIME types this extractor handles
     """
     
     # Plugin API version
-    pyapu_plugin_version: str = "1.0"
+    strutex_plugin_version: str = "1.0"
     
     # Priority for waterfall ordering
     priority: int = 50
@@ -221,12 +221,12 @@ class Validator(ABC):
     Subclassing auto-registers the plugin.
     
     Attributes:
-        pyapu_plugin_version: API version for compatibility checks
+        strutex_plugin_version: API version for compatibility checks
         priority: Ordering priority in validation chain
     """
     
     # Plugin API version
-    pyapu_plugin_version: str = "1.0"
+    strutex_plugin_version: str = "1.0"
     
     # Priority in validation chain
     priority: int = 50
@@ -289,12 +289,12 @@ class Postprocessor(ABC):
     Subclassing auto-registers the plugin.
     
     Attributes:
-        pyapu_plugin_version: API version for compatibility checks
+        strutex_plugin_version: API version for compatibility checks
         priority: Ordering priority in postprocessing pipeline
     """
     
     # Plugin API version
-    pyapu_plugin_version: str = "1.0"
+    strutex_plugin_version: str = "1.0"
     
     # Priority in postprocessing pipeline
     priority: int = 50
@@ -337,12 +337,12 @@ class SecurityPlugin(ABC):
     Subclassing auto-registers the plugin.
     
     Attributes:
-        pyapu_plugin_version: API version for compatibility checks
+        strutex_plugin_version: API version for compatibility checks
         priority: Ordering priority in security chain
     """
     
     # Plugin API version
-    pyapu_plugin_version: str = "1.0"
+    strutex_plugin_version: str = "1.0"
     
     # Priority in security chain
     priority: int = 50

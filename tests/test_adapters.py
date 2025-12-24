@@ -1,11 +1,11 @@
 """
-Tests for pyapu.adapters module.
+Tests for strutex.adapters module.
 """
 import os,sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pytest
-from pyapu.types import Schema, Type, String, Number, Integer, Boolean, Array, Object
-from pyapu.adapters import SchemaAdapter
+from strutex.types import Schema, Type, String, Number, Integer, Boolean, Array, Object
+from strutex.adapters import SchemaAdapter
 
 class TestSchemaAdapterOpenAI:
     """Tests for OpenAI schema conversion."""

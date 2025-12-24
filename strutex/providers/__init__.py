@@ -1,5 +1,5 @@
 """
-LLM Providers for pyapu.
+LLM Providers for strutex.
 
 Provides the Provider base class and built-in provider implementations.
 """

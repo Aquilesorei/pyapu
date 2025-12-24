@@ -1,6 +1,6 @@
 # Hooks System
 
-Extend the pyapu processing pipeline without modifying core code.
+Extend the strutex processing pipeline without modifying core code.
 
 !!! note "New in v0.3.0"
 Hooks are powered by [pluggy](https://pluggy.readthedocs.io/), the same framework used by pytest.
@@ -16,7 +16,7 @@ Hooks let you:
 - **Error handling** — Recover from failures gracefully
 
 ```python
-from pyapu.plugins import hookimpl, register_hook_plugin
+from strutex.plugins import hookimpl, register_hook_plugin
 
 class MyPlugin:
     @hookimpl
@@ -130,7 +130,7 @@ def on_error(
 ## Registering Hook Plugins
 
 ```python
-from pyapu.plugins import register_hook_plugin, unregister_hook_plugin
+from strutex.plugins import register_hook_plugin, unregister_hook_plugin
 
 class CostTracker:
     def __init__(self):
@@ -156,8 +156,8 @@ print(f"Total cost: ${tracker.total_cost:.2f}")
 
 ```python
 import time
-from pyapu import DocumentProcessor
-from pyapu.plugins import hookimpl, register_hook_plugin
+from strutex import DocumentProcessor
+from strutex.plugins import hookimpl, register_hook_plugin
 
 class LoggingPlugin:
     """Log all document processing."""
@@ -232,7 +232,7 @@ def register_extractors(self) -> List[type]:
 If `pluggy` is not installed, hooks degrade gracefully:
 
 ```python
-from pyapu.plugins.hooks import PLUGGY_AVAILABLE
+from strutex.plugins.hooks import PLUGGY_AVAILABLE
 
 if PLUGGY_AVAILABLE:
     register_hook_plugin(MyPlugin())
@@ -244,14 +244,14 @@ else:
 
 ## API Reference
 
-::: pyapu.plugins.hooks.register_hook_plugin
+::: strutex.plugins.hooks.register_hook_plugin
 options:
 show_root_heading: true
 
-::: pyapu.plugins.hooks.unregister_hook_plugin
+::: strutex.plugins.hooks.unregister_hook_plugin
 options:
 show_root_heading: true
 
-::: pyapu.plugins.hooks.call_hook
+::: strutex.plugins.hooks.call_hook
 options:
 show_root_heading: true

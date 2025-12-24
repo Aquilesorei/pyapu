@@ -11,7 +11,7 @@ LLM providers handle the actual document processing.
 Google's Gemini models (default).
 
 ```python
-from pyapu import DocumentProcessor
+from strutex import DocumentProcessor
 
 processor = DocumentProcessor(
     provider="gemini",
@@ -28,7 +28,7 @@ processor = DocumentProcessor(
 Create your own provider:
 
 ```python
-from pyapu.plugins import Provider, register
+from strutex.plugins import Provider, register
 
 @register("provider", name="ollama")
 class OllamaProvider(Provider):

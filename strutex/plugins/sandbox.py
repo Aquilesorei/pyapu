@@ -5,9 +5,9 @@ Provides subprocess-based plugin probing to extract metadata without
 importing potentially dangerous code into the main process.
 
 Example:
-    >>> from pyapu.plugins.sandbox import probe_plugin_metadata
+    >>> from strutex.plugins.sandbox import probe_plugin_metadata
     >>> 
-    >>> info = probe_plugin_metadata("pyapu.providers", "my_provider")
+    >>> info = probe_plugin_metadata("strutex.providers", "my_provider")
     >>> print(info)
     {'name': 'my_provider', 'version': '1.0', 'healthy': True, ...}
 """
@@ -55,7 +55,7 @@ def probe():
         # Extract metadata
         result = {{
             "name": ep.name,
-            "version": getattr(cls, "pyapu_plugin_version", "unknown"),
+            "version": getattr(cls, "strutex_plugin_version", "unknown"),
             "priority": getattr(cls, "priority", 50),
             "cost": getattr(cls, "cost", 1.0),
             "capabilities": list(getattr(cls, "capabilities", [])),
@@ -95,7 +95,7 @@ def probe_plugin_metadata(
     into the main process. Useful for untrusted or heavy plugins.
     
     Args:
-        group: Entry point group (e.g., "pyapu.providers")
+        group: Entry point group (e.g., "strutex.providers")
         name: Plugin name within the group
         timeout: Maximum time to wait for probe (seconds)
         python_executable: Python interpreter to use (default: same as current)
@@ -111,7 +111,7 @@ def probe_plugin_metadata(
         - error: Error message if probe failed
         
     Example:
-        >>> info = probe_plugin_metadata("pyapu.providers", "gemini")
+        >>> info = probe_plugin_metadata("strutex.providers", "gemini")
         >>> if info.get("healthy"):
         ...     print(f"Plugin {info['name']} v{info['version']} is ready")
     """
@@ -164,7 +164,7 @@ def probe_all_plugins(
     Probe all plugins in an entry point group.
     
     Args:
-        group: Entry point group (e.g., "pyapu.providers")
+        group: Entry point group (e.g., "strutex.providers")
         timeout_per_plugin: Timeout for each plugin probe
         
     Returns:

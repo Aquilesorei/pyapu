@@ -1,6 +1,6 @@
 # Schema Types
 
-Define your expected output structure using pyapu's schema types.
+Define your expected output structure using strutex's schema types.
 
 ---
 
@@ -9,7 +9,7 @@ Define your expected output structure using pyapu's schema types.
 ### String
 
 ```python
-from pyapu import String
+from strutex import String
 
 name = String(description="Customer name")
 optional_name = String(description="Middle name", nullable=True)
@@ -20,7 +20,7 @@ optional_name = String(description="Middle name", nullable=True)
 For floating-point values:
 
 ```python
-from pyapu import Number
+from strutex import Number
 
 price = Number(description="Item price")
 ```
@@ -30,7 +30,7 @@ price = Number(description="Item price")
 For whole numbers:
 
 ```python
-from pyapu import Integer
+from strutex import Integer
 
 quantity = Integer(description="Item count")
 ```
@@ -38,7 +38,7 @@ quantity = Integer(description="Item count")
 ### Boolean
 
 ```python
-from pyapu import Boolean
+from strutex import Boolean
 
 is_paid = Boolean(description="Payment status")
 ```
@@ -50,7 +50,7 @@ is_paid = Boolean(description="Payment status")
 ### Array
 
 ```python
-from pyapu import Array, String, Object
+from strutex import Array, String, Object
 
 # Array of strings
 tags = Array(items=String(), description="Item tags")
@@ -69,7 +69,7 @@ items = Array(
 ### Object
 
 ```python
-from pyapu import Object, String
+from strutex import Object, String
 
 address = Object(
     description="Shipping address",
@@ -115,7 +115,7 @@ By default, **all properties are required**. To make fields optional:
 ## Complete Example
 
 ```python
-from pyapu import Object, String, Number, Integer, Array, Boolean
+from strutex import Object, String, Number, Integer, Array, Boolean
 
 invoice_schema = Object(
     description="Complete invoice",
