@@ -366,21 +366,42 @@ class TestSandbox:
         assert isinstance(result, bool)
 
 
-class TestDeprecationWarning:
-    """Test @register decorator deprecation."""
+class TestRegisterDecorator:
+    """Test @register decorator (no longer deprecated - used for aliases)."""
     
     def setup_method(self):
         PluginRegistry.clear()
     
-    def test_register_emits_deprecation_warning(self):
-        """@register should emit DeprecationWarning."""
+    def test_register_does_not_emit_deprecation_warning(self):
+        """@register should NOT emit DeprecationWarning (no longer deprecated)."""
+        import warnings
         from pyapu.plugins import register
         
-        with pytest.warns(DeprecationWarning, match="deprecated"):
-            @register("provider", name="deprecated_test")
-            class DeprecatedProvider(Provider):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            
+            @register("provider", name="alias_test")
+            class AliasProvider(Provider):
                 capabilities = []
                 def process(self, *args, **kwargs): pass
+        
+        # Should have no deprecation warnings
+        deprecation_warnings = [x for x in w if issubclass(x.category, DeprecationWarning)]
+        assert len(deprecation_warnings) == 0, f"Unexpected deprecation warnings: {deprecation_warnings}"
+    
+    def test_register_creates_alias(self):
+        """@register should create an alias alongside auto-registration."""
+        from pyapu.plugins import register
+        
+        @register("provider", name="my_alias")
+        class MyProvider(Provider):
+            capabilities = []
+            def process(self, *args, **kwargs): pass
+        
+        # Should be registered under BOTH names
+        assert PluginRegistry.get("provider", "myprovider") is not None
+        assert PluginRegistry.get("provider", "my_alias") is not None
+        assert PluginRegistry.get("provider", "myprovider") is PluginRegistry.get("provider", "my_alias")
 
 
 if __name__ == "__main__":
