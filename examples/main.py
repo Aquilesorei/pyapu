@@ -41,7 +41,7 @@ try:
     )
     print(result)
 
-    # 4. Output the Validated Data
+    #  4. Output the Validated Data
     # The 'result' is now a standard Python dictionary
     print("--- Extraction Successful ---")
     print(f"Order ID: {result['order_id']}")
