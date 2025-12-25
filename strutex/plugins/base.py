@@ -53,7 +53,6 @@ def _auto_register(
                 # Still abstract - don't register
                 return
     
-    # Import here to avoid circular imports
     from .registry import PluginRegistry
     
     plugin_name = name or cls.__name__.lower()

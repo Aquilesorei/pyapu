@@ -7,6 +7,60 @@ Plugin System v2 introduces auto-registration via inheritance, lazy loading, ent
 
 ---
 
+## Architecture: Plugins vs Hooks
+
+Strutex has two extension mechanisms that serve different purposes:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     DocumentProcessor.process()                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─── HOOKS (Observers) ───┐                                     │
+│  │ • pre_process           │ ◄── Logging, timing, prompt mods   │
+│  └─────────────────────────┘                                     │
+│              │                                                   │
+│              ▼                                                   │
+│  ┌─── PLUGINS (Components) ─┐                                    │
+│  │ • SecurityPlugin         │ ◄── Validates input               │
+│  │ • Extractor              │ ◄── PDF → text                    │
+│  │ • Provider               │ ◄── LLM call                      │
+│  │ • Validator              │ ◄── Validates output              │
+│  │ • Postprocessor          │ ◄── Transforms result             │
+│  └──────────────────────────┘                                    │
+│              │                                                   │
+│              ▼                                                   │
+│  ┌─── HOOKS (Observers) ───┐                                     │
+│  │ • post_process          │ ◄── Add metadata, notifications    │
+│  │ • on_error              │ ◄── Fallbacks, alerting            │
+│  └─────────────────────────┘                                     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### When to Use Which?
+
+| Feature         | Plugins (Base Classes)                         | Hooks System                                         |
+| --------------- | ---------------------------------------------- | ---------------------------------------------------- |
+| **Pattern**     | Strategy Pattern                               | Observer/Middleware Pattern                          |
+| **Role**        | **Drivers** — define _how_ a step is performed | **Observers** — react to pipeline events             |
+| **Cardinality** | **1:1** — one Provider, one Extractor per run  | **1:N** — many hooks can run simultaneously          |
+| **Complexity**  | Higher — implement interface methods           | Lower — just a function or decorator                 |
+| **Goal**        | Interchangeability — replace the engine        | Cross-cutting concerns — add without touching engine |
+
+**Use a Plugin when:**
+
+- Changing the **fundamental logic** (e.g., "use OCR instead of text extraction")
+- Replacing a core component (different LLM provider)
+
+**Use a Hook when:**
+
+- **Observing** events (logging, timing, metrics)
+- **Modifying** data generically (add metadata to all results)
+- **Handling errors** (fallbacks, alerting)
+
+---
+
 ## Plugin Types
 
 | Type            | Purpose                 | Built-in Examples                       |
@@ -17,7 +71,7 @@ Plugin System v2 introduces auto-registration via inheritance, lazy loading, ent
 | `validator`     | Output validation       | Schema, business rules                  |
 | `postprocessor` | Data transformation     | DateNormalizer                          |
 
-The `PluginType` enum provides type-safe access to these types:
+The `PluginType` enum provides type-safe access:
 
 ```python
 from strutex.plugins import PluginType
@@ -82,18 +136,18 @@ class AdobeProvider(BasePdfProvider):
 ```
 
 !!! tip
-Classes with unimplemented `@abstractmethod`s are automatically skipped - no need for `register=False`.
+Classes with unimplemented `@abstractmethod`s are automatically skipped.
 
 ---
 
 ## Plugin Attributes
 
-| Attribute              | Type    | Default | Description                                    |
-| ---------------------- | ------- | ------- | ---------------------------------------------- |
+| Attribute                | Type    | Default | Description                                    |
+| ------------------------ | ------- | ------- | ---------------------------------------------- |
 | `strutex_plugin_version` | `str`   | `"1.0"` | API version for compatibility                  |
-| `priority`             | `int`   | `50`    | Order in waterfall (0-100, higher = preferred) |
-| `cost`                 | `float` | `1.0`   | Cost hint (lower = cheaper)                    |
-| `capabilities`         | `list`  | `[]`    | Features this plugin supports                  |
+| `priority`               | `int`   | `50`    | Order in waterfall (0-100, higher = preferred) |
+| `cost`                   | `float` | `1.0`   | Cost hint (lower = cheaper)                    |
+| `capabilities`           | `list`  | `[]`    | Features this plugin supports                  |
 
 ---
 
@@ -117,7 +171,7 @@ class MyProvider(Provider, name="custom"):
 
 For distributable packages, register in `pyproject.toml`:
 
-```toml title="pyproject.toml"
+```toml
 [project.entry-points."strutex.providers"]
 my_provider = "my_package:MyProvider"
 
@@ -127,21 +181,7 @@ my_validator = "my_package:MyValidator"
 
 Plugins are **lazy loaded** — only imported when first used.
 
-### 3. Decorator (For Aliases)
-
-Use decorators to register the same plugin under multiple names:
-
-```python
-from strutex.plugins import register, Provider
-
-@register("provider", name="fast_v1")
-class FastProvider(Provider, name="fast"):
-    def process(self, ...): ...
-
-# Now accessible as BOTH "fast" AND "fast_v1"
-```
-
-### 4. Manual Registration
+### 3. Manual Registration
 
 ```python
 from strutex.plugins import PluginRegistry
@@ -170,38 +210,6 @@ strutex plugins info gemini --type provider
 strutex plugins refresh
 ```
 
-Example output:
-
-```
-PROVIDERS
-----------------------------------------
-  ✓ ● gemini               v1.0      priority: 50
-       └─ capabilities: vision
-```
-
----
-
-## Lazy Loading
-
-Plugins are discovered but not loaded until first use:
-
-```python
-from strutex.plugins import PluginRegistry
-
-PluginRegistry.discover()
-
-# Check plugin exists (not loaded yet)
-info = PluginRegistry.get_plugin_info("provider", "gemini")
-print(info["loaded"])  # False
-
-# Now load it
-cls = PluginRegistry.get("provider", "gemini")
-
-# Check again
-info = PluginRegistry.get_plugin_info("provider", "gemini")
-print(info["loaded"])  # True
-```
-
 ---
 
 ## Creating Custom Plugins
@@ -212,7 +220,6 @@ print(info["loaded"])  # True
 from strutex.plugins import Provider
 
 class OllamaProvider(Provider):
-    # Optional overrides
     priority = 60
     capabilities = ["local", "vision"]
 
@@ -222,15 +229,6 @@ class OllamaProvider(Provider):
     def process(self, file_path, prompt, schema, mime_type, **kwargs):
         # Your implementation
         ...
-
-    @classmethod
-    def health_check(cls) -> bool:
-        """Optional: custom health check."""
-        try:
-            # Check if Ollama is running
-            return True
-        except:
-            return False
 ```
 
 ### Custom Validator
@@ -240,7 +238,7 @@ from strutex.plugins import Validator, ValidationResult
 
 class SumValidator(Validator):
     """Verify line items sum to total."""
-    priority = 70  # Run before default validators
+    priority = 70
 
     def validate(self, data, schema=None):
         items_sum = sum(i.get("amount", 0) for i in data.get("items", []))
@@ -273,38 +271,6 @@ class DateNormalizer(Postprocessor):
                 result["date"] = f"{y}-{m}-{d}"
         return result
 ```
-
----
-
-## Pluggy Hooks
-
-Extend the processing pipeline with hooks:
-
-```python
-from strutex.plugins import hookimpl, register_hook_plugin
-
-class LoggingPlugin:
-    @hookimpl
-    def strutex_pre_process(self, file_path, prompt, schema, mime_type, context):
-        context["start_time"] = time.time()
-        print(f"Processing: {file_path}")
-
-    @hookimpl
-    def strutex_post_process(self, result, context):
-        elapsed = time.time() - context["start_time"]
-        print(f"Completed in {elapsed:.2f}s")
-
-# Register the hook plugin
-register_hook_plugin(LoggingPlugin())
-```
-
-Available hooks:
-
-| Hook                 | When              | Purpose                |
-| -------------------- | ----------------- | ---------------------- |
-| `strutex_pre_process`  | Before extraction | Modify inputs, logging |
-| `strutex_post_process` | After extraction  | Transform results      |
-| `strutex_on_error`     | On failure        | Error recovery         |
 
 ---
 

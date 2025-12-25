@@ -3,14 +3,14 @@ from strutex.types import Type
 class SchemaAdapter:
 
     @staticmethod
-    def to_google(strutex_schema):
+    def to_google(schema):
         """Converts Strutex schema -> Google GenAI Schema"""
         from google.genai import types as g_types
 
         # Recursive conversion
         props = {k: SchemaAdapter.to_google(v) for k, v in
-                 strutex_schema.properties.items()} if strutex_schema.properties else None
-        items = SchemaAdapter.to_google(strutex_schema.items) if strutex_schema.items else None
+                 schema.properties.items()} if schema.properties else None
+        items = SchemaAdapter.to_google(schema.items) if schema.items else None
 
         # Map Enum (Strutex Type -> Google Type)
         type_map = {
@@ -23,34 +23,33 @@ class SchemaAdapter:
         }
 
         return g_types.Schema(
-            # FIX: Use the Enum directly, NOT .value
-            type=type_map[strutex_schema.type],
-            description=strutex_schema.description,
+            type=type_map[schema.type],
+            description=schema.description,
             properties=props,
             items=items,
-            required=strutex_schema.required,
-            nullable=strutex_schema.nullable
+            required=schema.required,
+            nullable=schema.nullable
         )
 
     @staticmethod
-    def to_openai(strutex_schema):
+    def to_openai(schema):
         """Converts Strutex schema -> OpenAI JSON Schema (Dict)"""
         schema_dict = {
             # OpenAI expects generic strings like "object", "string"
-            "type": strutex_schema.type.value.lower(),
-            "description": strutex_schema.description
+            "type": schema.type.value.lower(),
+            "description": schema.description
         }
 
-        if strutex_schema.properties:
+        if schema.properties:
             schema_dict["properties"] = {
-                k: SchemaAdapter.to_openai(v) for k, v in strutex_schema.properties.items()
+                k: SchemaAdapter.to_openai(v) for k, v in schema.properties.items()
             }
             schema_dict["additionalProperties"] = False
 
-        if strutex_schema.required:
-            schema_dict["required"] = strutex_schema.required
+        if schema.required:
+            schema_dict["required"] = schema.required
 
-        if strutex_schema.items:
-            schema_dict["items"] = SchemaAdapter.to_openai(strutex_schema.items)
+        if schema.items:
+            schema_dict["items"] = SchemaAdapter.to_openai(schema.items)
 
         return schema_dict

@@ -12,6 +12,7 @@
 ## Features
 
 - **Plugin System v2** — Auto-registration via inheritance, lazy loading, entry points
+- **Hooks** — Callbacks and decorators for pre/post processing pipeline
 - **CLI Tooling** — `strutex plugins list|info|refresh` commands
 - **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, and custom endpoints
 - **Universal Document Support** — PDFs, images, Excel, and custom formats

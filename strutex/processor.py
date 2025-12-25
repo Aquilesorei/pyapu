@@ -6,13 +6,102 @@ class that orchestrates document extraction using pluggable LLM providers.
 """
 
 import os
-from typing import Any, Optional, Union, Type
+from typing import Any, Callable, Dict, List, Optional, Union, Type
 
 from .documents import get_mime_type
 from .types import Schema
 from .plugins.registry import PluginRegistry
 from .plugins.base import SecurityPlugin, SecurityResult
 from .providers.base import Provider
+
+# Type aliases for hook callbacks
+PreProcessCallback = Callable[[str, str, Any, str, Dict[str, Any]], Optional[Dict[str, Any]]]
+PostProcessCallback = Callable[[Dict[str, Any], Dict[str, Any]], Optional[Dict[str, Any]]]
+ErrorCallback = Callable[[Exception, str, Dict[str, Any]], Optional[Dict[str, Any]]]
+
+
+class _CallbackHookPlugin:
+    """
+    Wrapper that converts callback functions into a pluggy-compatible plugin.
+    
+    This allows callbacks registered via DocumentProcessor to integrate with
+    the global pluggy hook system.
+    """
+    
+    def __init__(
+        self,
+        pre_process_hooks: List[PreProcessCallback],
+        post_process_hooks: List[PostProcessCallback],
+        error_hooks: List[ErrorCallback],
+    ):
+        self._pre_process_hooks = pre_process_hooks
+        self._post_process_hooks = post_process_hooks
+        self._error_hooks = error_hooks
+    
+    def pre_process(
+        self,
+        file_path: str,
+        prompt: str,
+        schema: Any,
+        mime_type: str,
+        context: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """Execute all pre-process callbacks."""
+        result = None
+        for hook in self._pre_process_hooks:
+            try:
+                hook_result = hook(file_path, prompt, schema, mime_type, context)
+                if hook_result and isinstance(hook_result, dict):
+                    result = hook_result
+                    # Update prompt if modified
+                    if "prompt" in hook_result:
+                        prompt = hook_result["prompt"]
+            except Exception:
+                pass  # Hooks should not break processing
+        return result
+    
+    def post_process(
+        self,
+        result: Dict[str, Any],
+        context: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """Execute all post-process callbacks."""
+        for hook in self._post_process_hooks:
+            try:
+                modified = hook(result, context)
+                if modified is not None and isinstance(modified, dict):
+                    result = modified
+            except Exception:
+                pass
+        return result
+    
+    def on_error(
+        self,
+        error: Exception,
+        file_path: str,
+        context: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """Execute error callbacks until one returns a fallback."""
+        for hook in self._error_hooks:
+            try:
+                fallback = hook(error, file_path, context)
+                if fallback is not None:
+                    return fallback
+            except Exception:
+                pass
+        return None
+
+
+# Apply hookimpl markers to _CallbackHookPlugin methods
+# This must be done at class definition time, not instance time
+try:
+    from .plugins.hooks import hookimpl, PLUGGY_AVAILABLE
+    if PLUGGY_AVAILABLE:
+        _CallbackHookPlugin.pre_process = hookimpl(_CallbackHookPlugin.pre_process)
+        _CallbackHookPlugin.post_process = hookimpl(_CallbackHookPlugin.post_process)
+        _CallbackHookPlugin.on_error = hookimpl(_CallbackHookPlugin.on_error)
+except ImportError:
+    pass
 
 
 class DocumentProcessor:
@@ -42,28 +131,24 @@ class DocumentProcessor:
         print(result["invoice_number"])
         ```
 
-        With Pydantic model:
+        With callbacks:
 
         ```python
-        from pydantic import BaseModel
-
-        class Invoice(BaseModel):
-            invoice_number: str
-            total: float
-
-        result = processor.process("invoice.pdf", "Extract data", model=Invoice)
-        # result is a validated Invoice instance
-        ```
-
-        With security enabled:
-
-        ```python
-        from strutex.security import default_security_chain
-
         processor = DocumentProcessor(
             provider="gemini",
-            security=default_security_chain()
+            on_post_process=lambda result, ctx: {**result, "processed": True}
         )
+        ```
+
+        With decorator:
+
+        ```python
+        processor = DocumentProcessor()
+
+        @processor.on_post_process
+        def add_timestamp(result, context):
+            result["timestamp"] = datetime.now().isoformat()
+            return result
         ```
     """
 
@@ -72,7 +157,10 @@ class DocumentProcessor:
         provider: Union[str, Provider] = "gemini",
         model_name: str = "gemini-2.5-flash",
         api_key: Optional[str] = None,
-        security: Optional[SecurityPlugin] = None
+        security: Optional[SecurityPlugin] = None,
+        on_pre_process: Optional[PreProcessCallback] = None,
+        on_post_process: Optional[PostProcessCallback] = None,
+        on_error: Optional[ErrorCallback] = None,
     ):
         """
         Initialize the document processor.
@@ -86,21 +174,44 @@ class DocumentProcessor:
             security: Optional [`SecurityPlugin`][strutex.plugins.base.SecurityPlugin]
                 or [`SecurityChain`][strutex.security.chain.SecurityChain] for
                 input/output validation. Security is opt-in.
+            on_pre_process: Callback called before processing. Receives
+                (file_path, prompt, schema, mime_type, context) and can return
+                a dict with modified values.
+            on_post_process: Callback called after processing. Receives
+                (result, context) and can return a modified result dict.
+            on_error: Callback called on error. Receives (error, file_path, context)
+                and can return a fallback result or None to propagate the error.
 
         Raises:
             ValueError: If the specified provider is not found in the registry.
 
         Example:
             ```python
-            # Using provider name
-            processor = DocumentProcessor(provider="gemini")
-
-            # Using provider instance
-            from strutex.providers import GeminiProvider
-            processor = DocumentProcessor(provider=GeminiProvider(api_key="..."))
+            # Using callbacks
+            processor = DocumentProcessor(
+                provider="gemini",
+                on_post_process=lambda result, ctx: normalize_dates(result)
+            )
             ```
         """
         self.security = security
+
+        # Hook storage: callbacks first, then decorated hooks
+        self._pre_process_hooks: List[PreProcessCallback] = []
+        self._post_process_hooks: List[PostProcessCallback] = []
+        self._error_hooks: List[ErrorCallback] = []
+        
+        # Pluggy integration
+        self._hook_plugin: Optional[_CallbackHookPlugin] = None
+        self._hook_plugin_registered = False
+
+        # Add initial callbacks if provided
+        if on_pre_process:
+            self._pre_process_hooks.append(on_pre_process)
+        if on_post_process:
+            self._post_process_hooks.append(on_post_process)
+        if on_error:
+            self._error_hooks.append(on_error)
 
         # Resolve provider
         if isinstance(provider, str):
@@ -121,6 +232,104 @@ class DocumentProcessor:
         else:
             # Provider instance passed directly
             self._provider = provider
+
+    def _ensure_hooks_registered(self) -> None:
+        """Register callback hooks with pluggy if not already done."""
+        if self._hook_plugin_registered:
+            return
+            
+        # Only register if we have any hooks
+        if not (self._pre_process_hooks or self._post_process_hooks or self._error_hooks):
+            return
+            
+        from .plugins.hooks import get_plugin_manager, PLUGGY_AVAILABLE
+        
+        if not PLUGGY_AVAILABLE:
+            return
+            
+        pm = get_plugin_manager()
+        if pm is None:
+            return
+            
+        # Create and register the callback wrapper plugin
+        self._hook_plugin = _CallbackHookPlugin(
+            pre_process_hooks=self._pre_process_hooks,
+            post_process_hooks=self._post_process_hooks,
+            error_hooks=self._error_hooks,
+        )
+        pm.register(self._hook_plugin)
+        self._hook_plugin_registered = True
+
+    def __del__(self):
+        """Unregister hooks when processor is garbage collected."""
+        if self._hook_plugin_registered and self._hook_plugin:
+            try:
+                from .plugins.hooks import get_plugin_manager
+                pm = get_plugin_manager()
+                if pm:
+                    pm.unregister(self._hook_plugin)
+            except Exception:
+                pass  # Ignore errors during cleanup
+
+    # ==================== Decorator Methods ====================
+
+    def on_pre_process(self, func: PreProcessCallback) -> PreProcessCallback:
+        """
+        Decorator to register a pre-process hook.
+
+        The hook receives (file_path, prompt, schema, mime_type, context) and
+        can return a dict with modified values for 'prompt' or other parameters.
+
+        Example:
+            ```python
+            @processor.on_pre_process
+            def add_instructions(file_path, prompt, schema, mime_type, context):
+                return {"prompt": prompt + "\\nBe precise."}
+            ```
+        """
+        self._pre_process_hooks.append(func)
+        self._hook_plugin_registered = False  # Force re-registration
+        return func
+
+    def on_post_process(self, func: PostProcessCallback) -> PostProcessCallback:
+        """
+        Decorator to register a post-process hook.
+
+        The hook receives (result, context) and can return a modified result dict.
+
+        Example:
+            ```python
+            @processor.on_post_process
+            def normalize_dates(result, context):
+                result["date"] = parse_date(result.get("date"))
+                return result
+            ```
+        """
+        self._post_process_hooks.append(func)
+        self._hook_plugin_registered = False  # Force re-registration
+        return func
+
+    def on_error(self, func: ErrorCallback) -> ErrorCallback:
+        """
+        Decorator to register an error hook.
+
+        The hook receives (error, file_path, context) and can return a fallback
+        result dict. Return None to propagate the original error.
+
+        Example:
+            ```python
+            @processor.on_error
+            def handle_rate_limit(error, file_path, context):
+                if "rate limit" in str(error).lower():
+                    return {"error": "Rate limited, please retry"}
+                return None  # Propagate other errors
+            ```
+        """
+        self._error_hooks.append(func)
+        self._hook_plugin_registered = False  # Force re-registration
+        return func
+
+    # ==================== Main Processing ====================
 
     def process(
         self,
@@ -173,6 +382,9 @@ class DocumentProcessor:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
 
+        # Ensure hooks are registered with pluggy
+        self._ensure_hooks_registered()
+
         # Handle Pydantic model
         pydantic_model = None
         if model is not None:
@@ -186,6 +398,28 @@ class DocumentProcessor:
         # Detect MIME type
         mime_type = get_mime_type(file_path)
 
+        # Create context for hooks
+        context: Dict[str, Any] = {
+            "file_path": file_path,
+            "mime_type": mime_type,
+            "kwargs": kwargs,
+        }
+
+        # Run pre-process hooks via pluggy
+        from .plugins.hooks import call_hook
+        pre_results = call_hook(
+            "pre_process",
+            file_path=file_path,
+            prompt=prompt,
+            schema=schema,
+            mime_type=mime_type,
+            context=context
+        )
+        # Apply any prompt modifications from hooks
+        for hook_result in pre_results:
+            if hook_result and isinstance(hook_result, dict) and "prompt" in hook_result:
+                prompt = hook_result["prompt"]
+
         # Handle security
         effective_security = self._resolve_security(security)
 
@@ -196,14 +430,34 @@ class DocumentProcessor:
                 raise SecurityError(f"Input rejected: {input_result.reason}")
             prompt = input_result.text or prompt
 
-        # Process with provider
-        result = self._provider.process(
-            file_path=file_path,
-            prompt=prompt,
-            schema=schema,
-            mime_type=mime_type,
-            **kwargs
-        )
+        # Process with provider (with error handling)
+        try:
+            result = self._provider.process(
+                file_path=file_path,
+                prompt=prompt,
+                schema=schema,
+                mime_type=mime_type,
+                **kwargs
+            )
+        except Exception as e:
+            # Run error hooks via pluggy
+            error_results = call_hook(
+                "on_error",
+                error=e,
+                file_path=file_path,
+                context=context
+            )
+            # Use first non-None fallback
+            fallback = None
+            for hook_result in error_results:
+                if hook_result is not None:
+                    fallback = hook_result
+                    break
+            
+            if fallback is not None:
+                result = fallback
+            else:
+                raise  # Re-raise if no hook handled it
 
         # Apply output security if enabled
         if effective_security and isinstance(result, dict):
@@ -211,6 +465,18 @@ class DocumentProcessor:
             if not output_result.valid:
                 raise SecurityError(f"Output rejected: {output_result.reason}")
             result = output_result.data or result
+
+        # Run post-process hooks via pluggy
+        if isinstance(result, dict):
+            post_results = call_hook(
+                "post_process",
+                result=result,
+                context=context
+            )
+            # Apply modifications from hooks
+            for hook_result in post_results:
+                if hook_result is not None and isinstance(hook_result, dict):
+                    result = hook_result
 
         # Validate with Pydantic if model was provided
         if pydantic_model is not None:
