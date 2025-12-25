@@ -54,17 +54,20 @@ jobs:
           else
             VERSION="dev"
           fi
-
           echo "Deploying version: $VERSION"
 
-          # Fetch gh-pages if it exists
+          # Configure user again just in case
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch gh-pages to ensure we know it exists
           git fetch origin gh-pages --depth=1 || true
 
-          # Deploy with mike
+          # Deploy using --rebase to handle remote conflicts
           if [[ "$VERSION" == "dev" ]]; then
-            poetry run mike deploy dev --push --ignore-remote-status
-            poetry run mike set-default dev --push --ignore-remote-status
+            poetry run mike deploy dev --push --rebase
+            poetry run mike set-default dev --push --rebase
           else
-            poetry run mike deploy "$VERSION" latest --update-aliases --push --ignore-remote-status
-            poetry run mike set-default latest --push --ignore-remote-status
+            poetry run mike deploy "$VERSION" latest --update-aliases --push --rebase
+            poetry run mike set-default latest --push --rebase
           fi
