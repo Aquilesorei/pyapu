@@ -59,6 +59,9 @@ mkdocs-material = "^9.5.0"
 mkdocstrings = {extras = ["python"], version = "^0.27.0"}
 mike = "^2.1.0"
 
+[tool.coverage.run]
+omit = ["strutex/cli.py"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
