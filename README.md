@@ -186,8 +186,6 @@ mike deploy 0.3.0 latest --push
 
 This project is licensed under the **GNU General Public License v3.0** — see [LICENSE](LICENSE) for details.
 
-For commercial use, please [contact me](mailto:achillezongo07@gmail.com).
-
 ---
 
 ## Contributing
