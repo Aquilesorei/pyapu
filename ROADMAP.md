@@ -314,6 +314,7 @@ class MyCustomProvider(Provider, name="custom"):
 | v0.6.0  | 📋 Planned  | Extraction, Validation & Schemas          |
 | v0.7.0  | 📋 Planned  | Multi-Provider & Context                  |
 | v0.8.0  | ✅ Released | Caching & Performance                     |
+| v0.8.1  | ✅ Released | Documentation & Coverage Fixes            |
 | v0.8.5  | 📋 Planned  | Ecosystem Integrations (LlamaIndex, etc.) |
 | v0.9.0  | 📋 Planned  | Postprocessing & Reliability              |
 | v1.0.0  | 📋 Planned  | Production Ready (API, Docker, CLI)       |

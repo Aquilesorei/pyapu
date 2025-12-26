@@ -23,7 +23,7 @@
 
 ---
 
-## What's New in v0.8.0 
+## What's New in v0.8.1 🚀
 
 - **Smart Caching**: Built-in Memory, SQLite, and Redis-ready caching to save costs on redundant extractions.
 - **Async & Batching**: High-performance `aprocess` and `process_batch` for high-volume workflows.
@@ -222,6 +222,7 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan.
 - [x] v0.6.0 — Built-in Schemas & Logging
 - [x] v0.7.0 — Providers & Retries
 - [x] v0.8.0 — Async, Batch, Cache, Verification
+- [x] v0.8.1 — Documentation & Coverage Fixes
 
 ---
 

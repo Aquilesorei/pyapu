@@ -4,6 +4,16 @@ All notable changes to strutex will be documented here.
 
 ---
 
+## v0.8.1 (December 26, 2025)
+
+### 🐛 Bug Fixes & Improvements
+
+- **Documentation**: Updated README with "What's New" and PyPI links.
+- **Coverage**: Increased test coverage >61% (OpenAI/Langdock tests).
+- **Docs**: Added `docs/caching.md`.
+
+---
+
 ## v0.8.0 (December 26, 2025)
 
 ### 🚀 New Features
