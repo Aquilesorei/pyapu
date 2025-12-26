@@ -53,3 +53,9 @@ class SchemaAdapter:
             schema_dict["items"] = SchemaAdapter.to_openai(schema.items)
 
         return schema_dict
+
+    @staticmethod
+    def to_json_schema(schema):
+        """Converts Strutex schema -> Standard JSON Schema"""
+        # OpenAI format is compatible enough for standard usage
+        return SchemaAdapter.to_openai(schema)

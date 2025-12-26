@@ -186,10 +186,11 @@ Extract the data from the attached document and return valid JSON matching this 
     def _clean_json_string(self, content: str) -> str:
         """Strip markdown code blocks from a string."""
         content = content.strip()
-        if content.startswith("```json"):
+        if "```json" in content:
             content = content.split("```json", 1)[1]
-        elif content.startswith("```"):
+        elif "```" in content:
             content = content.split("```", 1)[1]
+            
         if content.endswith("```"):
             content = content.rsplit("```", 1)[0]
         return content.strip()
