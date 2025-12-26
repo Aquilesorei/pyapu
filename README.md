@@ -23,6 +23,15 @@
 
 ---
 
+## What's New in v0.8.0 
+
+- **Smart Caching**: Built-in Memory, SQLite, and Redis-ready caching to save costs on redundant extractions.
+- **Async & Batching**: High-performance `aprocess` and `process_batch` for high-volume workflows.
+- **Verification Loop**: Auto-correction agent that audits and fixes its own extractions.
+- **Expanded Providers**: First-class support for OpenAI, Anthropic, Ollama, Groq, and Langdock.
+
+---
+
 ## Quick Start
 
 ### Installation
@@ -75,6 +84,54 @@ result = processor.process(
 
 print(result["invoice_number"])  # "INV-2024-001"
 print(result["total"])           # 1250.00
+```
+
+### Advanced Usage
+
+#### 1. Caching
+
+Save API costs by caching results. Smart hashing avoids re-processing identical files/prompts.
+
+```python
+from strutex.cache import SQLiteCache
+
+# Persistent cache across runs
+processor = DocumentProcessor(
+    provider="openai",
+    cache=SQLiteCache("strutex_cache.db")
+)
+```
+
+#### 2. Async Processing
+
+Process multiple documents in parallel.
+
+```python
+import asyncio
+
+async def main():
+    processor = DocumentProcessor(provider="anthropic")
+
+    # Run in parallel
+    results = await asyncio.gather(
+        processor.aprocess("doc1.pdf", "Summary", schema),
+        processor.aprocess("doc2.pdf", "Summary", schema)
+    )
+
+asyncio.run(main())
+```
+
+#### 3. Verification & Self-Correction
+
+Enable the audit loop to have the LLM double-check its work.
+
+```python
+result = processor.process(
+    "contract.pdf",
+    prompt="Extract clauses",
+    schema=contract_schema,
+    verify=True  # triggers self-correction loop
+)
 ```
 
 ---
