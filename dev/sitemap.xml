@@ -2,50 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://strutex.readthedocs.io/dev/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/api-reference/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/changelog/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/cli/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/getting-started/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/hooks/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/plugins/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/prompt-builder/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/providers/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/pydantic/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/schema-types/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/security/</loc>
-         <lastmod>2025-12-25</lastmod>
+         <lastmod>2025-12-26</lastmod>
     </url>
 </urlset>
