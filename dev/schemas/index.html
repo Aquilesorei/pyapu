@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://strutex.readthedocs.io/dev/security/">
+        <link rel="canonical" href="https://strutex.readthedocs.io/dev/schemas/">
       
       
-        <link rel="prev" href="../validators/">
+        <link rel="prev" href="../schema-types/">
       
       
-        <link rel="next" href="../api-reference/">
+        <link rel="next" href="../prompt-builder/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Security Layer - Strutex Documentation</title>
+        <title>Built-in Schemas - Strutex Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#security-layer" class="md-skip">
+        <a href="#built-in-schemas" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Security Layer
+              Built-in Schemas
             
           </span>
         </div>
@@ -267,10 +267,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../schema-types/" class="md-tabs__link">
           
   
@@ -327,12 +329,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../extractors/" class="md-tabs__link">
           
   
@@ -486,28 +486,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -525,7 +528,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -568,10 +571,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../schemas/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Built-in Schemas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -587,6 +617,203 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Schemas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Schemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invoices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receipts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receipts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purchase-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purchase Orders
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipping-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipping Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#financial-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Financial Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resumescvs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumes/CVs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legal-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legal Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extending-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending Schemas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invoicegeneric-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InvoiceGeneric Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receipt-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receipt Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#billoflading-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BillOfLading Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1033,31 +1260,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1075,7 +1299,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1146,37 +1370,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Security Layer
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
         
   
   
@@ -1192,120 +1389,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#built-in-plugins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in Plugins
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Built-in Plugins">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#inputsanitizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InputSanitizer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#promptinjectiondetector" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PromptInjectionDetector
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#outputvalidator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OutputValidator
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-chain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Chain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-security-plugin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Security Plugin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-security-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Security Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1410,22 +1493,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-plugins" class="md-nav__link">
+  <a href="#available-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Plugins
+        Available Schemas
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Built-in Plugins">
+    <nav class="md-nav" aria-label="Available Schemas">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputsanitizer" class="md-nav__link">
+  <a href="#invoices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        InputSanitizer
+        Invoices
       
     </span>
   </a>
@@ -1433,10 +1516,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#promptinjectiondetector" class="md-nav__link">
+  <a href="#receipts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PromptInjectionDetector
+        Receipts
       
     </span>
   </a>
@@ -1444,10 +1527,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#outputvalidator" class="md-nav__link">
+  <a href="#purchase-orders" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OutputValidator
+        Purchase Orders
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipping-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipping Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#financial-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Financial Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resumescvs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumes/CVs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legal-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legal Documents
       
     </span>
   </a>
@@ -1460,10 +1587,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-chain" class="md-nav__link">
+  <a href="#extending-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Chain
+        Extending Schemas
       
     </span>
   </a>
@@ -1471,21 +1598,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-security-plugin" class="md-nav__link">
+  <a href="#schema-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Security Plugin
+        Schema Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invoicegeneric-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InvoiceGeneric Fields
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-security-errors" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#receipt-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Handling Security Errors
+        Receipt Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#billoflading-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BillOfLading Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -1512,118 +1678,376 @@
   
 
 
-<h1 id="security-layer">Security Layer<a class="headerlink" href="#security-layer" title="Permanent link">&para;</a></h1>
-<p>Protect against prompt injection and data leaks with strutex's pluggable security layer.</p>
-<div class="admonition warning">
-<p class="admonition-title">Security is Opt-In</p>
-</div>
-<p>Security features are not enabled by default. You must explicitly enable them.</p>
+<h1 id="built-in-schemas">Built-in Schemas<a class="headerlink" href="#built-in-schemas" title="Permanent link">&para;</a></h1>
+<p>strutex includes ready-to-use Pydantic schemas for common document types. Use these directly with <code>DocumentProcessor</code> for instant structured extraction.</p>
 <hr />
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Default Chain</label><label for="__tabbed_1_2">Per-Request</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_security_chain</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">INVOICE_US</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">security</span><span class="o">=</span><span class="n">default_security_chain</span><span class="p">()</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">invoice</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;invoice.pdf&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s2">&quot;Extract invoice details&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">model</span><span class="o">=</span><span class="n">INVOICE_US</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invoice #</span><span class="si">{</span><span class="n">invoice</span><span class="o">.</span><span class="n">invoice_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total: $</span><span class="si">{</span><span class="n">invoice</span><span class="o">.</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Items: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">invoice</span><span class="o">.</span><span class="n">line_items</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Enable for specific request</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
 <hr />
-<h2 id="built-in-plugins">Built-in Plugins<a class="headerlink" href="#built-in-plugins" title="Permanent link">&para;</a></h2>
-<h3 id="inputsanitizer">InputSanitizer<a class="headerlink" href="#inputsanitizer" title="Permanent link">&para;</a></h3>
-<p>Cleans and normalizes input text.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputSanitizer</span>
+<h2 id="available-schemas">Available Schemas<a class="headerlink" href="#available-schemas" title="Permanent link">&para;</a></h2>
+<h3 id="invoices">Invoices<a class="headerlink" href="#invoices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INVOICE_GENERIC</code></td>
+<td>Universal invoice format</td>
+<td>invoice_number, vendor, customer, line_items, total</td>
+</tr>
+<tr>
+<td><code>INVOICE_US</code></td>
+<td>US-style with sales tax</td>
+<td>+ sales_tax, state_tax_rate, ein</td>
+</tr>
+<tr>
+<td><code>INVOICE_EU</code></td>
+<td>EU-style with VAT</td>
+<td>+ vat_number, vat_rate, reverse_charge</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">INVOICE_GENERIC</span><span class="p">,</span> <span class="n">INVOICE_US</span><span class="p">,</span> <span class="n">INVOICE_EU</span>
+</span></code></pre></div>
+<h3 id="receipts">Receipts<a class="headerlink" href="#receipts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RECEIPT</code></td>
+<td>Retail/restaurant receipts</td>
+<td>merchant_name, items, subtotal, tax, total, payment_method</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">RECEIPT</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">sanitizer</span> <span class="o">=</span> <span class="n">InputSanitizer</span><span class="p">(</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">collapse_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># &quot;Hello   World&quot; → &quot;Hello World&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">normalize_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># NFKC normalization</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">remove_invisible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>      <span class="c1"># Remove zero-width chars</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">max_length</span><span class="o">=</span><span class="mi">50000</span>            <span class="c1"># Reject if too long</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">receipt</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;receipt.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract receipt&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">RECEIPT</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Store: </span><span class="si">{</span><span class="n">receipt</span><span class="o">.</span><span class="n">merchant_name</span><span class="si">}</span><span class="s2">, Total: $</span><span class="si">{</span><span class="n">receipt</span><span class="o">.</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="promptinjectiondetector">PromptInjectionDetector<a class="headerlink" href="#promptinjectiondetector" title="Permanent link">&para;</a></h3>
-<p>Detects common prompt injection patterns.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptInjectionDetector</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">detector</span> <span class="o">=</span> <span class="n">PromptInjectionDetector</span><span class="p">()</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="s2">&quot;Ignore previous instructions&quot;</span><span class="p">)</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># &quot;Potential prompt injection detected&quot;</span>
+<h3 id="purchase-orders">Purchase Orders<a class="headerlink" href="#purchase-orders" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PURCHASE_ORDER</code></td>
+<td>B2B purchase orders</td>
+<td>po_number, vendor_name, line_items, ship_to, payment_terms</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">PURCHASE_ORDER</span>
 </span></code></pre></div>
-<p><strong>Detected patterns:</strong></p>
-<ul>
-<li><code>"Ignore previous instructions"</code></li>
-<li><code>"You are now X"</code></li>
-<li><code>"Show me your system prompt"</code></li>
-<li>XML/HTML delimiter attacks</li>
-</ul>
-<h3 id="outputvalidator">OutputValidator<a class="headerlink" href="#outputvalidator" title="Permanent link">&para;</a></h3>
-<p>Checks LLM output for sensitive data.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputValidator</span>
+<h3 id="shipping-documents">Shipping Documents<a class="headerlink" href="#shipping-documents" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BILL_OF_LADING</code></td>
+<td>Ocean freight B/L</td>
+<td>bl_number, shipper, consignee, containers, cargo, port_of_loading, port_of_discharge</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BILL_OF_LADING</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">validator</span> <span class="o">=</span> <span class="n">OutputValidator</span><span class="p">(</span><span class="n">check_secrets</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate_output</span><span class="p">({</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;sk-1234...&quot;</span><span class="p">})</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># &quot;Potential API key detected&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">bol</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;bl.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract B/L&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">BILL_OF_LADING</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_loading</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_discharge</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="financial-documents">Financial Documents<a class="headerlink" href="#financial-documents" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BANK_STATEMENT</code></td>
+<td>Bank account statements</td>
+<td>account_number, opening_balance, closing_balance, transactions</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BANK_STATEMENT</span>
+</span></code></pre></div>
+<h3 id="resumescvs">Resumes/CVs<a class="headerlink" href="#resumescvs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RESUME</code></td>
+<td>Professional resumes</td>
+<td>name, email, skills, work_experience, education, certifications</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">RESUME</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">resume</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;resume.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract resume&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">RESUME</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resume</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resume</span><span class="o">.</span><span class="n">work_experience</span><span class="p">)</span><span class="si">}</span><span class="s2"> positions&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="legal-documents">Legal Documents<a class="headerlink" href="#legal-documents" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CONTRACT_CLAUSE</code></td>
+<td>Contract key terms</td>
+<td>title, parties, effective_date, payment_terms, governing_law</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTRACT_CLAUSE</span>
 </span></code></pre></div>
 <hr />
-<h2 id="security-chain">Security Chain<a class="headerlink" href="#security-chain" title="Permanent link">&para;</a></h2>
-<p>Combine multiple plugins:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityChain</span><span class="p">,</span> <span class="n">InputSanitizer</span><span class="p">,</span> <span class="n">PromptInjectionDetector</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">SecurityChain</span><span class="p">([</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">InputSanitizer</span><span class="p">(</span><span class="n">collapse_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">PromptInjectionDetector</span><span class="p">(),</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">])</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="s2">&quot;Ignore    all   instructions&quot;</span><span class="p">)</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False (injection detected)</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>    <span class="c1"># &quot;Ignore all instructions&quot; (sanitized)</span>
+<h2 id="extending-schemas">Extending Schemas<a class="headerlink" href="#extending-schemas" title="Permanent link">&para;</a></h2>
+<p>Create custom schemas by inheriting from built-in ones:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvoiceGeneric</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyInvoice</span><span class="p">(</span><span class="n">InvoiceGeneric</span><span class="p">):</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom invoice with company-specific fields.&quot;&quot;&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">internal_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Internal tracking code&quot;</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">department</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Department to charge&quot;</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Use your custom schema</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;invoice.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract invoice&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">MyInvoice</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="custom-security-plugin">Custom Security Plugin<a class="headerlink" href="#custom-security-plugin" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.plugins</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityPlugin</span><span class="p">,</span> <span class="n">SecurityResult</span><span class="p">,</span> <span class="n">register</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nd">@register</span><span class="p">(</span><span class="s2">&quot;security&quot;</span><span class="p">)</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">PIIRedactor</span><span class="p">(</span><span class="n">SecurityPlugin</span><span class="p">):</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Redact emails from output.&quot;&quot;&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">redact</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\S+@\S+&#39;</span><span class="p">,</span> <span class="s1">&#39;[EMAIL]&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">redact</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                <span class="k">return</span> <span class="p">[</span><span class="n">redact</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">]</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>            <span class="k">return</span> <span class="n">obj</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="k">return</span> <span class="n">SecurityResult</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">redact</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-</span></code></pre></div>
+<h2 id="schema-reference">Schema Reference<a class="headerlink" href="#schema-reference" title="Permanent link">&para;</a></h2>
+<h3 id="invoicegeneric-fields">InvoiceGeneric Fields<a class="headerlink" href="#invoicegeneric-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoice_number</code></td>
+<td>str</td>
+<td>Invoice number/ID</td>
+</tr>
+<tr>
+<td><code>invoice_date</code></td>
+<td>str?</td>
+<td>Invoice date</td>
+</tr>
+<tr>
+<td><code>due_date</code></td>
+<td>str?</td>
+<td>Payment due date</td>
+</tr>
+<tr>
+<td><code>vendor</code></td>
+<td>Party?</td>
+<td>Seller information</td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td>Party?</td>
+<td>Buyer information</td>
+</tr>
+<tr>
+<td><code>line_items</code></td>
+<td>list</td>
+<td>List of line items</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>float?</td>
+<td>Subtotal before tax</td>
+</tr>
+<tr>
+<td><code>tax_amount</code></td>
+<td>float?</td>
+<td>Tax amount</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>float</td>
+<td>Grand total</td>
+</tr>
+<tr>
+<td><code>payment_terms</code></td>
+<td>str?</td>
+<td>Payment terms</td>
+</tr>
+</tbody>
+</table>
+<h3 id="receipt-fields">Receipt Fields<a class="headerlink" href="#receipt-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>merchant_name</code></td>
+<td>str</td>
+<td>Store name</td>
+</tr>
+<tr>
+<td><code>receipt_number</code></td>
+<td>str?</td>
+<td>Receipt/transaction number</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>str?</td>
+<td>Transaction date</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>list</td>
+<td>Purchased items</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>float?</td>
+<td>Before tax</td>
+</tr>
+<tr>
+<td><code>tax</code></td>
+<td>float?</td>
+<td>Tax amount</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>float</td>
+<td>Total paid</td>
+</tr>
+<tr>
+<td><code>payment_method</code></td>
+<td>str?</td>
+<td>Cash, Card, etc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="billoflading-fields">BillOfLading Fields<a class="headerlink" href="#billoflading-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bl_number</code></td>
+<td>str</td>
+<td>B/L number</td>
+</tr>
+<tr>
+<td><code>shipper</code></td>
+<td>str?</td>
+<td>Shipper name/address</td>
+</tr>
+<tr>
+<td><code>consignee</code></td>
+<td>str?</td>
+<td>Consignee name/address</td>
+</tr>
+<tr>
+<td><code>carrier</code></td>
+<td>str?</td>
+<td>Shipping line</td>
+</tr>
+<tr>
+<td><code>vessel_name</code></td>
+<td>str?</td>
+<td>Ship name</td>
+</tr>
+<tr>
+<td><code>port_of_loading</code></td>
+<td>str?</td>
+<td>POL</td>
+</tr>
+<tr>
+<td><code>port_of_discharge</code></td>
+<td>str?</td>
+<td>POD</td>
+</tr>
+<tr>
+<td><code>containers</code></td>
+<td>list</td>
+<td>Container details</td>
+</tr>
+<tr>
+<td><code>cargo</code></td>
+<td>list</td>
+<td>Cargo details</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="handling-security-errors">Handling Security Errors<a class="headerlink" href="#handling-security-errors" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityError</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">try</span><span class="p">:</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">except</span> <span class="n">SecurityError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Security check failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Use specific schemas when possible</strong> - <code>INVOICE_US</code> over <code>INVOICE_GENERIC</code> for better accuracy</li>
+<li><strong>Extend for custom fields</strong> - Inherit and add company-specific fields</li>
+<li><strong>Validate after extraction</strong> - Use Pydantic's validation:</li>
+</ol>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">invoice</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">INVOICE_US</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extraction incomplete: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 
 

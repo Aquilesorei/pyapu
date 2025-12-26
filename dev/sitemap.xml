@@ -9,11 +9,23 @@
          <lastmod>2025-12-26</lastmod>
     </url>
     <url>
+         <loc>https://strutex.readthedocs.io/dev/cache/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
          <loc>https://strutex.readthedocs.io/dev/changelog/</loc>
          <lastmod>2025-12-26</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/cli/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
+         <loc>https://strutex.readthedocs.io/dev/context/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
+         <loc>https://strutex.readthedocs.io/dev/extractors/</loc>
          <lastmod>2025-12-26</lastmod>
     </url>
     <url>
@@ -33,6 +45,10 @@
          <lastmod>2025-12-26</lastmod>
     </url>
     <url>
+         <loc>https://strutex.readthedocs.io/dev/provider-chains/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
          <loc>https://strutex.readthedocs.io/dev/providers/</loc>
          <lastmod>2025-12-26</lastmod>
     </url>
@@ -45,7 +61,23 @@
          <lastmod>2025-12-26</lastmod>
     </url>
     <url>
+         <loc>https://strutex.readthedocs.io/dev/schemas/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
          <loc>https://strutex.readthedocs.io/dev/security/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
+         <loc>https://strutex.readthedocs.io/dev/streaming/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
+         <loc>https://strutex.readthedocs.io/dev/validators/</loc>
+         <lastmod>2025-12-26</lastmod>
+    </url>
+    <url>
+         <loc>https://strutex.readthedocs.io/dev/verification/</loc>
          <lastmod>2025-12-26</lastmod>
     </url>
 </urlset>

@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://strutex.readthedocs.io/dev/security/">
+        <link rel="canonical" href="https://strutex.readthedocs.io/dev/provider-chains/">
       
       
-        <link rel="prev" href="../validators/">
+        <link rel="prev" href="../providers/">
       
       
-        <link rel="next" href="../api-reference/">
+        <link rel="next" href="../cache/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Security Layer - Strutex Documentation</title>
+        <title>Provider Chains - Strutex Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#security-layer" class="md-skip">
+        <a href="#provider-chains" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Security Layer
+              Provider Chains
             
           </span>
         </div>
@@ -287,10 +287,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../providers/" class="md-tabs__link">
           
   
@@ -327,12 +329,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../extractors/" class="md-tabs__link">
           
   
@@ -715,28 +715,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -754,7 +757,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -797,10 +800,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../provider-chains/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provider Chains
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -816,6 +846,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-built-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-built Chains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-built Chains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local_first_chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        local_first_chain()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost_optimized_chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cost_optimized_chain()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Chains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Chains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-provider-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Provider Instances
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-provider-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Provider Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fallback-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback Callbacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tracking-which-provider-succeeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tracking Which Provider Succeeded
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1033,31 +1249,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1075,7 +1288,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1146,37 +1359,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Security Layer
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
         
   
   
@@ -1192,120 +1378,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#built-in-plugins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in Plugins
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Built-in Plugins">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#inputsanitizer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InputSanitizer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#promptinjectiondetector" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PromptInjectionDetector
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#outputvalidator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OutputValidator
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-chain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Chain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-security-plugin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Security Plugin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-security-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Security Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1410,22 +1482,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-plugins" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Plugins
+        How It Works
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Built-in Plugins">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-built-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-built Chains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-built Chains">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#inputsanitizer" class="md-nav__link">
+  <a href="#local_first_chain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        InputSanitizer
+        local_first_chain()
       
     </span>
   </a>
@@ -1433,21 +1516,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#promptinjectiondetector" class="md-nav__link">
+  <a href="#cost_optimized_chain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PromptInjectionDetector
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#outputvalidator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OutputValidator
+        cost_optimized_chain()
       
     </span>
   </a>
@@ -1460,10 +1532,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-chain" class="md-nav__link">
+  <a href="#custom-chains" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Chain
+        Custom Chains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Chains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-provider-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Provider Instances
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-provider-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Provider Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fallback-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback Callbacks
       
     </span>
   </a>
@@ -1471,10 +1582,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-security-plugin" class="md-nav__link">
+  <a href="#tracking-which-provider-succeeded" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Security Plugin
+        Tracking Which Provider Succeeded
       
     </span>
   </a>
@@ -1482,10 +1593,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#handling-security-errors" class="md-nav__link">
+  <a href="#async-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Handling Security Errors
+        Async Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -1512,119 +1656,175 @@
   
 
 
-<h1 id="security-layer">Security Layer<a class="headerlink" href="#security-layer" title="Permanent link">&para;</a></h1>
-<p>Protect against prompt injection and data leaks with strutex's pluggable security layer.</p>
-<div class="admonition warning">
-<p class="admonition-title">Security is Opt-In</p>
-</div>
-<p>Security features are not enabled by default. You must explicitly enable them.</p>
+<h1 id="provider-chains">Provider Chains<a class="headerlink" href="#provider-chains" title="Permanent link">&para;</a></h1>
+<p>Provider chains allow automatic fallback between multiple providers for reliability and cost optimization.</p>
 <hr />
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Default Chain</label><label for="__tabbed_1_2">Per-Request</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_security_chain</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">security</span><span class="o">=</span><span class="n">default_security_chain</span><span class="p">()</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span><span class="p">,</span> <span class="n">ProviderChain</span><span class="p">,</span> <span class="n">local_first_chain</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Use a pre-built chain</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="n">local_first_chain</span><span class="p">())</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Or create a custom chain</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeminiProvider</span><span class="p">,</span> <span class="n">OllamaProvider</span><span class="p">,</span> <span class="n">OpenAIProvider</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">([</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">OllamaProvider</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.2-vision&quot;</span><span class="p">),</span>  <span class="c1"># Try local first</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">GeminiProvider</span><span class="p">(),</span>                          <span class="c1"># Then Gemini</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">OpenAIProvider</span><span class="p">()</span>                           <span class="c1"># Finally OpenAI</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">])</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="n">chain</span><span class="p">)</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">)</span>
+<hr />
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>When you call <code>process()</code> on a ProviderChain:</p>
+<ol>
+<li>The first provider attempts the extraction</li>
+<li>If it fails (any exception), the chain moves to the next provider</li>
+<li>Process continues until one succeeds or all fail</li>
+<li>If all fail, raises <code>ProviderChainError</code> with details</li>
+</ol>
+<pre class="mermaid"><code>graph LR
+    A[Request] --&gt; B[Provider 1]
+    B --&gt;|Success| C[Return Result]
+    B --&gt;|Fail| D[Provider 2]
+    D --&gt;|Success| C
+    D --&gt;|Fail| E[Provider 3]
+    E --&gt;|Success| C
+    E --&gt;|Fail| F[ProviderChainError]</code></pre>
+<hr />
+<h2 id="pre-built-chains">Pre-built Chains<a class="headerlink" href="#pre-built-chains" title="Permanent link">&para;</a></h2>
+<h3 id="local_first_chain">local_first_chain()<a class="headerlink" href="#local_first_chain" title="Permanent link">&para;</a></h3>
+<p>Prefers local/free providers:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_first_chain</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Enable for specific request</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">local_first_chain</span><span class="p">()</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Order: Ollama → Gemini → OpenAI</span>
 </span></code></pre></div>
-</div>
-</div>
-</div>
-<hr />
-<h2 id="built-in-plugins">Built-in Plugins<a class="headerlink" href="#built-in-plugins" title="Permanent link">&para;</a></h2>
-<h3 id="inputsanitizer">InputSanitizer<a class="headerlink" href="#inputsanitizer" title="Permanent link">&para;</a></h3>
-<p>Cleans and normalizes input text.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputSanitizer</span>
+<h3 id="cost_optimized_chain">cost_optimized_chain()<a class="headerlink" href="#cost_optimized_chain" title="Permanent link">&para;</a></h3>
+<p>Ordered by cost (cheapest first):</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">cost_optimized_chain</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">sanitizer</span> <span class="o">=</span> <span class="n">InputSanitizer</span><span class="p">(</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">collapse_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># &quot;Hello   World&quot; → &quot;Hello World&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">normalize_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># NFKC normalization</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">remove_invisible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>      <span class="c1"># Remove zero-width chars</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">max_length</span><span class="o">=</span><span class="mi">50000</span>            <span class="c1"># Reject if too long</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">cost_optimized_chain</span><span class="p">()</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Order: Ollama (free) → Gemini → Anthropic → OpenAI</span>
 </span></code></pre></div>
-<h3 id="promptinjectiondetector">PromptInjectionDetector<a class="headerlink" href="#promptinjectiondetector" title="Permanent link">&para;</a></h3>
-<p>Detects common prompt injection patterns.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptInjectionDetector</span>
+<hr />
+<h2 id="custom-chains">Custom Chains<a class="headerlink" href="#custom-chains" title="Permanent link">&para;</a></h2>
+<h3 id="using-provider-instances">Using Provider Instances<a class="headerlink" href="#using-provider-instances" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProviderChain</span><span class="p">,</span> <span class="n">OllamaProvider</span><span class="p">,</span> <span class="n">GeminiProvider</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">detector</span> <span class="o">=</span> <span class="n">PromptInjectionDetector</span><span class="p">()</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="s2">&quot;Ignore previous instructions&quot;</span><span class="p">)</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># &quot;Potential prompt injection detected&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">([</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">OllamaProvider</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.2-vision&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">GeminiProvider</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">])</span>
 </span></code></pre></div>
-<p><strong>Detected patterns:</strong></p>
-<ul>
-<li><code>"Ignore previous instructions"</code></li>
-<li><code>"You are now X"</code></li>
-<li><code>"Show me your system prompt"</code></li>
-<li>XML/HTML delimiter attacks</li>
-</ul>
-<h3 id="outputvalidator">OutputValidator<a class="headerlink" href="#outputvalidator" title="Permanent link">&para;</a></h3>
-<p>Checks LLM output for sensitive data.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputValidator</span>
+<h3 id="using-provider-names">Using Provider Names<a class="headerlink" href="#using-provider-names" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_fallback_chain</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">validator</span> <span class="o">=</span> <span class="n">OutputValidator</span><span class="p">(</span><span class="n">check_secrets</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate_output</span><span class="p">({</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;sk-1234...&quot;</span><span class="p">})</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># &quot;Potential API key detected&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Resolves provider names automatically</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">create_fallback_chain</span><span class="p">(</span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini&quot;</span><span class="p">,</span> <span class="s2">&quot;openai&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="security-chain">Security Chain<a class="headerlink" href="#security-chain" title="Permanent link">&para;</a></h2>
-<p>Combine multiple plugins:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityChain</span><span class="p">,</span> <span class="n">InputSanitizer</span><span class="p">,</span> <span class="n">PromptInjectionDetector</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">SecurityChain</span><span class="p">([</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">InputSanitizer</span><span class="p">(</span><span class="n">collapse_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">PromptInjectionDetector</span><span class="p">(),</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">])</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="s2">&quot;Ignore    all   instructions&quot;</span><span class="p">)</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">)</span>   <span class="c1"># False (injection detected)</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>    <span class="c1"># &quot;Ignore all instructions&quot; (sanitized)</span>
+<h2 id="fallback-callbacks">Fallback Callbacks<a class="headerlink" href="#fallback-callbacks" title="Permanent link">&para;</a></h2>
+<p>Get notified when fallback occurs:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">on_fallback</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provider </span><span class="si">{</span><span class="n">provider</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="c1"># Log, send alert, etc.</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">(</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">providers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini&quot;</span><span class="p">],</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">on_fallback</span><span class="o">=</span><span class="n">on_fallback</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="custom-security-plugin">Custom Security Plugin<a class="headerlink" href="#custom-security-plugin" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.plugins</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityPlugin</span><span class="p">,</span> <span class="n">SecurityResult</span><span class="p">,</span> <span class="n">register</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nd">@register</span><span class="p">(</span><span class="s2">&quot;security&quot;</span><span class="p">)</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">PIIRedactor</span><span class="p">(</span><span class="n">SecurityPlugin</span><span class="p">):</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Redact emails from output.&quot;&quot;&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">redact</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\S+@\S+&#39;</span><span class="p">,</span> <span class="s1">&#39;[EMAIL]&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">redact</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                <span class="k">return</span> <span class="p">[</span><span class="n">redact</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">]</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>            <span class="k">return</span> <span class="n">obj</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="k">return</span> <span class="n">SecurityResult</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">redact</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<h2 id="tracking-which-provider-succeeded">Tracking Which Provider Succeeded<a class="headerlink" href="#tracking-which-provider-succeeded" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">([</span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini&quot;</span><span class="p">,</span> <span class="s2">&quot;openai&quot;</span><span class="p">])</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check which provider was used</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Used: </span><span class="si">{</span><span class="n">chain</span><span class="o">.</span><span class="n">last_provider</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="handling-security-errors">Handling Security Errors<a class="headerlink" href="#handling-security-errors" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityError</span>
+<h2 id="async-support">Async Support<a class="headerlink" href="#async-support" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">try</span><span class="p">:</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">except</span> <span class="n">SecurityError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Security check failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">extract</span><span class="p">():</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">([</span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini&quot;</span><span class="p">])</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">chain</span><span class="o">.</span><span class="n">aprocess</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="k">return</span> <span class="n">result</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">extract</span><span class="p">())</span>
 </span></code></pre></div>
+<hr />
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProviderChain</span><span class="p">,</span> <span class="n">ProviderChainError</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">ProviderChain</span><span class="p">([</span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini&quot;</span><span class="p">])</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">except</span> <span class="n">ProviderChainError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All providers failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="c1"># Access individual errors</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="k">for</span> <span class="n">provider</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">provider</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="available-providers">Available Providers<a class="headerlink" href="#available-providers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Cost</th>
+<th>Priority</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OllamaProvider</code></td>
+<td>0.0</td>
+<td>40</td>
+<td>vision, local</td>
+</tr>
+<tr>
+<td><code>GroqProvider</code></td>
+<td>0.3</td>
+<td>45</td>
+<td>fast, vision</td>
+</tr>
+<tr>
+<td><code>GeminiProvider</code></td>
+<td>1.0</td>
+<td>50</td>
+<td>vision</td>
+</tr>
+<tr>
+<td><code>AnthropicProvider</code></td>
+<td>1.5</td>
+<td>55</td>
+<td>vision, large_context</td>
+</tr>
+<tr>
+<td><code>OpenAIProvider</code></td>
+<td>2.0</td>
+<td>60</td>
+<td>vision, function_calling</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Put cheapest/fastest providers first</strong> for cost optimization</li>
+<li><strong>Put most reliable providers last</strong> as final fallback</li>
+<li><strong>Set appropriate timeouts</strong> on each provider</li>
+<li><strong>Use callbacks</strong> to log/alert on failures</li>
+<li><strong>Check <code>last_provider</code></strong> to understand usage patterns</li>
+</ol>
 
 
 
