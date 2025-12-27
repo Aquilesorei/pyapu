@@ -1210,6 +1210,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#order-confirmations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Confirmations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shipping-documents" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2085,6 +2096,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#order-confirmations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Confirmations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shipping-documents" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2315,6 +2337,25 @@
 </table>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">PURCHASE_ORDER</span>
 </span></code></pre></div>
+<h3 id="order-confirmations">Order Confirmations<a class="headerlink" href="#order-confirmations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ORDER_CONFIRMATION</code></td>
+<td>Quotations / Order Responses</td>
+<td>quotation_number, vendor, buyer, items, delivery, totals</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">ORDER_CONFIRMATION</span>
+</span></code></pre></div>
 <h3 id="shipping-documents">Shipping Documents<a class="headerlink" href="#shipping-documents" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2332,10 +2373,12 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BILL_OF_LADING</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">bol</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;bl.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract B/L&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">BILL_OF_LADING</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_loading</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_discharge</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p><strong>Container Fields:</strong> <code>container_number</code>, <code>seal_number</code>, <code>type</code>, <code>weight</code>
+<strong>Cargo Fields:</strong> <code>description</code>, <code>quantity</code>, <code>gross_weight</code>, <code>volume</code>, <code>hs_code</code>, <code>marks</code></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BILL_OF_LADING</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">bol</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;bl.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract B/L&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">BILL_OF_LADING</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_loading</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">bol</span><span class="o">.</span><span class="n">port_of_discharge</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="financial-documents">Financial Documents<a class="headerlink" href="#financial-documents" title="Permanent link">&para;</a></h3>
 <table>
@@ -2354,7 +2397,7 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BANK_STATEMENT</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BANK_STATEMENT</span>
 </span></code></pre></div>
 <h3 id="resumescvs">Resumes/CVs<a class="headerlink" href="#resumescvs" title="Permanent link">&para;</a></h3>
 <table>
@@ -2373,10 +2416,10 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">RESUME</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">resume</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;resume.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract resume&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">RESUME</span><span class="p">)</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resume</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resume</span><span class="o">.</span><span class="n">work_experience</span><span class="p">)</span><span class="si">}</span><span class="s2"> positions&quot;</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">RESUME</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">resume</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;resume.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract resume&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">RESUME</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resume</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resume</span><span class="o">.</span><span class="n">work_experience</span><span class="p">)</span><span class="si">}</span><span class="s2"> positions&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="legal-documents">Legal Documents<a class="headerlink" href="#legal-documents" title="Permanent link">&para;</a></h3>
 <table>
@@ -2395,21 +2438,21 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTRACT_CLAUSE</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTRACT_CLAUSE</span>
 </span></code></pre></div>
 <hr />
 <h2 id="extending-schemas">Extending Schemas<a class="headerlink" href="#extending-schemas" title="Permanent link">&para;</a></h2>
 <p>Create custom schemas by inheriting from built-in ones:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvoiceGeneric</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyInvoice</span><span class="p">(</span><span class="n">InvoiceGeneric</span><span class="p">):</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom invoice with company-specific fields.&quot;&quot;&quot;</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">internal_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Internal tracking code&quot;</span><span class="p">)</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">department</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Department to charge&quot;</span><span class="p">)</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Use your custom schema</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;invoice.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract invoice&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">MyInvoice</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">strutex.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvoiceGeneric</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyInvoice</span><span class="p">(</span><span class="n">InvoiceGeneric</span><span class="p">):</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom invoice with company-specific fields.&quot;&quot;&quot;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">internal_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Internal tracking code&quot;</span><span class="p">)</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">department</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Department to charge&quot;</span><span class="p">)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Use your custom schema</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;invoice.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract invoice&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">MyInvoice</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="schema-reference">Schema Reference<a class="headerlink" href="#schema-reference" title="Permanent link">&para;</a></h2>
@@ -2591,10 +2634,10 @@
 <li><strong>Extend for custom fields</strong> - Inherit and add company-specific fields</li>
 <li><strong>Validate after extraction</strong> - Use Pydantic's validation:</li>
 </ol>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">try</span><span class="p">:</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">invoice</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">INVOICE_US</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extraction incomplete: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">invoice</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">INVOICE_US</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extraction incomplete: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 
 
