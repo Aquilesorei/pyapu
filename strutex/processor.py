@@ -351,13 +351,20 @@ class DocumentProcessor:
         Args:
             file_path: Absolute path to the source file (PDF, Excel, or Image).
             prompt: Natural language instruction for extraction.
-            schema: A [`Schema`][strutex.types.Schema] definition. Mutually exclusive
+            schema: A [`Schema`][strutex.Schema] definition. Mutually exclusive
                 with `model`.
             model: A Pydantic `BaseModel` class. Mutually exclusive with `schema`.
                 If provided, returns a validated Pydantic instance.
             security: Override security setting for this request.
                 - `True`: Use default security chain
                 - `False`: Disable security
+                - `SecurityPlugin`: Use custom security instance
+            verify: If `True`, enables self-correction loop where the LLM audits its own
+                result.
+            **kwargs: Additional arguments passed to the provider (e.g. `temperature`).
+
+        Returns:
+            Extracted data as a dict (if `schema` used) or Pydantic model (if `model` used).
                 - `SecurityPlugin`: Use specific plugin
                 - `None`: Use processor default
             verify: If True, performs a second pass to verify and correct the result.
