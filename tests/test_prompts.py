@@ -230,5 +230,100 @@ class TestFluentChaining:
         assert "G1" in result
         assert "**CRITICAL**" in result
         assert "O1" in result
+
+
+class TestFromSchema:
+    """Tests for from_schema class method."""
+    
+    def test_from_pydantic_model(self):
+        """Test creating prompt from Pydantic model."""
+        from pydantic import BaseModel, Field
+        
+        class Invoice(BaseModel):
+            invoice_number: str = Field(description="Unique invoice ID")
+            total: float = Field(description="Final amount due")
+        
+        prompt = StructuredPrompt.from_schema(Invoice)
+        
+        # Should have field rules for described fields
+        assert "invoice_number" in prompt.field_rules
+        assert "total" in prompt.field_rules
+        
+        # Required fields should be marked critical
+        assert any("**CRITICAL**" in r for r in prompt.field_rules["invoice_number"])
+        assert any("**CRITICAL**" in r for r in prompt.field_rules["total"])
+    
+    def test_from_schema_optional_not_critical(self):
+        """Test optional fields are not marked critical."""
+        from pydantic import BaseModel, Field
+        
+        class Invoice(BaseModel):
+            invoice_number: str = Field(description="Required ID")
+            notes: str = Field(default="", description="Optional notes")
+        
+        prompt = StructuredPrompt.from_schema(Invoice)
+        
+        # Required should be critical
+        assert any("**CRITICAL**" in r for r in prompt.field_rules["invoice_number"])
+        
+        # Optional should NOT be critical
+        assert not any("**CRITICAL**" in r for r in prompt.field_rules["notes"])
+    
+    def test_from_schema_with_custom_persona(self):
+        """Test custom persona is applied."""
+        from pydantic import BaseModel, Field
+        
+        class Simple(BaseModel):
+            name: str = Field(description="Name")
+        
+        prompt = StructuredPrompt.from_schema(Simple, persona="Custom persona")
+        
+        assert prompt.persona == "Custom persona"
+    
+    def test_from_schema_chaining(self):
+        """Test from_schema result can be chained."""
+        from pydantic import BaseModel, Field
+        
+        class Doc(BaseModel):
+            title: str = Field(description="Title")
+        
+        prompt = (
+            StructuredPrompt.from_schema(Doc)
+            .add_general_rule("Use ISO dates")
+            .add_output_guideline("JSON only")
+        )
+        
+        assert "Use ISO dates" in prompt.general_rules
+        assert "JSON only" in prompt.output_guidelines
+    
+    def test_from_schema_skips_fields_without_description(self):
+        """Test fields without descriptions are skipped."""
+        from pydantic import BaseModel, Field
+        
+        class Mixed(BaseModel):
+            with_desc: str = Field(description="Has description")
+            without_desc: str  # No description
+        
+        prompt = StructuredPrompt.from_schema(Mixed)
+        
+        assert "with_desc" in prompt.field_rules
+        assert "without_desc" not in prompt.field_rules
+    
+    def test_from_schema_compiles(self):
+        """Test from_schema result compiles correctly."""
+        from pydantic import BaseModel, Field
+        
+        class Invoice(BaseModel):
+            invoice_number: str = Field(description="Unique invoice ID")
+            total: float = Field(description="Final amount")
+        
+        prompt = StructuredPrompt.from_schema(Invoice)
+        compiled = prompt.compile()
+        
+        assert "invoice_number" in compiled
+        assert "Unique invoice ID" in compiled
+        assert "Final amount" in compiled
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
