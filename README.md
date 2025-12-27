@@ -46,7 +46,7 @@
 
 ---
 
-## What's New in v0.8.5 🚀
+## What's New 
 
 - **Framework Integrations**: LangChain, LlamaIndex, Haystack, and Unstructured.io fallback
 - **DocumentInput**: Unified handling for file paths and BytesIO (HTTP uploads)
