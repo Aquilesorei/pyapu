@@ -11,42 +11,42 @@ contract_schema = Object(
     description="Legal contract data",
     properties={
         "contract_type": String(description="e.g., NDA, Employment, Sales"),
-        "title": String(),
-        "effective_date": String(),
-        "expiration_date": String(),
+        "title": String,
+        "effective_date": String,
+        "expiration_date": String,
         "parties": Array(
             items=Object(properties={
-                "name": String(),
+                "name": String,
                 "role": String(description="e.g., 'Seller', 'Buyer', 'Employer'"),
-                "address": String(),
+                "address": String,
             })
         ),
         "key_terms": Array(
             description="Important contractual terms",
             items=Object(properties={
-                "term": String(),
-                "details": String(),
+                "term": String,
+                "details": String,
             })
         ),
         "obligations": Array(
             description="Obligations of each party",
             items=Object(properties={
-                "party": String(),
-                "obligation": String(),
+                "party": String,
+                "obligation": String,
             })
         ),
         "payment_terms": Object(properties={
-            "amount": Number(),
-            "currency": String(),
-            "schedule": String(),
+            "amount": Number,
+            "currency": String,
+            "schedule": String,
         }),
-        "termination_clause": String(),
+        "termination_clause": String,
         "governing_law": String(description="Jurisdiction for disputes"),
         "signatures": Array(
             items=Object(properties={
-                "name": String(),
-                "title": String(),
-                "date": String(),
+                "name": String,
+                "title": String,
+                "date": String,
             })
         ),
     }

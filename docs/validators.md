@@ -30,11 +30,14 @@ if not result.valid:
 Ensures output structure matches expected schema.
 
 ```python
-from strutex import SchemaValidator, Object, String, Number
+from strutex import SchemaValidator, Object, String, Number, Array
 
 schema = Object(properties={
-    "invoice_number": String(),
-    "total": Number(),
+    "invoice_number": String,
+    "total": Number,
+    "items": Array(items=Object(properties={
+        "amount": Number
+    }))
 })
 
 validator = SchemaValidator()
@@ -45,7 +48,7 @@ result = validator.validate(data, schema)
 
 - Required fields are present
 - Field types match (string, number, boolean, array, object)
-- Nested objects validated recursively
+- Nested objects validated recursively (issues reported with full path, e.g., `items.0.amount`)
 
 ### SumValidator
 

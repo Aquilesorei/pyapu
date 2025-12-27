@@ -10,38 +10,38 @@ from strutex import DocumentProcessor, Object, String, Number, Array
 patent_schema = Object(
     description="Patent document data",
     properties={
-        "patent_number": String(),
-        "application_number": String(),
-        "title": String(),
-        "abstract": String(),
+        "patent_number": String,
+        "application_number": String,
+        "title": String,
+        "abstract": String,
         "inventors": Array(
             items=Object(properties={
-                "name": String(),
-                "city": String(),
-                "country": String(),
+                "name": String,
+                "city": String,
+                "country": String,
             })
         ),
         "assignee": Object(properties={
-            "name": String(),
-            "city": String(),
-            "country": String(),
+            "name": String,
+            "city": String,
+            "country": String,
         }),
-        "filing_date": String(),
-        "publication_date": String(),
-        "grant_date": String(),
-        "priority_date": String(),
+        "filing_date": String,
+        "publication_date": String,
+        "grant_date": String,
+        "priority_date": String,
         "classifications": Array(
             items=Object(properties={
                 "type": String(description="IPC, CPC, etc."),
-                "code": String(),
+                "code": String,
             })
         ),
-        "claims_count": Number(),
-        "independent_claims": Array(items=String()),
-        "cited_patents": Array(items=String()),
-        "cited_by_count": Number(),
-        "status": String(),
-        "expiration_date": String(),
+        "claims_count": Number,
+        "independent_claims": Array(items=String),
+        "cited_patents": Array(items=String),
+        "cited_by_count": Number,
+        "status": String,
+        "expiration_date": String,
     }
 )
 

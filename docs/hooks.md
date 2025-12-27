@@ -59,8 +59,20 @@ Before diving in, understand the distinction:
         return result
 
     @processor.on_pre_process
-    def add_instructions(file_path, prompt, schema, mime_type, context):
-        return {"prompt": prompt + "\nExtract all values precisely."}
+    def add_date_context(file_path, prompt, schema, mime_type, context):
+        """Inject today's date into prompt."""
+        import datetime
+        today = datetime.date.today().isoformat()
+
+        # Example: modify prompt
+        new_prompt = f"{prompt}\nToday's date is {today}."
+
+        # We can also modify schema if needed (advanced)
+        # schema = Object(properties={"invoice_number": String, "total": Number})
+
+        return {"prompt": new_prompt}
+
+
 
     @processor.on_error
     def handle_rate_limit(error, file_path, context):

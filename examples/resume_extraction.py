@@ -18,32 +18,32 @@ resume_schema = Object(
         "experience": Array(
             description="Work experience entries",
             items=Object(properties={
-                "company": String(),
+                "company": String,
                 "title": String(description="Job title"),
-                "start_date": String(),
+                "start_date": String,
                 "end_date": String(description="End date or 'Present'"),
-                "responsibilities": Array(items=String()),
+                "responsibilities": Array(items=String),
             })
         ),
         "education": Array(
             description="Educational background",
             items=Object(properties={
-                "institution": String(),
-                "degree": String(),
+                "institution": String,
+                "degree": String,
                 "field": String(description="Field of study"),
-                "graduation_year": Number(),
+                "graduation_year": Number,
             })
         ),
         "skills": Array(
             description="Technical and soft skills",
-            items=String()
+            items=String
         ),
         "certifications": Array(
             description="Professional certifications",
             items=Object(properties={
-                "name": String(),
-                "issuer": String(),
-                "date": String(),
+                "name": String,
+                "issuer": String,
+                "date": String,
             })
         ),
     }

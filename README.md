@@ -46,10 +46,11 @@
 
 ---
 
-## What's New 
+## What's New
 
-- **Framework Integrations**: LangChain, LlamaIndex, Haystack, and Unstructured.io fallback
+- **Framework Integrations**: LangChain, LlamaIndex, Haystack
 - **DocumentInput**: Unified handling for file paths and BytesIO (HTTP uploads)
+- **OCR Fallback**: Automatic integration with Unstructured.io for complex layouts
 - **Optional Extras**: Install only the integrations you need
 
 ---
@@ -90,12 +91,12 @@ invoice_schema = Object(
     description="Invoice data",
     properties={
         "invoice_number": String(description="The invoice ID"),
-        "total": Number(),
+        "total": Number,
         "items": Array(
             items=Object(
                 properties={
-                    "description": String(),
-                    "amount": Number(),
+                    "description": String,
+                    "amount": Number,
                 }
             )
         )
@@ -103,6 +104,9 @@ invoice_schema = Object(
 )
 
 # Process a document
+# Process a document
+# 'provider="gemini"' selects Google's Gemini models.
+# You can also use "openai", "anthropic", or "ollama".
 processor = DocumentProcessor(provider="gemini")
 result = processor.process(
     file_path="invoice.pdf",

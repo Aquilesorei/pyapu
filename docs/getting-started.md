@@ -38,8 +38,8 @@ schema = Object(
         "items": Array(
             items=Object(
                 properties={
-                    "description": String(),
-                    "amount": Number()
+                    "description": String,
+                    "amount": Number
                 }
             )
         )
@@ -50,12 +50,13 @@ schema = Object(
 ### 2. Create a Processor
 
 ```python
-from strutex import DocumentProcessor
+import os
 
+# Ensure GOOGLE_API_KEY is set in your environment
 processor = DocumentProcessor(
     provider="gemini",
-    model_name="gemini-2.5-flash"
-    # api_key="..."  # Or set GOOGLE_API_KEY env var
+    model_name="gemini-2.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 ```
 

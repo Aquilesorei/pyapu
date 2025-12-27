@@ -30,10 +30,10 @@ def main():
                 description="List of line items",
                 items=Object(
                     properties={
-                        "description": String(),
-                        "quantity": Integer(),
-                        "unit_price": Number(),
-                        "total": Number()
+                        "description": String,
+                        "quantity": Integer,
+                        "unit_price": Number,
+                        "total": Number
                     }
                 )
             )

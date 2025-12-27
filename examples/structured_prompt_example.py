@@ -85,10 +85,10 @@ def process_invoice_example():
             "items": Array(
                 items=Object(
                     properties={
-                        "description": String(),
-                        "quantity": Number(),
-                        "unit_price": Number(),
-                        "line_total": Number(),
+                        "description": String,
+                        "quantity": Number,
+                        "unit_price": Number,
+                        "line_total": Number,
                     }
                 )
             )

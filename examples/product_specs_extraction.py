@@ -13,51 +13,51 @@ product_schema = Object(
     properties={
         "product_name": String(description="Official product name"),
         "sku": String(description="Stock Keeping Unit or product code"),
-        "manufacturer": String(),
+        "manufacturer": String,
         "category": String(description="Product category"),
         "description": String(description="Product description"),
         "specifications": Object(
             description="Technical specifications",
             properties={
                 "dimensions": Object(properties={
-                    "width": Number(),
-                    "height": Number(),
-                    "depth": Number(),
+                    "width": Number,
+                    "height": Number,
+                    "depth": Number,
                     "unit": String(description="e.g., mm, cm, inches"),
                 }),
                 "weight": Object(properties={
-                    "value": Number(),
+                    "value": Number,
                     "unit": String(description="e.g., kg, lbs, g"),
                 }),
-                "materials": Array(items=String()),
-                "color": String(),
+                "materials": Array(items=String),
+                "color": String,
                 "power_consumption": String(description="e.g., '50W', '120V AC'"),
             }
         ),
         "features": Array(
             description="Key product features",
-            items=String()
+            items=String
         ),
         "price": Object(
             description="Pricing information",
             properties={
-                "amount": Number(),
-                "currency": String(),
+                "amount": Number,
+                "currency": String,
                 "msrp": Number(description="Manufacturer suggested retail price"),
             }
         ),
         "availability": Object(properties={
-            "in_stock": Boolean(),
-            "lead_time_days": Number(),
-            "regions": Array(items=String()),
+            "in_stock": Boolean,
+            "lead_time_days": Number,
+            "regions": Array(items=String),
         }),
         "warranty": Object(properties={
-            "duration_months": Number(),
+            "duration_months": Number,
             "type": String(description="e.g., 'Limited', 'Full'"),
         }),
         "certifications": Array(
             description="Safety and quality certifications",
-            items=String()
+            items=String
         ),
     }
 )

@@ -10,47 +10,47 @@ from strutex import DocumentProcessor, Object, String, Number, Array
 claim_schema = Object(
     description="Insurance claim data",
     properties={
-        "claim_number": String(),
-        "policy_number": String(),
+        "claim_number": String,
+        "policy_number": String,
         "claim_type": String(description="e.g., Auto, Health, Property"),
-        "status": String(),
+        "status": String,
         "claimant": Object(properties={
-            "name": String(),
-            "policy_holder": String(),
-            "contact_phone": String(),
-            "email": String(),
-            "address": String(),
+            "name": String,
+            "policy_holder": String,
+            "contact_phone": String,
+            "email": String,
+            "address": String,
         }),
         "incident": Object(properties={
-            "date": String(),
-            "time": String(),
-            "location": String(),
-            "description": String(),
-            "police_report_number": String(),
+            "date": String,
+            "time": String,
+            "location": String,
+            "description": String,
+            "police_report_number": String,
         }),
         "damages": Array(
             items=Object(properties={
-                "item": String(),
-                "description": String(),
-                "estimated_cost": Number(),
+                "item": String,
+                "description": String,
+                "estimated_cost": Number,
             })
         ),
-        "total_claimed": Number(),
-        "deductible": Number(),
-        "approved_amount": Number(),
+        "total_claimed": Number,
+        "deductible": Number,
+        "approved_amount": Number,
         "witnesses": Array(
             items=Object(properties={
-                "name": String(),
-                "contact": String(),
+                "name": String,
+                "contact": String,
             })
         ),
         "adjuster": Object(properties={
-            "name": String(),
-            "phone": String(),
+            "name": String,
+            "phone": String,
         }),
-        "documents_submitted": Array(items=String()),
-        "filing_date": String(),
-        "resolution_date": String(),
+        "documents_submitted": Array(items=String),
+        "filing_date": String,
+        "resolution_date": String,
     }
 )
 

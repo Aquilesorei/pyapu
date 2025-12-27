@@ -13,12 +13,12 @@ order_schema = Object(
     # Logic: 'required' is automatically inferred as ["order_id", "total_amount", "items"]
     properties={
         "order_id": String(description="The unique order ID"),
-        "total_amount": Number(),
+        "total_amount": Number,
         "items": Array(
             items=Object(
                 properties={
-                    "item_name": String(),
-                    "price": Number(),
+                    "item_name": String,
+                    "price": Number,
                 }
             )
         )

@@ -72,9 +72,9 @@ order_schema = Object(
         "total": Number(description="Total amount"),
         "items": Array(
             items=Object(properties={
-                "description": String(),
-                "quantity": Number(),
-                "price": Number()
+                "description": String,  # Simplified syntax!
+                "quantity": Number,
+                "unit_price": Number
             })
         )
     }
@@ -106,14 +106,16 @@ print(result["po_number"])
 
 ## Field Types Reference
 
-| Pydantic Type | Strutex Type     | Use For                    |
-| ------------- | ---------------- | -------------------------- |
-| `str`         | `String()`       | Text, IDs, names           |
-| `int`         | `Integer()`      | Counts, quantities         |
-| `float`       | `Number()`       | Prices, percentages        |
-| `bool`        | `Boolean()`      | Yes/no fields              |
-| `List[T]`     | `Array(items=T)` | Line items, tags           |
-| `Optional[T]` | nullable=True    | Fields that may be missing |
+You can use types as classes (e.g., `String`) or instances (e.g., `String(description="...")`).
+
+| Pydantic Type | Strutex Type       | Use For                    |
+| ------------- | ------------------ | -------------------------- |
+| `str`         | `String`           | Text, IDs, names           |
+| `int`         | `Integer`          | Counts, quantities         |
+| `float`       | `Number`           | Prices, percentages        |
+| `bool`        | `Boolean`          | Yes/no fields              |
+| `List[T]`     | `Array(items=T)`   | Line items, tags           |
+| `Optional[T]` | `T(nullable=True)` | Fields that may be missing |
 
 ---
 

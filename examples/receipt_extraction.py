@@ -11,34 +11,34 @@ receipt_schema = Object(
     description="Receipt/purchase data",
     properties={
         "merchant": Object(properties={
-            "name": String(),
-            "address": String(),
-            "phone": String(),
+            "name": String,
+            "address": String,
+            "phone": String,
         }),
-        "transaction_date": String(),
-        "transaction_time": String(),
-        "receipt_number": String(),
+        "transaction_date": String,
+        "transaction_time": String,
+        "receipt_number": String,
         "items": Array(
             items=Object(properties={
-                "description": String(),
-                "quantity": Number(),
-                "unit_price": Number(),
-                "total": Number(),
+                "description": String,
+                "quantity": Number,
+                "unit_price": Number,
+                "total": Number,
             })
         ),
-        "subtotal": Number(),
-        "tax": Number(),
-        "tax_rate": Number(),
+        "subtotal": Number,
+        "tax": Number,
+        "tax_rate": Number,
         "discounts": Array(
             items=Object(properties={
-                "description": String(),
-                "amount": Number(),
+                "description": String,
+                "amount": Number,
             })
         ),
-        "total": Number(),
-        "payment_method": String(),
-        "card_last_four": String(),
-        "cashier": String(),
+        "total": Number,
+        "payment_method": String,
+        "card_last_four": String,
+        "cashier": String,
     }
 )
 

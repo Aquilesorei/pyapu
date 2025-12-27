@@ -15,33 +15,33 @@ paper_schema = Object(
         "authors": Array(
             description="List of authors",
             items=Object(properties={
-                "name": String(),
+                "name": String,
                 "affiliation": String(description="University or organization"),
-                "email": String(),
+                "email": String,
             })
         ),
         "abstract": String(description="Paper abstract"),
         "keywords": Array(
             description="Keywords or topics",
-            items=String()
+            items=String
         ),
         "publication_date": String(description="Publication date"),
         "journal": String(description="Journal or conference name"),
         "doi": String(description="Digital Object Identifier"),
-        "volume": String(),
-        "issue": String(),
+        "volume": String,
+        "issue": String,
         "pages": String(description="Page range, e.g., '123-145'"),
         "sections": Array(
             description="Main sections of the paper",
             items=Object(properties={
-                "title": String(),
+                "title": String,
                 "summary": String(description="Brief summary of section content"),
             })
         ),
         "references_count": Number(description="Number of references cited"),
         "funding": Array(
             description="Funding sources",
-            items=String()
+            items=String
         ),
     }
 )

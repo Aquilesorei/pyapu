@@ -10,35 +10,35 @@ from strutex import DocumentProcessor, Object, String, Array
 meeting_schema = Object(
     description="Meeting minutes data",
     properties={
-        "meeting_title": String(),
-        "date": String(),
-        "time": String(),
+        "meeting_title": String,
+        "date": String,
+        "time": String,
         "location": String(description="Physical or virtual meeting link"),
         "attendees": Array(
             items=Object(properties={
-                "name": String(),
-                "role": String(),
+                "name": String,
+                "role": String,
                 "present": String(description="Present, Absent, or Remote"),
             })
         ),
-        "agenda_items": Array(items=String()),
+        "agenda_items": Array(items=String),
         "discussions": Array(
             items=Object(properties={
-                "topic": String(),
-                "summary": String(),
-                "decisions": Array(items=String()),
+                "topic": String,
+                "summary": String,
+                "decisions": Array(items=String),
             })
         ),
         "action_items": Array(
             items=Object(properties={
-                "task": String(),
-                "assignee": String(),
-                "due_date": String(),
-                "priority": String(),
+                "task": String,
+                "assignee": String,
+                "due_date": String,
+                "priority": String,
             })
         ),
-        "next_meeting": String(),
-        "notes": String(),
+        "next_meeting": String,
+        "notes": String,
     }
 )
 

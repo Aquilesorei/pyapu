@@ -98,17 +98,17 @@ def validator_examples():
     
     # Invoice schema
     invoice_schema = Object(properties={
-        "invoice_number": String(),
-        "total": Number(),
+        "invoice_number": String,
+        "total": Number,
     })
     result = schema_validator.validate(invoice_data, invoice_schema)
     print(f"  Invoice valid: {result.valid}")
     
     # Resume schema  
     resume_schema = Object(properties={
-        "name": String(),
-        "email": String(),
-        "skills": Array(items=String()),
+        "name": String,
+        "email": String,
+        "skills": Array(items=String),
     })
     result = schema_validator.validate(resume_data, resume_schema)
     print(f"  Resume valid: {result.valid}")

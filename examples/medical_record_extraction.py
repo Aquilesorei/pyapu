@@ -11,47 +11,47 @@ medical_schema = Object(
     description="Medical record data",
     properties={
         "patient": Object(properties={
-            "name": String(),
-            "date_of_birth": String(),
-            "gender": String(),
-            "patient_id": String(),
+            "name": String,
+            "date_of_birth": String,
+            "gender": String,
+            "patient_id": String,
         }),
-        "visit_date": String(),
+        "visit_date": String,
         "provider": Object(properties={
-            "name": String(),
-            "specialty": String(),
-            "facility": String(),
+            "name": String,
+            "specialty": String,
+            "facility": String,
         }),
-        "chief_complaint": String(),
+        "chief_complaint": String,
         "diagnosis": Array(
             items=Object(properties={
                 "code": String(description="ICD code if available"),
-                "description": String(),
+                "description": String,
             })
         ),
         "medications": Array(
             items=Object(properties={
-                "name": String(),
-                "dosage": String(),
-                "frequency": String(),
+                "name": String,
+                "dosage": String,
+                "frequency": String,
             })
         ),
         "vital_signs": Object(properties={
-            "blood_pressure": String(),
-            "heart_rate": Number(),
-            "temperature": Number(),
-            "weight": Number(),
+            "blood_pressure": String,
+            "heart_rate": Number,
+            "temperature": Number,
+            "weight": Number,
         }),
         "lab_results": Array(
             items=Object(properties={
-                "test": String(),
-                "value": String(),
-                "unit": String(),
-                "reference_range": String(),
+                "test": String,
+                "value": String,
+                "unit": String,
+                "reference_range": String,
             })
         ),
-        "treatment_plan": String(),
-        "follow_up": String(),
+        "treatment_plan": String,
+        "follow_up": String,
     }
 )
 
