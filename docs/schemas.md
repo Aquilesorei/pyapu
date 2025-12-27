@@ -61,11 +61,24 @@ print(f"Store: {receipt.merchant_name}, Total: ${receipt.total}")
 from strutex.schemas import PURCHASE_ORDER
 ```
 
+### Order Confirmations
+
+| Schema               | Description                  | Key Fields                                               |
+| -------------------- | ---------------------------- | -------------------------------------------------------- |
+| `ORDER_CONFIRMATION` | Quotations / Order Responses | quotation_number, vendor, buyer, items, delivery, totals |
+
+```python
+from strutex.schemas import ORDER_CONFIRMATION
+```
+
 ### Shipping Documents
 
 | Schema           | Description       | Key Fields                                                                           |
 | ---------------- | ----------------- | ------------------------------------------------------------------------------------ |
 | `BILL_OF_LADING` | Ocean freight B/L | bl_number, shipper, consignee, containers, cargo, port_of_loading, port_of_discharge |
+
+**Container Fields:** `container_number`, `seal_number`, `type`, `weight`
+**Cargo Fields:** `description`, `quantity`, `gross_weight`, `volume`, `hs_code`, `marks`
 
 ```python
 from strutex.schemas import BILL_OF_LADING

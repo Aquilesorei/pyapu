@@ -118,6 +118,35 @@ print(result["invoice_number"])  # "INV-2024-001"
 print(result["total"])           # 1250.00
 ```
 
+### Using Built-in Schemas
+
+Skip defining schemas manually! Strutex includes ready-to-use schemas for common documents:
+
+```python
+from strutex import DocumentProcessor
+from strutex.schemas import INVOICE_US, RECEIPT, BILL_OF_LADING
+
+processor = DocumentProcessor(provider="gemini")
+
+# Extract US Invoice
+invoice = processor.process(
+    "invoice.pdf",
+    "Extract invoice details",
+    model=INVOICE_US
+)
+print(f"Invoice #{invoice.invoice_number}, Total: ${invoice.total}")
+
+# Extract Bill of Lading
+bol = processor.process(
+    "bl.pdf",
+    "Extract shipping info",
+    model=BILL_OF_LADING
+)
+print(f"From: {bol.port_of_loading}, To: {bol.port_of_discharge}")
+```
+
+Available: `INVOICE_GENERIC`, `INVOICE_US`, `INVOICE_EU`, `RECEIPT`, `PURCHASE_ORDER`, `BILL_OF_LADING`, `RESUME`, `BANK_STATEMENT`, etc.
+
 ### Advanced Usage
 
 #### 1. Caching

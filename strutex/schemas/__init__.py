@@ -68,6 +68,11 @@ from .legal import (
     CONTRACT_CLAUSE,
 )
 
+from .order_confirmation import (
+    OrderConfirmation,
+    ORDER_CONFIRMATION,
+)
+
 __all__ = [
     # Invoices
     "InvoiceGeneric",
@@ -107,4 +112,8 @@ __all__ = [
     # Legal
     "ContractClause",
     "CONTRACT_CLAUSE",
+    
+    # Order Confirmation
+    "OrderConfirmation",
+    "ORDER_CONFIRMATION",
 ]
