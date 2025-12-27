@@ -55,6 +55,7 @@ nav:
       - Extractors: extractors.md
       - Validators: validators.md
       - Security Layer: security.md
+  - Integrations: integrations.md
   - API Reference: api-reference.md
   - Changelog: changelog.md
 

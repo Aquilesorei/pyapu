@@ -20,6 +20,7 @@
 - **Schema-Driven Extraction** — Define your output structure, get consistent JSON
 - **Verification & Self-Correction** — built-in audit loop for high accuracy
 - **Security First** — Built-in input sanitization and output validation
+- **Framework Integrations** — LangChain, LlamaIndex, Haystack compatibility
 
 ---
 
@@ -33,15 +34,15 @@
 - Local/air-gapped (Ollama, custom endpoints)
 - Lightweight deps, pluggable architecture
 - Production-ready: caching, batch/async, verification
+- LangChain/LlamaIndex integration for RAG pipelines
 
 **Not a fit:**
 
-- Agents, tools, autonomous workflows
-- RAG / vector search
-- Multi-step reasoning chains
-- Full LLM app frameworks → use LangChain
+- Complex multi-step agents or autonomous workflows
+- Vector search / embedding pipelines (use with LlamaIndex instead)
+- Full LLM orchestration framework → combine with LangChain
 
-> **TL;DR**: strutex turns messy documents into trustworthy structured data.
+> **TL;DR**: strutex turns messy documents into trustworthy structured data. Use it standalone or plugged into your RAG stack.
 
 ---
 
