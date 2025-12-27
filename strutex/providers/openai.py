@@ -109,13 +109,49 @@ class OpenAIProvider(Provider, name="openai"):
         # Make request with retry
         @with_retry(config=self.retry_config)
         def call_api():
-            return self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                response_format={"type": "json_object"},
-                temperature=0.1,  # Low temp for more consistent extraction
-                max_tokens=4096
-            )
+            try:
+                return self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    response_format={"type": "json_object"},
+                    temperature=0.1,  # Low temp for more consistent extraction
+                    max_tokens=4096
+                )
+            except Exception as e:
+                # Map OpenAI errors
+                error_str = str(e).lower()
+                
+                if "rate limit" in error_str or "429" in error_str:
+                    from ..exceptions import RateLimitError
+                    raise RateLimitError(
+                        f"OpenAI rate limit exceeded: {e}",
+                        provider="openai",
+                        details={"original_error": str(e)}
+                    )
+                
+                if "authentication" in error_str or "api key" in error_str or "401" in error_str:
+                    from ..exceptions import AuthenticationError
+                    raise AuthenticationError(
+                        f"OpenAI authentication failed: {e}",
+                        provider="openai",
+                        details={"original_error": str(e)}
+                    )
+                    
+                if "not found" in error_str or "404" in error_str:
+                    from ..exceptions import ModelNotFoundError
+                    raise ModelNotFoundError(
+                        model=self.model,
+                        provider="openai",
+                        details={"original_error": str(e)}
+                    )
+
+                from ..exceptions import ProviderError
+                raise ProviderError(
+                    f"OpenAI request failed: {e}",
+                    provider="openai",
+                    retryable="timeout" in error_str or "500" in error_str,
+                    details={"original_error": str(e)}
+                ) from e
         
         response = call_api()
         
@@ -212,15 +248,24 @@ class OpenAIProvider(Provider, name="openai"):
                 sheets = excel_to_csv_sheets(file_path)
                 return "\n\n".join(f"Sheet: {name}\n{content}" 
                                   for name, content in sheets.items())
-        except Exception:
-            pass
+        except ImportError:
+            # Missing dependency for PDF/Excel extraction
+            return f"[Missing dependency for {mime_type} extraction]"
+        except Exception as e:
+             # Log warning but fallback to plain text read
+             pass
         
         # Fallback: try to read as text
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 return f.read()
         except Exception:
-            return f"[Could not extract text from {file_path}]"
+            from ..exceptions import DocumentParseError
+            raise DocumentParseError(
+                f"Could not extract text from {file_path}",
+                file_path=file_path,
+                mime_type=mime_type
+            )
     
     @classmethod
     def health_check(cls) -> bool:

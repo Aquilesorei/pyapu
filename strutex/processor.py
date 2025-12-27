@@ -15,8 +15,9 @@ from .documents import get_mime_type
 from .types import Schema
 from .plugins.registry import PluginRegistry
 from .plugins.base import SecurityPlugin, SecurityResult
-from .providers.base import Provider
 from .context import BatchContext, ProcessingContext
+from .exceptions import StrutexError, SecurityError
+from .providers.base import Provider
 
 # Type aliases for hook callbacks
 PreProcessCallback = Callable[[str, str, Any, str, Dict[str, Any]], Optional[Dict[str, Any]]]
@@ -60,8 +61,9 @@ class _CallbackHookPlugin:
                     # Update prompt if modified
                     if "prompt" in hook_result:
                         prompt = hook_result["prompt"]
-            except Exception:
-                pass  # Hooks should not break processing
+            except Exception as e:
+                logger.error(f"Error in pre-process hook: {e}")
+                # Hooks should not break processing
         return result
     
     def post_process(
@@ -75,8 +77,8 @@ class _CallbackHookPlugin:
                 modified = hook(result, context)
                 if modified is not None and isinstance(modified, dict):
                     result = modified
-            except Exception:
-                pass
+            except Exception as e:
+                logger.error(f"Error in post-process hook: {e}")
         return result
     
     def on_error(
@@ -91,8 +93,8 @@ class _CallbackHookPlugin:
                 fallback = hook(error, file_path, context)
                 if fallback is not None:
                     return fallback
-            except Exception:
-                pass
+            except Exception as e:
+                logger.error(f"Error in error hook: {e}")
         return None
 
 

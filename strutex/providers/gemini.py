@@ -93,21 +93,59 @@ class GeminiProvider(Provider):
         )
         
         # Call API
-        response = self.client.models.generate_content(
-            model=self.model,
-            contents=[
-                g_types.Content(
-                    role="user",
-                    parts=[
-                        g_types.Part.from_bytes(data=file_content, mime_type=mime_type),
-                        g_types.Part.from_text(text=prompt),
-                    ],
-                ),
-            ],
-            config=generate_config,
-        )
-        
-        return response.parsed
+        try:
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=[
+                    g_types.Content(
+                        role="user",
+                        parts=[
+                            g_types.Part.from_bytes(data=file_content, mime_type=mime_type),
+                            g_types.Part.from_text(text=prompt),
+                        ],
+                    ),
+                ],
+                config=generate_config,
+            )
+            return response.parsed
+            
+        except ImportError:
+            raise
+        except Exception as e:
+            # Map common Google errors if possible, otherwise generic ProviderError
+            error_str = str(e).lower()
+            
+            if "429" in error_str or "quota" in error_str or "rate limit" in error_str:
+                from ..exceptions import RateLimitError
+                raise RateLimitError(
+                    f"Gemini rate limit exceeded: {e}",
+                    provider="gemini",
+                    details={"original_error": str(e)}
+                )
+            
+            if "401" in error_str or "unauthenticated" in error_str or "api key" in error_str:
+                from ..exceptions import AuthenticationError
+                raise AuthenticationError(
+                    f"Gemini authentication failed: {e}",
+                    provider="gemini",
+                    details={"original_error": str(e)}
+                )
+                
+            if "404" in error_str or "not found" in error_str:
+                from ..exceptions import ModelNotFoundError
+                raise ModelNotFoundError(
+                    model=self.model,
+                    provider="gemini",
+                    details={"original_error": str(e)}
+                )
+            
+            from ..exceptions import ProviderError
+            raise ProviderError(
+                f"Gemini processing failed: {e}",
+                provider="gemini",
+                retryable="500" in error_str or "timeout" in error_str,
+                details={"original_error": str(e)}
+            )
     
     @classmethod
     def health_check(cls) -> bool:

@@ -11,8 +11,11 @@ Define your expected output structure using strutex's schema types.
 ```python
 from strutex import String
 
+# Standard
 name = String(description="Customer name")
-optional_name = String(description="Middle name", nullable=True)
+
+# Simplified (if no args needed)
+middle_name = String  # equivalent to String()
 ```
 
 ### Number
@@ -22,7 +25,7 @@ For floating-point values:
 ```python
 from strutex import Number
 
-price = Number(description="Item price")
+price = Number  # equivalent to Number()
 ```
 
 ### Integer
@@ -41,6 +44,43 @@ quantity = Integer(description="Item count")
 from strutex import Boolean
 
 is_paid = Boolean(description="Payment status")
+```
+
+---
+
+## Specialized Types
+
+### Enum
+
+Restrict output to a specific set of strings.
+
+```python
+from strutex import Enum
+
+category = Enum(
+    values=["Food", "Transport", "Lodging"],
+    description="Expense category"
+)
+```
+
+### Date
+
+Extracts a string formatted as `YYYY-MM-DD`.
+
+```python
+from strutex import Date
+
+invoice_date = Date(description="Invoice date")
+```
+
+### DateTime
+
+Extracts a string formatted as ISO 8601 (`YYYY-MM-DDTHH:MM:SS`).
+
+```python
+from strutex import DateTime
+
+created_at = DateTime(description="Metadata creation time")
 ```
 
 ---
@@ -138,7 +178,34 @@ invoice_schema = Object(
             )
         ),
         "total": Number(),
-        "paid": Boolean()
     }
 )
+```
+
+---
+
+## JSON Schema Serialization
+
+You can convert any schema object into a standard JSON Schema dictionary, useful for debugging or integrating with other tools.
+
+```python
+from strutex import String, Object
+import json
+
+schema = Object(
+    properties={"name": String(description="User name")},
+    required=["name"]
+)
+
+# Convert to dict
+print(schema.to_dict())
+# {
+#     "type": "object",
+#     "properties": {"name": {"type": "string", "description": "User name"}},
+#     "required": ["name"],
+#     "additionalProperties": False
+# }
+
+# Convert to JSON string
+print(str(schema))
 ```

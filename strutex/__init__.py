@@ -6,10 +6,25 @@ Extract structured JSON from documents using LLMs.
 
 # Schema types
 from .types import Schema, Type
-from .types import String, Number, Integer, Boolean, Array, Object
+from .types import String, Number, Integer, Boolean, Array, Object, Enum, Date, DateTime
 
 # Processor
-from .processor import DocumentProcessor, SecurityError
+from .processor import DocumentProcessor
+
+# Exceptions
+from .exceptions import (
+    StrutexError,
+    ProviderError,
+    RateLimitError,
+    AuthenticationError,
+    ExtractionError,
+    ValidationError,
+    ConfigurationError,
+    PluginError,
+    CacheError,
+    SecurityError,
+    InjectionDetectedError,
+)
 
 # Prompts
 from .prompts import StructuredPrompt
@@ -103,8 +118,20 @@ from . import integrations
 __all__ = [
     # Core
     "DocumentProcessor",
-    "SecurityError",
     "StructuredPrompt",
+    
+    # Exceptions
+    "StrutexError",
+    "ProviderError",
+    "RateLimitError",
+    "AuthenticationError",
+    "ExtractionError",
+    "ValidationError",
+    "ConfigurationError",
+    "PluginError",
+    "CacheError",
+    "SecurityError",
+    "InjectionDetectedError",
     
     # Schema types
     "Schema",
@@ -115,6 +142,9 @@ __all__ = [
     "Boolean",
     "Array",
     "Object",
+    "Enum",
+    "Date",
+    "DateTime",
     
     # Document utilities
     "pdf_to_text",

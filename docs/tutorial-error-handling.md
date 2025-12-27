@@ -1,57 +1,70 @@
 # Error Handling
 
-Handle errors gracefully and debug extraction issues.
+Handle errors gracefully with Strutex's comprehensive exception hierarchy.
 
 ---
 
-## Common Errors
+## Exception Hierarchy
 
-### FileNotFoundError
+All Strutex errors inherit from `StrutexError`, enabling catch-all patterns:
 
-```python
-from strutex import DocumentProcessor, GeminiProvider
-
-processor = DocumentProcessor(provider=GeminiProvider())
-
-try:
-    result = processor.process("missing.pdf", "Extract", schema=MySchema)
-except FileNotFoundError as e:
-    print(f"File not found: {e}")
-    # Handle: check path, download file, etc.
+```
+StrutexError (base)
+├── ProviderError          # LLM API failures
+│   ├── RateLimitError     # 429 - retry after delay
+│   ├── AuthenticationError # 401 - invalid API key
+│   └── ModelNotFoundError  # 404 - model unavailable
+├── ExtractionError        # Document processing failed
+│   ├── DocumentParseError  # Can't read file
+│   └── SchemaError         # Invalid schema definition
+├── ValidationError        # Output validation failed
+├── ConfigurationError     # Setup/config issues
+│   └── PluginError         # Plugin loading failed
+├── CacheError             # Cache operations failed
+├── SecurityError          # Security check failed
+│   └── InjectionDetectedError  # Prompt injection detected
+└── TimeoutError           # Operation timed out
 ```
 
-### ValueError (Missing Schema)
+---
+
+## Quick Start
 
 ```python
+from strutex import (
+    DocumentProcessor,
+    StrutexError,
+    ProviderError,
+    RateLimitError,
+    ValidationError,
+    ExtractionError,
+)
+import time
+
+processor = DocumentProcessor(provider="gemini")
+
 try:
-    result = processor.process("doc.pdf", "Extract")  # No schema!
-except ValueError as e:
-    print(f"Invalid input: {e}")
-    # Fix: provide schema= or model= argument
-```
-
-### API Errors
-
-```python
-from strutex.providers.base import ProviderError
-
-try:
-    result = processor.process("doc.pdf", "Extract", schema=MySchema)
+    result = processor.process("invoice.pdf", "Extract invoice", schema=MySchema)
+except RateLimitError as e:
+    # Handle rate limiting with retry
+    print(f"Rate limited, wait {e.retry_after}s")
+    time.sleep(e.retry_after or 60)
 except ProviderError as e:
-    print(f"Provider failed: {e}")
-    # Handle: retry, switch provider, alert
-```
-
-### Security Errors
-
-```python
-from strutex.security import SecurityError
-
-try:
-    result = processor.process("doc.pdf", prompt, schema=MySchema)
-except SecurityError as e:
-    print(f"Security violation: {e}")
-    # Handle: log, reject request, sanitize input
+    # Check if error is retryable
+    if e.retryable:
+        print(f"Retryable error from {e.provider}: {e.message}")
+    else:
+        print(f"Permanent error: {e.message}")
+except ValidationError as e:
+    # Handle validation failures
+    print(f"Validation failed: {e.issues}")
+except ExtractionError as e:
+    # Handle extraction failures
+    print(f"Failed at stage {e.stage}: {e.message}")
+except StrutexError as e:
+    # Catch-all for any Strutex error
+    print(f"Strutex error: {e.message}")
+    print(f"Details: {e.details}")
 ```
 
 ---

@@ -27,15 +27,11 @@ except ImportError:
     _OCR_AVAILABLE = False
 
 from ..plugins.base import Extractor, Provider
+from ..exceptions import ExtractionError
 
 logger = logging.getLogger(__name__)
 
 TableFormat = Literal["markdown", "csv", "plain"]
-
-
-class ExtractionError(Exception):
-    """Raised when document extraction fails."""
-    pass
 
 
 class FormattedDocExtractor(Extractor, name="formatted"):
