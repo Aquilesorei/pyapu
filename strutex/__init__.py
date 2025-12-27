@@ -88,11 +88,17 @@ from .logging import get_logger, configure_logging, set_level
 # Context (stateful workflows)
 from .context import ProcessingContext, BatchContext
 
+# Input handling (file paths and BytesIO)
+from .input import DocumentInput
+
 # Cache
 from .cache import MemoryCache, SQLiteCache, FileCache, CacheKey
 
 # Schemas (ready-to-use Pydantic models)
 from . import schemas
+
+# Integrations (LangChain, LlamaIndex)
+from . import integrations
 
 __all__ = [
     # Core
@@ -181,6 +187,12 @@ __all__ = [
     "FileCache",
     "CacheKey",
     
+    # Input handling
+    "DocumentInput",
+    
     # Schemas module
     "schemas",
+    
+    # Integrations module
+    "integrations",
 ]

@@ -216,16 +216,16 @@ class DocumentProcessor:
 
         # Resolve provider
         if isinstance(provider, str):
-            provider_name = provider.lower()
+            self.provider_name = provider.lower()
 
             # Try to get from registry
-            provider_cls = PluginRegistry.get("provider", provider_name)
+            provider_cls = PluginRegistry.get("provider", self.provider_name)
 
             if provider_cls:
                 self._provider = provider_cls(api_key=api_key, model=model_name)
             else:
                 # Fallback for backward compatibility
-                if provider_name in ("google", "gemini"):
+                if self.provider_name in ("google", "gemini"):
                     from .providers.gemini import GeminiProvider
                     self._provider = GeminiProvider(api_key=api_key, model=model_name)
                 else:
@@ -233,6 +233,8 @@ class DocumentProcessor:
         else:
             # Provider instance passed directly
             self._provider = provider
+            # Try to get name from provider instance
+            self.provider_name = getattr(provider, 'name', type(provider).__name__)
 
     def _ensure_hooks_registered(self) -> None:
         """Register callback hooks with pluggy if not already done."""
