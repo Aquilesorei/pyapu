@@ -69,12 +69,23 @@ mike = "^2.1.0"
 
 [tool.coverage.run]
 omit = [
+    # CLI
     "strutex/cli.py",
+    # Integrations (experimental)
     "strutex/integrations/langchain.py",
     "strutex/integrations/llamaindex.py",
     "strutex/integrations/haystack.py",
     "strutex/integrations/unstructured.py",
+    # Providers (require API keys)
+    "strutex/providers/anthropic.py",
+    "strutex/providers/ollama.py",
+    "strutex/providers/groq.py",
+    "strutex/providers/chain.py",
+    "strutex/providers/hybrid.py",
+    "strutex/providers/streaming.py",
+    # Data schemas (no logic to test)
     "strutex/schemas/*",
+    # Non-code
     "docs/*",
     "examples/*",
 ]
