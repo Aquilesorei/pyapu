@@ -7,25 +7,51 @@ Reduce API costs and improve response times with strutex's caching system.
 ## Quick Start
 
 ```python
-from strutex import DocumentProcessor, MemoryCache, CacheKey
+from strutex import DocumentProcessor, MemoryCache
 from strutex.schemas import INVOICE_US
 
-# Create cache
-cache = MemoryCache(max_size=100, ttl=3600)  # 1 hour TTL
+# Create processor with cache
+processor = DocumentProcessor(
+    provider="gemini",
+    cache=MemoryCache(max_size=100, ttl=3600)  # 1 hour TTL
+)
 
-# Create processor
+# First call: hits LLM API
+result1 = processor.process("invoice.pdf", "Extract invoice", model=INVOICE_US)
+
+# Second call: returns cached result instantly (no API call)
+result2 = processor.process("invoice.pdf", "Extract invoice", model=INVOICE_US)
+
+print(f"Invoice: {result1}")
+```
+
+The cache key is automatically computed from:
+
+- File content hash (same content = same key)
+- Prompt hash
+- Schema hash
+- Provider and model name
+
+---
+
+## Manual Cache Usage
+
+For more control, you can manually manage the cache:
+
+```python
+from strutex import DocumentProcessor, MemoryCache, CacheKey
+
+cache = MemoryCache()
 processor = DocumentProcessor(provider="gemini")
 
-# Check cache before calling API
+# Create cache key
 key = CacheKey.create("invoice.pdf", "Extract invoice", INVOICE_US, "gemini")
-result = cache.get(key)
 
+# Check cache
+result = cache.get(key)
 if result is None:
-    # Not cached - call API
     result = processor.process("invoice.pdf", "Extract invoice", model=INVOICE_US)
     cache.set(key, result)
-
-print(f"Invoice: {result}")
 ```
 
 ---

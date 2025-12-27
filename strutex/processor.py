@@ -5,8 +5,11 @@ This module contains the core [`DocumentProcessor`][strutex.processor.DocumentPr
 class that orchestrates document extraction using pluggable LLM providers.
 """
 
+import logging
 import os
 from typing import Any, Callable, Dict, List, Optional, Union, Type
+
+logger = logging.getLogger("strutex.processor")
 
 from .documents import get_mime_type
 from .types import Schema
@@ -159,6 +162,7 @@ class DocumentProcessor:
         model_name: str = "gemini-2.5-flash",
         api_key: Optional[str] = None,
         security: Optional[SecurityPlugin] = None,
+        cache: Optional[Any] = None,
         on_pre_process: Optional[PreProcessCallback] = None,
         on_post_process: Optional[PostProcessCallback] = None,
         on_error: Optional[ErrorCallback] = None,
@@ -175,6 +179,8 @@ class DocumentProcessor:
             security: Optional [`SecurityPlugin`][strutex.plugins.base.SecurityPlugin]
                 or [`SecurityChain`][strutex.security.chain.SecurityChain] for
                 input/output validation. Security is opt-in.
+            cache: Optional cache instance (MemoryCache, SQLiteCache, etc.) for
+                caching extraction results to avoid redundant API calls.
             on_pre_process: Callback called before processing. Receives
                 (file_path, prompt, schema, mime_type, context) and can return
                 a dict with modified values.
@@ -193,9 +199,17 @@ class DocumentProcessor:
                 provider="gemini",
                 on_post_process=lambda result, ctx: normalize_dates(result)
             )
+            
+            # With caching
+            from strutex import MemoryCache
+            processor = DocumentProcessor(
+                provider="gemini",
+                cache=MemoryCache()
+            )
             ```
         """
         self.security = security
+        self.cache = cache
 
         # Hook storage: callbacks first, then decorated hooks
         self._pre_process_hooks: List[PreProcessCallback] = []
@@ -443,6 +457,36 @@ class DocumentProcessor:
                 raise SecurityError(f"Input rejected: {input_result.reason}")
             prompt = input_result.text or prompt
 
+        # Check cache if enabled
+        cache_key = None
+        if self.cache is not None:
+            from .cache import CacheKey
+            cache_key = CacheKey.create(
+                file_path=file_path,
+                prompt=prompt,
+                schema=schema,
+                provider=self.provider_name,
+                model=getattr(self._provider, 'model', None),
+            )
+            cached_result = self.cache.get(cache_key)
+            if cached_result is not None:
+                logger.debug(f"Cache hit for {file_path}")
+                # Still run post-process hooks on cached results
+                if isinstance(cached_result, dict):
+                    post_results = call_hook(
+                        "post_process",
+                        result=cached_result,
+                        context=context
+                    )
+                    for hook_result in post_results:
+                        if hook_result is not None and isinstance(hook_result, dict):
+                            cached_result = hook_result
+                # Validate with Pydantic if needed
+                if pydantic_model is not None:
+                    from .pydantic_support import validate_with_pydantic
+                    cached_result = validate_with_pydantic(cached_result, pydantic_model)
+                return cached_result
+
         # Process with provider (with error handling)
         try:
             result = self._provider.process(
@@ -452,6 +496,12 @@ class DocumentProcessor:
                 mime_type=mime_type,
                 **kwargs
             )
+            
+            # Store in cache if enabled
+            if self.cache is not None and cache_key is not None:
+                self.cache.set(cache_key, result)
+                logger.debug(f"Cached result for {file_path}")
+                
         except Exception as e:
             # Run error hooks via pluggy
             error_results = call_hook(
