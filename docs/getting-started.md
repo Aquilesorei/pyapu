@@ -1,86 +1,110 @@
 # Getting Started
 
+## The Simplest Way
+
+```python
+import strutex
+from pydantic import BaseModel
+
+class Invoice(BaseModel):
+    invoice_number: str
+    total: float
+
+result = strutex.extract("invoice.pdf", model=Invoice)
+print(result.invoice_number, result.total)
+```
+
+**That's it.** You're done. Everything below is optional.
+
+---
+
 ## Installation
 
 ```bash
 pip install strutex
 ```
 
-### Optional Dependencies
+### Optional Extras
 
-=== "OCR Support"
-
-    ```bash
-    pip install strutex[ocr]
-    ```
-
-=== "All Features"
-
-    ```bash
-    pip install strutex[ocr] pydantic
-    ```
+```bash
+pip install strutex[cli]          # CLI commands
+pip install strutex[ocr]          # OCR support
+pip install strutex[langchain]    # LangChain integration
+pip install strutex[all]          # Everything
+```
 
 ---
 
-## Basic Usage
+## More Control: DocumentProcessor
 
-### 1. Define Your Schema
-
-```python
-from strutex import Object, String, Number, Array
-
-schema = Object(
-    description="Invoice data",
-    properties={
-        "invoice_number": String(description="The invoice ID"),
-        "date": String(description="Invoice date"),
-        "total": Number(description="Total amount"),
-        "items": Array(
-            items=Object(
-                properties={
-                    "description": String,
-                    "amount": Number
-                }
-            )
-        )
-    }
-)
-```
-
-### 2. Create a Processor
+For more control over the extraction process:
 
 ```python
-import os
+from strutex import DocumentProcessor
+from pydantic import BaseModel
 
-# Ensure GOOGLE_API_KEY is set in your environment
-processor = DocumentProcessor(
-    provider="gemini",
-    model_name="gemini-2.5-flash",
-    api_key=os.getenv("GOOGLE_API_KEY")
-)
-```
+class Invoice(BaseModel):
+    invoice_number: str
+    date: str
+    total: float
 
-### 3. Process a Document
+processor = DocumentProcessor(provider="gemini")
 
-```python
 result = processor.process(
     file_path="invoice.pdf",
-    prompt="Extract all invoice data.",
-    schema=schema
+    prompt="Extract the invoice details.",
+    model=Invoice
 )
 
-print(f"Invoice: {result['invoice_number']}")
-print(f"Total: ${result['total']}")
+print(f"Invoice: {result.invoice_number}")
+print(f"Total: ${result.total}")
+```
+
+---
+
+## Using Native Schemas
+
+If you prefer not to use Pydantic:
+
+```python
+from strutex import extract, Object, String, Number
+
+schema = Object(properties={
+    "invoice_number": String(description="The invoice ID"),
+    "total": Number(description="Total amount")
+})
+
+result = extract("invoice.pdf", schema=schema)
+print(result["invoice_number"])
+```
+
+---
+
+## Choosing a Provider
+
+```python
+# Default: Gemini (uses GOOGLE_API_KEY env var)
+result = strutex.extract("doc.pdf", model=Schema)
+
+# OpenAI
+result = strutex.extract("doc.pdf", model=Schema, provider="openai")
+
+# Anthropic
+result = strutex.extract("doc.pdf", model=Schema, provider="anthropic")
+
+# Local with Ollama
+result = strutex.extract("doc.pdf", model=Schema, provider="ollama")
 ```
 
 ---
 
 ## Environment Variables
 
-| Variable         | Description             |
-| ---------------- | ----------------------- |
-| `GOOGLE_API_KEY` | Google Gemini API key   |
-| `OPENAI_API_KEY` | OpenAI API key (future) |
+| Variable            | Description           |
+| ------------------- | --------------------- |
+| `GOOGLE_API_KEY`    | Google Gemini API key |
+| `OPENAI_API_KEY`    | OpenAI API key        |
+| `ANTHROPIC_API_KEY` | Anthropic API key     |
 
 ---
 
@@ -97,7 +121,7 @@ print(f"Total: ${result['total']}")
 
 ## Next Steps
 
-- [Schema Types](schema-types.md) — Learn all available types
-- [Prompt Builder](prompt-builder.md) — Build structured prompts
-- [Plugin System](plugins.md) — Extend with custom plugins
-- [Security](security.md) — Add input/output protection
+- [Your First Schema](tutorial-schema.md) — Define custom schemas
+- [Built-in Schemas](schemas.md) — Ready-to-use Invoice, Receipt, etc.
+- [Verification](verification.md) — Self-correction for accuracy
+- [Caching](tutorial-caching.md) — Reduce API costs

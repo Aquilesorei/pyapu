@@ -115,8 +115,60 @@ from . import schemas
 # Integrations (LangChain, LlamaIndex)
 from . import integrations
 
+# Type hints
+from typing import Any, Dict, Optional, Union, TYPE_CHECKING, Type as TypingType
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+
+def extract(
+    document: str,
+    schema: Optional[Union["Schema", "Type"]] = None,
+    *,
+    provider: str = "gemini",
+    prompt: str = "Extract the data from this document.",
+    model: Optional[TypingType["BaseModel"]] = None,
+    **kwargs: Any
+) -> Dict[str, Any]:
+    """
+    Extract structured data from a document. That's it.
+    
+    This is the simplest way to use strutex. Everything else is optional.
+    
+    Args:
+        document: Path to the document (PDF, image, Excel, etc.)
+        schema: Schema definition for extraction (native Schema/Type)
+        provider: LLM provider name ("gemini", "openai", "anthropic", "ollama")
+        prompt: Extraction instructions
+        model: Pydantic model for extraction (alternative to schema)
+        **kwargs: Additional options passed to DocumentProcessor.process()
+    
+    Returns:
+        Extracted data as a dictionary (or Pydantic model if `model` was used)
+    
+    Example:
+        >>> import strutex
+        >>> result = strutex.extract("invoice.pdf", InvoiceSchema)
+        >>> print(result["total"])
+        1250.00
+        
+        # Or with Pydantic:
+        >>> invoice = strutex.extract("invoice.pdf", model=Invoice)
+        >>> print(invoice.total)
+    """
+    processor = DocumentProcessor(provider=provider)
+    return processor.process(
+        file_path=document,
+        prompt=prompt,
+        schema=schema,
+        model=model,
+        **kwargs
+    )
+
+
 __all__ = [
     # Core
+    "extract",
     "DocumentProcessor",
     "StructuredPrompt",
     

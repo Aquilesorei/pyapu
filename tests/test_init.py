@@ -73,6 +73,16 @@ class TestPackageExports:
         for item in expected:
             assert item in strutex.__all__, f"{item} missing from __all__"
 
+    def test_extract_export(self):
+        """Test extract convenience function is exported."""
+        from strutex import extract
+        assert callable(extract)
+
+    def test_extract_in_all(self):
+        """Test extract is in __all__."""
+        import strutex
+        assert "extract" in strutex.__all__
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

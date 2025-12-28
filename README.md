@@ -10,253 +10,257 @@
 
 ---
 
-## Features
+## The Simplest Example
 
-- **Plugin System v2** — Auto-registration via inheritance, lazy loading, entry points
-- **Hooks** — Callbacks and decorators for pre/post processing pipeline
-- **CLI Tooling** — `strutex plugins list|info|refresh` commands
-- **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, and custom endpoints
-- **Universal Document Support** — PDFs, images, Excel, and custom formats
-- **Schema-Driven Extraction** — Define your output structure, get consistent JSON
-- **Verification & Self-Correction** — built-in audit loop for high accuracy
-- **Security First** — Built-in input sanitization and output validation
-- **Framework Integrations** — LangChain, LlamaIndex, Haystack compatibility
+```python
+import strutex
+from pydantic import BaseModel
 
----
+class Invoice(BaseModel):
+    invoice_number: str
+    total: float
 
-## When to Choose Strutex
+result = strutex.extract("invoice.pdf", model=Invoice)
+print(result.invoice_number, result.total)
+```
 
-**Good fit:**
-
-- Document → JSON (invoices, receipts, forms, tables)
-- Schema-validated output, not free-form LLM text
-- Security by default (injection detection, PII redaction)
-- Local/air-gapped (Ollama, custom endpoints)
-- Lightweight deps, pluggable architecture
-- Production-ready: caching, batch/async, verification
-- LangChain/LlamaIndex integration for RAG pipelines
-
-**Not a fit:**
-
-- Complex multi-step agents or autonomous workflows
-- Vector search / embedding pipelines (use with LlamaIndex instead)
-- Full LLM orchestration framework → combine with LangChain
-
-> **TL;DR**: strutex turns messy documents into trustworthy structured data. Use it standalone or plugged into your RAG stack.
+**That's it.** Everything else in strutex is optional.
 
 ---
 
-## What's New
-
-- **Framework Integrations**: LangChain, LlamaIndex, Haystack
-- **DocumentInput**: Unified handling for file paths and BytesIO (HTTP uploads)
-- **OCR Fallback**: Automatic integration with Unstructured.io for complex layouts
-- **Optional Extras**: Install only the integrations you need
-
----
-
-## Quick Start
-
-### Installation
-
-View on PyPI: [https://pypi.org/project/strutex/](https://pypi.org/project/strutex/)
+## Installation
 
 ```bash
-# Core only
 pip install strutex
-
-# With CLI commands
-pip install strutex[cli]
-
-# With OCR support
-pip install strutex[ocr]
-
-# Framework integrations
-pip install strutex[langchain]     # LangChain
-pip install strutex[llamaindex]    # LlamaIndex
-pip install strutex[haystack]      # Haystack
-pip install strutex[fallback]      # Unstructured.io
-
-# Everything
-pip install strutex[all]
 ```
 
-### Basic Usage
+---
+
+## What You Can Do
+
+| Level             | Features                  | When to use                        |
+| ----------------- | ------------------------- | ---------------------------------- |
+| **Basic**         | `extract()`, schemas      | Most use cases — just extract data |
+| **Reliability**   | `verify=True`, validators | Production — ensure accuracy       |
+| **Scale**         | caching, async, batch     | High volume — reduce costs         |
+| **Extensibility** | plugins, hooks, CLI       | Custom needs — extend anything     |
+
+> **Most users only need Level 1.** The rest is there when you need it.
+
+---
+
+## Level 1: Basic Extraction
+
+### With Pydantic (recommended)
 
 ```python
-from strutex import DocumentProcessor, Object, String, Number, Array
+import strutex
+from pydantic import BaseModel
 
-# Define your output schema
-invoice_schema = Object(
-    description="Invoice data",
-    properties={
-        "invoice_number": String(description="The invoice ID"),
-        "total": Number,
-        "items": Array(
-            items=Object(
-                properties={
-                    "description": String,
-                    "amount": Number,
-                }
-            )
-        )
-    }
-)
+class Receipt(BaseModel):
+    store: str
+    date: str
+    total: float
 
-# Process a document
-# Process a document
-# 'provider="gemini"' selects Google's Gemini models.
-# You can also use "openai", "anthropic", or "ollama".
-processor = DocumentProcessor(provider="gemini")
-result = processor.process(
-    file_path="invoice.pdf",
-    prompt="Extract the invoice details.",
-    schema=invoice_schema
-)
-
-print(result["invoice_number"])  # "INV-2024-001"
-print(result["total"])           # 1250.00
+receipt = strutex.extract("receipt.jpg", model=Receipt)
 ```
 
-### Using Built-in Schemas
-
-Skip defining schemas manually! Strutex includes ready-to-use schemas for common documents:
+### With Native Schema
 
 ```python
-from strutex import DocumentProcessor
-from strutex.schemas import INVOICE_US, RECEIPT, BILL_OF_LADING
+from strutex import extract, Object, String, Number
 
-processor = DocumentProcessor(provider="gemini")
+schema = Object(properties={
+    "invoice_number": String,
+    "total": Number,
+})
 
-# Extract US Invoice
-invoice = processor.process(
-    "invoice.pdf",
-    "Extract invoice details",
-    model=INVOICE_US
-)
-print(f"Invoice #{invoice.invoice_number}, Total: ${invoice.total}")
+result = extract("invoice.pdf", schema=schema)
+```
 
-# Extract Bill of Lading
-bol = processor.process(
-    "bl.pdf",
-    "Extract shipping info",
-    model=BILL_OF_LADING
-)
-print(f"From: {bol.port_of_loading}, To: {bol.port_of_discharge}")
+### With Built-in Schemas
+
+```python
+from strutex import extract
+from strutex.schemas import INVOICE_US, BILL_OF_LADING
+
+invoice = extract("invoice.pdf", model=INVOICE_US)
+bol = extract("bl.pdf", model=BILL_OF_LADING)
 ```
 
 Available: `INVOICE_GENERIC`, `INVOICE_US`, `INVOICE_EU`, `RECEIPT`, `PURCHASE_ORDER`, `BILL_OF_LADING`, `RESUME`, `BANK_STATEMENT`, etc.
 
-### Advanced Usage
+---
 
-#### 1. Caching
+## Level 2: Reliability Features
 
-Save API costs by caching results. Smart hashing avoids re-processing identical files/prompts.
+### Verification & Self-Correction
 
 ```python
-from strutex.cache import SQLiteCache
-
-# Persistent cache across runs
-processor = DocumentProcessor(
-    provider="openai",
-    cache=SQLiteCache("strutex_cache.db")
+result = strutex.extract(
+    "contract.pdf",
+    model=ContractSchema,
+    verify=True  # LLM double-checks its work
 )
 ```
 
-#### 2. Async Processing
+### Choosing a Provider
 
-Process multiple documents in parallel.
+Create a provider instance for full control over API keys and configuration:
+
+```python
+from strutex import DocumentProcessor
+from strutex import GeminiProvider, OpenAIProvider, AnthropicProvider, OllamaProvider
+from strutex.schemas import INVOICE_US
+# Google Gemini
+processor = DocumentProcessor(provider=GeminiProvider(api_key="your-key"))
+
+# OpenAI
+processor = DocumentProcessor(provider=OpenAIProvider(api_key="your-key", model="gpt-4o"))
+
+# Anthropic Claude
+processor = DocumentProcessor(provider=AnthropicProvider(api_key="your-key"))
+
+# Local with Ollama (no API key needed)
+processor = DocumentProcessor(provider=OllamaProvider(model="llama3"))
+
+result = processor.process("doc.pdf", "Extract data", model=INVOICE_US)
+```
+
+---
+
+## Level 3: Scale Features
+
+### Caching (reduce API costs)
+
+```python
+from strutex import DocumentProcessor
+from strutex.cache import SQLiteCache
+
+processor = DocumentProcessor(
+    provider="gemini",
+    cache=SQLiteCache("cache.db")
+)
+```
+
+### Async Processing
 
 ```python
 import asyncio
+from strutex import DocumentProcessor
 
 async def main():
     processor = DocumentProcessor(provider="anthropic")
-
-    # Run in parallel
     results = await asyncio.gather(
-        processor.aprocess("doc1.pdf", "Summary", schema),
-        processor.aprocess("doc2.pdf", "Summary", schema)
+        processor.aprocess("doc1.pdf", "Extract", schema),
+        processor.aprocess("doc2.pdf", "Extract", schema)
     )
 
 asyncio.run(main())
 ```
 
-#### 3. Verification & Self-Correction
-
-Enable the audit loop to have the LLM double-check its work.
-
-```python
-result = processor.process(
-    "contract.pdf",
-    prompt="Extract clauses",
-    schema=contract_schema,
-    verify=True  # triggers self-correction loop
-)
-```
-
 ---
 
-## CLI Commands (v0.3.0+)
+## Level 4: Extensibility
 
-```bash
-# List all plugins
-strutex plugins list
+### Plugin System
 
-# Filter by type
-strutex plugins list --type provider
+Everything is pluggable. Just inherit from a base class:
 
-# Get plugin details
-strutex plugins info gemini --type provider
-
-# Refresh discovery cache
-strutex plugins refresh
-```
-
----
-
-## Plugin System
-
-**Everything is pluggable.** Just inherit from a base class:
+| Type             | Purpose                 | Examples                          |
+| ---------------- | ----------------------- | --------------------------------- |
+| `Provider`       | LLM backends            | Gemini, OpenAI, Claude, Ollama    |
+| `Extractor`      | Document parsing        | PDF, Image OCR, Excel             |
+| `Validator`      | Output validation       | Schema, sum checks, date formats  |
+| `SecurityPlugin` | Input/output protection | Injection detection, sanitization |
+| `Postprocessor`  | Data transformation     | Date/number normalization         |
 
 ```python
-from strutex.plugins import Provider
+from strutex.plugins import Provider, Extractor, Validator
 
+# Custom LLM Provider
 class MyProvider(Provider):
     """Auto-registered as 'myprovider'"""
-    capabilities = ["vision"]
-
     def process(self, file_path, prompt, schema, mime_type, **kwargs):
-        # Your LLM logic
+        # Call your LLM API
         ...
 
-# Customize with class arguments
-class FastProvider(Provider, name="fast"):
-    """Registered as 'fast' with high priority"""
-    priority = 90  # Class attribute
-    cost = 0.5
+# Custom Document Extractor
+class WordExtractor(Extractor, name="word"):
+    """Handle .docx files"""
+    mime_types = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
-    def process(self, ...): ...
+    def extract(self, file_path: str) -> str:
+        # Parse .docx and return text
+        ...
+
+# Custom Validator
+class TotalValidator(Validator):
+    """Verify line items sum to total"""
+    def validate(self, data, schema, context):
+        items_sum = sum(item["amount"] for item in data.get("items", []))
+        return ValidationResult(
+            valid=abs(items_sum - data["total"]) < 0.01,
+            message="Line items must sum to total"
+        )
+```
+
+### CLI Commands
+
+```bash
+strutex plugins list              # List all plugins
+strutex plugins list --type provider
+strutex plugins info gemini --type provider
 ```
 
 ### For Distributable Packages
 
-Use entry points in `pyproject.toml`:
-
 ```toml
+# pyproject.toml
 [project.entry-points."strutex.providers"]
 my_provider = "my_package:MyProvider"
 ```
 
-### Plugin Types
+### Hooks System
 
-| Type            | Purpose                 | Examples                          |
-| --------------- | ----------------------- | --------------------------------- |
-| `provider`      | LLM backends            | Gemini, OpenAI, Claude, Ollama    |
-| `security`      | Input/output protection | Injection detection, sanitization |
-| `extractor`     | Document parsing        | PDF, Image OCR, Excel             |
-| `validator`     | Output validation       | Schema, sum checks, date formats  |
-| `postprocessor` | Data transformation     | Date/number normalization         |
+Inject logic at any point in the processing pipeline:
+
+```python
+from strutex import DocumentProcessor
+
+processor = DocumentProcessor(provider="gemini")
+
+@processor.on_pre_process
+def add_instructions(file_path, prompt, schema, mime_type, context):
+    """Modify prompt before sending to LLM"""
+    return {"prompt": prompt + "\nBe precise and thorough."}
+
+@processor.on_post_process
+def normalize_dates(result, context):
+    """Transform output after extraction"""
+    if "date" in result:
+        result["date"] = parse_date(result["date"])
+    return result
+
+@processor.on_error
+def handle_rate_limit(error, file_path, context):
+    """Custom error handling"""
+    if "rate limit" in str(error).lower():
+        return {"error": "Rate limited, please retry"}
+    return None  # Propagate other errors
+```
+
+---
+
+## Optional Extras
+
+```bash
+pip install strutex[cli]          # CLI commands
+pip install strutex[ocr]          # OCR support
+pip install strutex[langchain]    # LangChain integration
+pip install strutex[llamaindex]   # LlamaIndex integration
+pip install strutex[all]          # Everything
+```
 
 ---
 
@@ -268,6 +272,34 @@ my_provider = "my_package:MyProvider"
 | Images | `.png`, `.jpg`, `.tiff` | Direct vision or OCR                |
 | Excel  | `.xlsx`, `.xls`         | Converted to structured text        |
 | Text   | `.txt`, `.csv`          | Direct input                        |
+
+---
+
+## Full Feature List
+
+<details>
+<summary>Click to expand all features</summary>
+
+- **Plugin System v2** — Auto-registration via inheritance, lazy loading, entry points
+- **Hooks** — Callbacks and decorators for pre/post processing pipeline
+- **CLI Tooling** — `strutex plugins list|info|refresh` commands
+- **Multi-Provider LLM Support** — Gemini, OpenAI, Anthropic, Ollama, Groq, Langdock
+- **Universal Document Support** — PDFs, images, Excel, and custom formats
+- **Schema-Driven Extraction** — Define your output structure, get consistent JSON
+- **Verification & Self-Correction** — Built-in audit loop for high accuracy
+- **Security First** — Built-in input sanitization and output validation
+- **Framework Integrations** — LangChain, LlamaIndex, Haystack compatibility
+- **Caching** — Memory, SQLite, and file-based caching
+- **Async & Batch** — Process multiple documents in parallel
+- **Streaming** — Real-time extraction feedback
+
+</details>
+
+---
+
+## Documentation
+
+📚 **[Read the Docs](https://aquilesorei.github.io/strutex/latest/)**
 
 ---
 
@@ -284,26 +316,6 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan.
 - [x] v0.7.0 — Providers & Retries
 - [x] v0.8.0 — Async, Batch, Cache, Verification
 - [x] v0.8.1 — Documentation & Coverage Fixes
-
----
-
-## Documentation
-
-📚 **[Read the Docs](https://aquilesorei.github.io/strutex/latest/)**
-
-```bash
-# Install docs dependencies
-pip install mkdocs mkdocs-material mkdocstrings[python] mike
-
-# Serve locally
-mkdocs serve
-
-# Build static site
-mkdocs build
-
-# Deploy with versioning
-mike deploy 0.3.0 latest --push
-```
 
 ---
 

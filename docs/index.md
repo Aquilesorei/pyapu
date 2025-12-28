@@ -1,25 +1,37 @@
 # Strutex
 
-**Python AI PDF Utilities** — Extract structured JSON from documents using LLMs.
+**Stru**ctured **T**ext **Ex**traction — Extract structured JSON from documents using LLMs.
 
 ---
 
-## Quick Example
+## The Simplest Example
 
 ```python
-from strutex import DocumentProcessor, GeminiProvider
+import strutex
 from pydantic import BaseModel
 
 class Invoice(BaseModel):
     invoice_number: str
-    vendor: str
     total: float
 
-processor = DocumentProcessor(provider=GeminiProvider())
-result = processor.process("invoice.pdf", "Extract invoice data", model=Invoice)
-
-print(result.invoice_number)  # Validated Pydantic model
+result = strutex.extract("invoice.pdf", model=Invoice)
+print(result.invoice_number, result.total)
 ```
+
+**That's it.** Everything else in strutex is optional.
+
+---
+
+## What You Can Do
+
+| Level             | Features                 | When to use    |
+| ----------------- | ------------------------ | -------------- |
+| **Basic**         | `extract()`, schemas     | Most use cases |
+| **Reliability**   | verification, validation | Production     |
+| **Scale**         | caching, async, batch    | High volume    |
+| **Extensibility** | plugins, hooks           | Custom needs   |
+
+> **Most users only need Level 1.** The rest is there when you need it.
 
 ---
 
@@ -114,40 +126,6 @@ Internal design and extension points:
 | --------------------------------- | ---------------------- |
 | [API Reference](api-reference.md) | Full API documentation |
 | [Changelog](changelog.md)         | Version history        |
-
----
-
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     DocumentProcessor                        │
-├─────────────────────────────────────────────────────────────┤
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │ Security │→ │ Extractor│→ │ Provider │→ │Validator │    │
-│  │  Chain   │  │  Plugin  │  │  Plugin  │  │  Plugin  │    │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-│         ↓            ↓            ↓            ↓            │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │                   Plugin Registry                       │ │
-│  └────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Key Features
-
-| Feature                    | Description                                       |
-| -------------------------- | ------------------------------------------------- |
-| **15 Tutorials**           | Progressive learning path                         |
-| **6 Providers**            | Gemini, OpenAI, Anthropic, Ollama, Groq, Langdock |
-| **Plugin System**          | Extend with custom providers, validators          |
-| **Pydantic Support**       | Type-safe extractions                             |
-| **Caching**                | Reduce API costs                                  |
-| **Framework Integrations** | LangChain, LlamaIndex, Haystack                   |
-| **Security Layer**         | Injection detection, PII redaction                |
-| **CLI Tools**              | `strutex run`, `strutex prompt build`             |
 
 ---
 
