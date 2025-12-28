@@ -2138,18 +2138,22 @@
 </span></code></pre></div>
 <hr />
 <h2 id="choosing-a-provider">Choosing a Provider<a class="headerlink" href="#choosing-a-provider" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Default: Gemini (uses GOOGLE_API_KEY env var)</span>
+<p>String providers are <strong>shortcuts for registered providers</strong> that use environment variables:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Default: Gemini (uses GEMINI_API_KEY or GOOGLE_API_KEY env var)</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">result</span> <span class="o">=</span> <span class="n">strutex</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Schema</span><span class="p">)</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># OpenAI</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># OpenAI (uses OPENAI_API_KEY)</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">strutex</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Schema</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Anthropic</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Anthropic (uses ANTHROPIC_API_KEY)</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">strutex</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Schema</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;anthropic&quot;</span><span class="p">)</span>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Local with Ollama</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Local with Ollama (no API key needed)</span>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">result</span> <span class="o">=</span> <span class="n">strutex</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Schema</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;ollama&quot;</span><span class="p">)</span>
 </span></code></pre></div>
+<blockquote>
+<p><strong>For production:</strong> Use explicit provider instances for full control. See <a href="../providers/">Providers</a>.</p>
+</blockquote>
 <hr />
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <table>
@@ -2161,8 +2165,12 @@
 </thead>
 <tbody>
 <tr>
+<td><code>GEMINI_API_KEY</code></td>
+<td>Google Gemini API key (primary)</td>
+</tr>
+<tr>
 <td><code>GOOGLE_API_KEY</code></td>
-<td>Google Gemini API key</td>
+<td>Google Gemini API key (fallback)</td>
 </tr>
 <tr>
 <td><code>OPENAI_API_KEY</code></td>
