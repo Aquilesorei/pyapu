@@ -170,6 +170,83 @@ def run_extraction(
         sys.exit(1)
 
 
+@cli.command("example")
+@click.argument("name", required=False)
+@click.option("--list", "-l", "list_examples", is_flag=True, help="List available examples")
+def run_example(name: Optional[str], list_examples: bool):
+    """Run a bundled example script.
+    
+    Run examples from the strutex examples directory.
+    
+    Examples:
+    
+        strutex example --list
+        
+        strutex example invoice_extraction_demo
+        
+        strutex example invoice_extraction_demo.py
+    """
+    import os
+    import subprocess
+    
+    # Find examples directory
+    package_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    examples_dir = os.path.join(package_dir, "examples")
+    
+    # Check if examples exist (installed from source)
+    if not os.path.exists(examples_dir):
+        # Try relative to current working directory
+        examples_dir = os.path.join(os.getcwd(), "examples")
+    
+    if not os.path.exists(examples_dir):
+        click.echo("Error: Examples directory not found.", err=True)
+        click.echo("Examples are available when running from source.", err=True)
+        sys.exit(1)
+    
+    # List examples
+    if list_examples or name is None:
+        click.secho("\nAvailable Examples", bold=True, fg="cyan")
+        click.echo("-" * 40)
+        
+        examples = sorted([
+            f for f in os.listdir(examples_dir) 
+            if f.endswith(".py") and not f.startswith("__")
+        ])
+        
+        for example in examples:
+            basename = example.replace(".py", "")
+            click.echo(f"  • {basename}")
+        
+        click.echo(f"\nRun with: strutex example <name>")
+        return
+    
+    # Normalize name
+    if not name.endswith(".py"):
+        name = f"{name}.py"
+    
+    example_path = os.path.join(examples_dir, name)
+    
+    if not os.path.exists(example_path):
+        click.echo(f"Error: Example '{name}' not found.", err=True)
+        click.echo(f"Run 'strutex example --list' to see available examples.", err=True)
+        sys.exit(1)
+    
+    click.secho(f"Running: {name}", fg="cyan")
+    click.echo("-" * 40)
+    
+    # Run the example with PYTHONPATH set
+    env = os.environ.copy()
+    env["PYTHONPATH"] = package_dir + os.pathsep + env.get("PYTHONPATH", "")
+    
+    result = subprocess.run(
+        [sys.executable, example_path],
+        env=env,
+        cwd=examples_dir
+    )
+    
+    sys.exit(result.returncode)
+
+
 @cli.group()
 def plugins():
     """Plugin management commands."""

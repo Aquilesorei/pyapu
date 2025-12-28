@@ -6,33 +6,30 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI](https://img.shields.io/pypi/v/strutex.svg)](https://pypi.org/project/strutex/)
-[![codecov](https://codecov.io/gh/Aquilesorei/strutex/branch/main/graph/badge.svg)](https://codecov.io/gh/Aquilesorei/strutex)
+
+```bash
+pip install strutex
+```
 
 ---
 
 ## The Simplest Example
 
 ```python
-import strutex
-from pydantic import BaseModel
+from strutex import extract
+from strutex.schemas import INVOICE_US
 
-class Invoice(BaseModel):
-    invoice_number: str
-    total: float
-
-result = strutex.extract("invoice.pdf", model=Invoice)
-print(result.invoice_number, result.total)
+invoice = extract("invoice.pdf", model=INVOICE_US)
+print(invoice.invoice_number, invoice.total)
 ```
 
-**That's it.** Everything else in strutex is optional.
+**That's it.** Three lines. No custom schema to write.
 
----
-
-## Installation
-
-```bash
-pip install strutex
-```
+> **Schemas are required** — but you have options:
+>
+> - **Built-in schemas** — 10+ ready-to-use (invoices, receipts, shipping docs, resumes)
+> - **Native types** — `Object`, `String`, `Number`, `Array` (lightweight, no dependencies)
+> - **Pydantic models** — Full type safety and validation
 
 ---
 
@@ -43,7 +40,7 @@ pip install strutex
 | **Basic**         | `extract()`, schemas      | Most use cases — just extract data |
 | **Reliability**   | `verify=True`, validators | Production — ensure accuracy       |
 | **Scale**         | caching, async, batch     | High volume — reduce costs         |
-| **Extensibility** | plugins, hooks, CLI       | Custom needs — extend anything     |
+| **Extensibility** | plugins, hooks, CLI       | Advanced — extend anything         |
 
 > **Most users only need Level 1.** The rest is there when you need it.
 
@@ -94,13 +91,15 @@ Available: `INVOICE_GENERIC`, `INVOICE_US`, `INVOICE_EU`, `RECEIPT`, `PURCHASE_O
 
 ## Level 2: Reliability Features
 
-### Verification & Self-Correction
+### Optional Double-Check
+
+Ask the LLM to validate its own answers automatically — adds accuracy, completely optional:
 
 ```python
 result = strutex.extract(
     "contract.pdf",
     model=ContractSchema,
-    verify=True  # LLM double-checks its work
+    verify=True  # LLM reviews its own output
 )
 ```
 
@@ -126,6 +125,8 @@ processor = DocumentProcessor(provider=OllamaProvider(model="llama3"))
 
 result = processor.process("doc.pdf", "Extract data", model=INVOICE_US)
 ```
+
+> **Note:** String providers like `provider="gemini"` are convenience shortcuts that assume correct environment variables. For production, explicit provider instances are recommended.
 
 ---
 

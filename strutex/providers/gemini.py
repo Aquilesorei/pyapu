@@ -40,10 +40,10 @@ class GeminiProvider(Provider):
     ):
         """
         Args:
-            api_key: Google API key. Falls back to GOOGLE_API_KEY env var.
+            api_key: Google API key. Falls back to GEMINI_API_KEY or GOOGLE_API_KEY env vars.
             model: Gemini model name
         """
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
         self.model = model
         self._client = None
     
