@@ -25,7 +25,7 @@ def main():
     processor = DocumentProcessor(
         provider=GeminiProvider(
             api_key=os.getenv("GEMINI_API_KEY"),
-            model="gemini-2.5-flash"
+            model="gemini-3-flash-preview"
         )
     )
     
@@ -60,7 +60,7 @@ async def async_main():
     processor = DocumentProcessor(
         provider=GeminiProvider(
             api_key=os.getenv("GEMINI_API_KEY"),
-            model="gemini-2.5-flash"
+            model="gemini-3-flash-preview"
         )
     )
     

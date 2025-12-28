@@ -23,7 +23,7 @@ class GeminiProvider(Provider):
     - Structured JSON output
     
     Usage:
-        provider = GeminiProvider(api_key="...", model="gemini-2.5-flash")
+        provider = GeminiProvider(api_key="...", model="gemini-3-flash-preview")
         result = provider.process(file_path, prompt, schema, mime_type)
     """
     
@@ -36,7 +36,7 @@ class GeminiProvider(Provider):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash"
+        model: str = "gemini-3-flash-preview"
     ):
         """
         Args:

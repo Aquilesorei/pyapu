@@ -149,10 +149,10 @@ key = CacheKey.create(
     prompt="Extract invoice details",
     schema=INVOICE_US,
     provider="gemini",
-    model="gemini-2.5-flash"
+    model="gemini-3-flash-preview"
 )
 
-# Key string: "a1b2c3:d4e5f6:g7h8i9:gemini:gemini-2.5-flash"
+# Key string: "a1b2c3:d4e5f6:g7h8i9:gemini:gemini-3-flash-preview"
 print(key.to_string())
 ```
 

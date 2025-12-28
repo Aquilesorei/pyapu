@@ -32,7 +32,7 @@ class LangdockProvider(Provider, name="langdock"):
     for maximum flexibility.
     
     Usage:
-        provider = LangdockProvider(model="gemini-2.5-flash")
+        provider = LangdockProvider(model="gemini-3-flash-preview")
         result = provider.process(file_path, prompt, schema, mime_type)
         
         # With custom model
@@ -65,7 +65,7 @@ class LangdockProvider(Provider, name="langdock"):
     
     # Fallback models (used when API call fails)
     FALLBACK_MODELS = {
-        "gemini-2.5-flash": "Google Gemini 2.5 Flash",
+        "gemini-3-flash-preview": "Google Gemini 2.5 Flash",
         "gemini-2.5-pro": "Google Gemini 2.5 Pro",
         "gpt-4o": "OpenAI GPT-4o",
         "gpt-4-turbo": "OpenAI GPT-4 Turbo",
@@ -76,7 +76,7 @@ class LangdockProvider(Provider, name="langdock"):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
+        model: str = "gemini-3-flash-preview",
         timeout: float = 120.0,
         retry_config: Optional[RetryConfig] = None,
         temperature: float = 0.0,
@@ -85,7 +85,7 @@ class LangdockProvider(Provider, name="langdock"):
         """
         Args:
             api_key: Langdock API key. Falls back to LANGDOCK_API_KEY env var.
-            model: Model name (gemini-2.5-flash, gpt-4o, claude-3-5-sonnet, etc.)
+            model: Model name (gemini-3-flash-preview, gpt-4o, claude-3-5-sonnet, etc.)
             timeout: Request timeout in seconds
             retry_config: Custom retry configuration
             temperature: Model temperature (0.0 for deterministic extraction)
@@ -272,7 +272,7 @@ Extract the data from the attached document and return valid JSON matching this 
             RuntimeError: If file upload or API call fails after retries.
             
         Example:
-            >>> provider = LangdockProvider(model="gemini-2.5-flash")
+            >>> provider = LangdockProvider(model="gemini-3-flash-preview")
             >>> result = provider.process(
             ...     file_path="invoice.pdf",
             ...     prompt="Extract all invoice line items and totals",

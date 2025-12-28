@@ -33,7 +33,7 @@ class TestLangdockConfig:
     def test_init_defaults(self, mock_env):
         p = LangdockProvider()
         assert p.api_key == "test-key"
-        assert p.model == "gemini-2.5-flash"
+        assert p.model == "gemini-3-flash-preview"
 
     def test_init_explicit(self):
         p = LangdockProvider(api_key="custom", model="gpt-4")
@@ -164,7 +164,7 @@ class TestLangdockProcess:
         
         data = json.loads(req.data.decode())
         assert data["assistant"]["attachmentIds"] == ["att-1"]
-        assert data["assistant"]["model"] == "gemini-2.5-flash"
+        assert data["assistant"]["model"] == "gemini-3-flash-preview"
 
 
 class TestLangdockModels:
@@ -186,7 +186,7 @@ class TestLangdockModels:
         
         models = provider.list_models(force_refresh=True)
         # Should return keys of fallback dict
-        assert "gemini-2.5-flash" in models
+        assert "gemini-3-flash-preview" in models
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

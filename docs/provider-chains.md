@@ -83,7 +83,7 @@ from strutex import ProviderChain, OllamaProvider, GeminiProvider
 
 chain = ProviderChain([
     OllamaProvider(model="llama3.2-vision", timeout=30),
-    GeminiProvider(model="gemini-2.5-flash")
+    GeminiProvider(model="gemini-3-flash-preview")
 ])
 ```
 

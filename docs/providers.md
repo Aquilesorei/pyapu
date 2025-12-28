@@ -32,7 +32,7 @@ processor = DocumentProcessor(provider="gemini")
 # Explicit instance (recommended for production)
 provider = GeminiProvider(
     api_key="...",  # or set GEMINI_API_KEY / GOOGLE_API_KEY
-    model="gemini-2.5-flash"
+    model="gemini-3-flash-preview"
 )
 processor = DocumentProcessor(provider=provider)
 ```
@@ -177,7 +177,7 @@ from strutex import LangdockProvider
 
 provider = LangdockProvider(
     api_key="...",  # or set LANGDOCK_API_KEY
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     temperature=0.0
 )
 ```
@@ -191,7 +191,7 @@ provider = LangdockProvider(
 
 **Models:**
 
-- `gemini-2.5-flash` (recommended)
+- `gemini-3-flash-preview` (recommended)
 - `gemini-2.5-pro`
 - `gpt-4o`
 - `gpt-4-turbo`

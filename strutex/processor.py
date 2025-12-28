@@ -161,7 +161,7 @@ class DocumentProcessor:
     def __init__(
         self,
         provider: Union[str, Provider] = "gemini",
-        model_name: str = "gemini-2.5-flash",
+        model_name: str = "gemini-3-flash-preview",
         api_key: Optional[str] = None,
         security: Optional[SecurityPlugin] = None,
         cache: Optional[Any] = None,

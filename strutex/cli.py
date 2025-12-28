@@ -70,7 +70,7 @@ def run_extraction(
     
     \b
         provider: gemini          # Provider name
-        model: gemini-2.5-flash   # Model name (optional)
+        model: gemini-3-flash-preview   # Model name (optional)
         file: document.pdf        # File to process
         prompt: "Extract..."      # Extraction prompt
         schema:                   # Expected output schema

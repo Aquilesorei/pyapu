@@ -63,11 +63,11 @@ def example_real_cache_key():
         prompt="Extract all invoice details",
         schema=INVOICE_US,
         provider="gemini",
-        model="gemini-2.5-flash"
+        model="gemini-3-flash-preview"
     )
     
     print(key.to_string())
-    # Output: a1b2c3:d4e5f6:g7h8i9:gemini:gemini-2.5-flash
+    # Output: a1b2c3:d4e5f6:g7h8i9:gemini:gemini-3-flash-preview
     """)
 
 

@@ -425,7 +425,7 @@ class InvoiceProcessorApp:
     def __init__(
         self,
         provider: str = "gemini",
-        model: str = "gemini-2.5-flash",
+        model: str = "gemini-3-flash-preview",
         language: str = "en",
         strict_security: bool = False,
         api_key: str = None
