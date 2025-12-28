@@ -59,7 +59,8 @@ class OllamaProvider(Provider, name="ollama"):
         host: Optional[str] = None,
         model: str = "llama3.2-vision",
         timeout: float = 120.0,
-        retry_config: Optional[RetryConfig] = None
+        retry_config: Optional[RetryConfig] = None,
+        options: Optional[Dict[str, Any]] = None
     ):
         """
         Args:
@@ -68,13 +69,15 @@ class OllamaProvider(Provider, name="ollama"):
             model: Model name (e.g., llama3.2-vision, llava, bakllava)
             timeout: Request timeout in seconds
             retry_config: Custom retry configuration
+            options: Ollama model options (temperature, num_ctx, etc.)
+                     See: https://github.com/ollama/ollama/blob/main/docs/modelfile.mdx#parameter
         """
-        self.host = host or os.getenv("OLLAMA_HOST", "http://localhost:11434")
         raw_host = host or os.getenv("OLLAMA_HOST", "http://localhost:11434")
         self.host = (raw_host or "").rstrip("/")
         self.model = model
         self.timeout = timeout
         self.retry_config = retry_config or self.DEFAULT_RETRY
+        self.options = options or {}
     
     def _make_request(
         self,
@@ -145,19 +148,29 @@ Respond ONLY with the JSON object, no additional text or markdown."""
         full_prompt = self._build_prompt_with_schema(prompt, schema)
         
         # Prepare the request
-        # Prepare the request
         messages: List[Dict[str, Any]] = [{
             "role": "user",
             "content": full_prompt
         }]
         
-        # Add image if it's a visual file
+        # Handle different file types
         if self._is_visual_file(mime_type, file_path):
+            # Direct image file - send as base64
             with open(file_path, "rb") as f:
                 image_data = base64.b64encode(f.read()).decode("utf-8")
             messages[0]["images"] = [image_data]
+        elif mime_type == "application/pdf":
+            # PDF - try to convert all pages to images for vision, fall back to text
+            images = self._pdf_to_images_base64(file_path)
+            if images:
+                messages[0]["images"] = images
+            else:
+                # Fall back to text extraction
+                text_content = self._extract_text(file_path, mime_type)
+                if text_content:
+                    messages[0]["content"] = f"Document content:\n{text_content}\n\n{full_prompt}"
         else:
-            # For non-visual files, try to extract text first
+            # For non-visual files, extract text
             text_content = self._extract_text(file_path, mime_type)
             if text_content:
                 messages[0]["content"] = f"Document content:\n{text_content}\n\n{full_prompt}"
@@ -168,6 +181,10 @@ Respond ONLY with the JSON object, no additional text or markdown."""
             "stream": False,
             "format": "json"  # Request JSON output
         }
+        
+        # Add model options if specified
+        if self.options:
+            payload["options"] = self.options
         
         # Make request with retry
         @with_retry(config=self.retry_config)
@@ -190,11 +207,45 @@ Respond ONLY with the JSON object, no additional text or markdown."""
     
     def _is_visual_file(self, mime_type: str, file_path: str) -> bool:
         """Check if file should be processed as image."""
+        # Note: PDFs are NOT directly supported by Ollama vision - they need conversion
         visual_types = {
-            "image/png", "image/jpeg", "image/jpg", "image/webp",
-            "image/gif", "application/pdf"  # Some vision models handle PDFs
+            "image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"
         }
         return mime_type.lower() in visual_types
+    
+    def _pdf_to_images_base64(self, file_path: str) -> Optional[List[str]]:
+        """
+        Convert all PDF pages to base64 images for vision models.
+        
+        Args:
+            file_path: Path to PDF file
+            
+        Returns:
+            List of base64-encoded PNG images, or None if conversion fails
+        """
+        try:
+            import fitz  # PyMuPDF
+            doc = fitz.open(file_path)
+            if len(doc) == 0:
+                return None
+            
+            images = []
+            for page in doc:
+                # Render at 2x resolution for better OCR
+                mat = fitz.Matrix(2.0, 2.0)
+                pix = page.get_pixmap(matrix=mat)
+                
+                # Convert to PNG bytes
+                png_bytes = pix.tobytes("png")
+                images.append(base64.b64encode(png_bytes).decode("utf-8"))
+            
+            doc.close()
+            return images if images else None
+        except ImportError:
+            # PyMuPDF not available, fall back to text extraction
+            return None
+        except Exception:
+            return None
     
     def _extract_text(self, file_path: str, mime_type: str) -> Optional[str]:
         """Extract text from non-visual documents."""
