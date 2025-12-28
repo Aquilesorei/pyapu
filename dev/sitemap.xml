@@ -2,146 +2,146 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://strutex.readthedocs.io/dev/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/api-reference/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/cache/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/changelog/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/cli/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/context/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/extractors/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/getting-started/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/hooks/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/integrations/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/plugins/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/prompt-builder/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/provider-chains/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/providers/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/pydantic/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/schema-types/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/schemas/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/security/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/streaming/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-batch/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-caching/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-custom-plugins/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-document-input/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-error-handling/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-hooks/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-integrations/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-prompts/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-providers/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-quickstart/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-schema/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-security/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-streaming/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-use-cases/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/tutorial-validation/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/validators/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
     <url>
          <loc>https://strutex.readthedocs.io/dev/verification/</loc>
-         <lastmod>2025-12-27</lastmod>
+         <lastmod>2025-12-28</lastmod>
     </url>
 </urlset>
