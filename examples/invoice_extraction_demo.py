@@ -42,21 +42,21 @@ print("=" * 60)
 print("INVOICE EXTRACTION RESULT")
 print("=" * 60)
 
-print(f"\n📄 Invoice Number: {invoice.invoice_number}")
-print(f"📅 Date: {invoice.invoice_date}")
-print(f"📅 Due Date: {invoice.due_date}")
+print(f"\nInvoice Number: {invoice.invoice_number}")
+print(f"Date: {invoice.invoice_date}")
+print(f"Due Date: {invoice.due_date}")
 
 if invoice.vendor:
-    print(f"\n🏢 Vendor: {invoice.vendor.name}")
+    print(f"\n Vendor: {invoice.vendor.name}")
     if invoice.vendor.address:
         print(f"   Address: {invoice.vendor.address.street}, {invoice.vendor.address.city}")
 
 if invoice.customer:
-    print(f"\n👤 Customer: {invoice.customer.name}")
+    print(f"\n Customer: {invoice.customer.name}")
     if invoice.customer.address:
         print(f"   Address: {invoice.customer.address.street}, {invoice.customer.address.city}")
 
-print(f"\n💰 Currency: {invoice.currency}")
+print(f"\n Currency: {invoice.currency}")
 if invoice.subtotal:
     print(f"   Subtotal: {invoice.subtotal}")
 if invoice.tax_amount:
@@ -64,15 +64,15 @@ if invoice.tax_amount:
 print(f"   TOTAL: {invoice.total}")
 
 if invoice.line_items:
-    print(f"\n📋 Line Items ({len(invoice.line_items)}):")
+    print(f"\n Line Items ({len(invoice.line_items)}):")
     for i, item in enumerate(invoice.line_items, 1):
         qty = f"x{item.quantity}" if item.quantity else ""
         print(f"   {i}. {item.description} {qty} = {item.amount}")
 
 if invoice.payment_terms:
-    print(f"\n💳 Payment Terms: {invoice.payment_terms}")
+    print(f"\nPayment Terms: {invoice.payment_terms}")
 
 if invoice.notes:
-    print(f"\n📝 Notes: {invoice.notes}")
+    print(f"\nNotes: {invoice.notes}")
 
 print("\n" + "=" * 60)

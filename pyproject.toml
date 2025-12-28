@@ -43,6 +43,7 @@ langchain-core = { version = "^0.3.0", optional = true }
 llama-index-core = { version = "^0.11.0", optional = true }
 haystack-ai = { version = "^2.0.0", optional = true }
 unstructured = { version = "^0.11.0", optional = true }
+gliner = { version = "^0.2.0", optional = true }
 
 [tool.poetry.extras]
 cli = ["click"]
@@ -51,7 +52,8 @@ langchain = ["langchain-core"]
 llamaindex = ["llama-index-core"]
 haystack = ["haystack-ai"]
 fallback = ["unstructured"]
-all = ["click", "pdf2image", "pytesseract", "langchain-core", "llama-index-core", "haystack-ai", "unstructured"]
+gliner = ["gliner"]
+all = ["click", "pdf2image", "pytesseract", "langchain-core", "llama-index-core", "haystack-ai", "unstructured", "gliner"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

@@ -13,7 +13,6 @@ Requirements:
 import os
 import sys
 
-# Add parent directory to path for local development
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from strutex import DocumentProcessor
@@ -42,9 +41,9 @@ def basic_extraction():
         model=INVOICE_GENERIC
     )
     
-    print("📄 Invoice Number:", result.invoice_number)
-    print("📅 Date:", result.invoice_date)
-    print("💰 Total:", result.total)
+    print("Invoice Number:", result.invoice_number)
+    print("Date:", result.invoice_date)
+    print("Total:", result.total)
     
     return result
 
@@ -100,7 +99,10 @@ def with_fallback_to_cloud():
     # Chain: Ollama → Gemini (cloud fallback)
     chain = ProviderChain([
         OllamaProvider(model="llama3.2-vision"),
-        GeminiProvider()  # Needs GEMINI_API_KEY env var
+        GeminiProvider(
+            api_key=os.getenv('GEMINI_API_KEY'),
+            model='gemini-2.5-pro'
+        )
     ])
     
     processor = DocumentProcessor(provider=chain)
@@ -123,12 +125,12 @@ if __name__ == "__main__":
     print("=" * 60)
     
     # Make sure Ollama is running
-    print("\n⚠️  Make sure Ollama is running: `ollama serve`")
-    print("⚠️  And you have a vision model: `ollama pull llama3.2-vision`\n")
+    print("\n Make sure Ollama is running: `ollama serve`")
+    print("And you have a vision model: `ollama pull llama3.2-vision`\n")
     
     try:
         result = basic_extraction()
-        print("\n✅ Extraction successful!")
+        print("\n Extraction successful!")
     except Exception as e:
         print(f"\n❌ Error: {e}")
         print("   Is Ollama running? Try: `ollama serve`")

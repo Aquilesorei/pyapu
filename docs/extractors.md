@@ -60,6 +60,54 @@ extractor = ExcelExtractor()
 text = extractor.extract("data.xlsx")
 ```
 
+### GlinerExtractor
+
+Fast, local entity extraction using [GLiNER](https://github.com/urchade/GLiNER) - a zero-shot NER model.
+
+!!! tip "When to Use" - **Speed**: 10-100x faster than LLM calls - **Cost**: Runs locally, no API costs - **Hybrid**: Pre-extract entities, refine with LLM
+
+```python
+from strutex.extractors import GlinerExtractor
+
+# Default labels (person, company, date, money, etc.)
+extractor = GlinerExtractor()
+result = extractor.extract("invoice.pdf")
+
+# Custom labels for your domain
+extractor = GlinerExtractor(
+    labels=["container_number", "vessel", "port", "weight"],
+    threshold=0.3  # Confidence threshold
+)
+result = extractor.extract("bill_of_lading.pdf")
+
+# Get structured output (not formatted string)
+entities = extractor.extract_structured("invoice.pdf")
+# Returns: {"date": [{"text": "2024-01-15", "score": 0.92}], ...}
+```
+
+**Hybrid Pipeline** - Use GLiNER for speed, LLM for accuracy:
+
+```python
+from strutex import DocumentProcessor
+from strutex.extractors import GlinerExtractor
+from strutex.schemas import INVOICE_GENERIC
+
+# Fast local pre-extraction
+extractor = GlinerExtractor(labels=["invoice_number", "date", "amount"])
+pre_extracted = extractor.extract("invoice.pdf")
+
+# LLM refines and validates
+processor = DocumentProcessor(provider="gemini")
+result = processor.process(
+    "invoice.pdf",
+    f"Extract invoice. Hints: {pre_extracted}",
+    model=INVOICE_GENERIC
+)
+```
+
+!!! note "Installation"
+Install with: `pip install strutex[gliner]`
+
 ---
 
 ## Auto-Selection

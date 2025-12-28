@@ -8,12 +8,14 @@ from .pdf import PDFExtractor
 from .image import ImageExtractor
 from .excel import ExcelExtractor
 from .formatted import FormattedDocExtractor
+from .gliner import GlinerExtractor
 
 __all__ = [
     "PDFExtractor",
     "ImageExtractor", 
     "ExcelExtractor",
     "FormattedDocExtractor",
+    "GlinerExtractor",
     "get_extractor",
 ]
 
