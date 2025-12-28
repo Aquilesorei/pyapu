@@ -61,6 +61,102 @@ Strutex has two extension mechanisms that serve different purposes:
 
 ---
 
+## Processing Pipeline Flow
+
+When you call `DocumentProcessor.process()`, plugins and hooks are invoked in this order:
+
+```mermaid
+flowchart TD
+    A["DocumentProcessor.process()"] --> B["1. PRE-PROCESS HOOKS"]
+    B --> C["2. SecurityPlugin.validate_input()"]
+    C --> D{"3. Cache Hit?"}
+    D -->|Yes| K["Return Cached Result"]
+    D -->|No| E["4. Provider.process()"]
+    E -->|Success| G["5. SecurityPlugin.validate_output()"]
+    E -->|Error| F["4a. ERROR HOOKS"]
+    F -->|Fallback| G
+    F -->|Re-raise| Z["Raise Exception"]
+    G --> H["6. POST-PROCESS HOOKS"]
+    H --> I["7. Pydantic Validation"]
+    I --> J{"8. verify=True?"}
+    J -->|Yes| L["Verification Loop"]
+    L --> M["Return Result"]
+    J -->|No| M
+```
+
+### Step-by-Step Breakdown
+
+| Step   | Component                        | Purpose                                   |
+| ------ | -------------------------------- | ----------------------------------------- |
+| **1**  | Pre-process Hooks                | Modify prompt, add context, log start     |
+| **2**  | SecurityPlugin.validate_input()  | Sanitize input, detect injection attacks  |
+| **3**  | Cache                            | Return cached result if available         |
+| **4**  | Provider.process()               | Send document + prompt to LLM             |
+| **4a** | Error Hooks                      | Handle failures, return fallback          |
+| **5**  | SecurityPlugin.validate_output() | Clean/validate extracted data             |
+| **6**  | Post-process Hooks               | Transform result, normalize data          |
+| **7**  | Pydantic Validation              | Validate against model (if provided)      |
+| **8**  | Verification Loop                | LLM self-checks output (if `verify=True`) |
+
+### Example: Full Pipeline with All Plugin Types
+
+```python
+from strutex import DocumentProcessor
+from strutex.providers import GeminiProvider
+from strutex.security import SecurityChain, InputSanitizer
+from strutex.plugins import Validator, Postprocessor, ValidationResult
+
+# Custom Validator
+class TotalValidator(Validator):
+    def validate(self, data, schema=None):
+        items = data.get("line_items", [])
+        total = data.get("total", 0)
+        items_sum = sum(i.get("amount", 0) for i in items)
+
+        return ValidationResult(
+            valid=abs(items_sum - total) < 0.01,
+            data=data,
+            issues=[] if abs(items_sum - total) < 0.01 else ["Sum mismatch"]
+        )
+
+# Custom Postprocessor
+class DateNormalizer(Postprocessor):
+    def process(self, data):
+        if "date" in data:
+            data["date"] = data["date"].replace("/", "-")
+        return data
+
+# Setup processor with plugins
+processor = DocumentProcessor(
+    provider=GeminiProvider(),
+    security=SecurityChain([InputSanitizer()])
+)
+
+# Add hooks
+@processor.on_pre_process
+def log_start(file_path, prompt, schema, mime_type, context):
+    print(f"Processing: {file_path}")
+
+@processor.on_post_process
+def add_metadata(result, context):
+    result["_processed_by"] = "strutex"
+    return result
+
+@processor.on_error
+def handle_rate_limit(error, file_path, context):
+    if "rate limit" in str(error).lower():
+        return {"error": "Rate limited", "retry": True}
+    return None  # Re-raise other errors
+
+# Process with full pipeline
+result = processor.process(
+    "invoice.pdf",
+    "Extract invoice data",
+    model=InvoiceSchema,
+    verify=True  # Enable verification loop
+)
+```
+
 ## Plugin Types
 
 | Type            | Purpose                 | Built-in Examples                       |
