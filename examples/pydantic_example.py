@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from strutex import DocumentProcessor
+from strutex import DocumentProcessor, GeminiProvider
 
 
 # ===================
@@ -45,7 +45,12 @@ def main():
     # ===================
     # 2. Create Processor
     # ===================
-    processor = DocumentProcessor(provider="gemini")
+    processor = DocumentProcessor(
+        provider=GeminiProvider(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            model="gemini-2.5-flash"
+        )
+    )
     
     # ===================
     # 3. Process with Pydantic Model

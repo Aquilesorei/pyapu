@@ -261,7 +261,7 @@ def call_hook(hook_name: str, **kwargs) -> List[Any]:
         **kwargs: Arguments to pass to hook implementations
         
     Returns:
-        List of results from all hook implementations
+        List of results from all hook implementations (never None)
     """
     pm = get_plugin_manager()
     if pm is None:
@@ -271,4 +271,12 @@ def call_hook(hook_name: str, **kwargs) -> List[Any]:
     if hook is None:
         return []
     
-    return hook(**kwargs)
+    result = hook(**kwargs)
+    
+    # Ensure we always return a list
+    # (firstresult=True hooks return a single value or None)
+    if result is None:
+        return []
+    if not isinstance(result, list):
+        return [result]
+    return result

@@ -1,67 +1,84 @@
+"""
+Verification Example - Self-correction with verify=True
+
+Demonstrates:
+- Automatic verification (verify=True)
+- Manual verification with processor.verify()
+- Async verification
+"""
 
 import os
+import sys
 import asyncio
-from strutex import DocumentProcessor
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from strutex import DocumentProcessor, GeminiProvider
 from strutex.schemas import INVOICE_US
 
-# Ensure you have set your API key
-# os.environ["GOOGLE_API_KEY"] = "..."
 
 def main():
     """Synchronous verification example."""
     print("--- Synchronous Verification ---")
     
-    # Initialize processor (defaults to Gemini)
-    processor = DocumentProcessor(provider="gemini", model_name="gemini-2.5-flash")
+    # Initialize processor with explicit provider
+    processor = DocumentProcessor(
+        provider=GeminiProvider(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            model="gemini-2.5-flash"
+        )
+    )
+    
+    # Get the order.pdf in this directory
+    pdf_path = os.path.join(os.path.dirname(__file__), "order.pdf")
+    
+    if not os.path.exists(pdf_path):
+        print(f"Sample PDF not found: {pdf_path}")
+        return
     
     # 1. Automatic Verification
     # This runs the extraction, then immediately runs a second pass 
     # to audit and correct the result.
     print("Processing with verification...")
     result = processor.process(
-        file_path="invoice.pdf",  # Replace with actual file
+        file_path=pdf_path,
         prompt="Extract invoice details",
-        schema=INVOICE_US,
+        model=INVOICE_US,
         verify=True  # 👈 Triggers self-correction
     )
     
-    print("Verified Result:", result)
+    print(f"\nVerified Result:")
+    print(f"  Invoice #: {result.invoice_number}")
+    print(f"  Total: {result.total}")
+    print(f"  Vendor: {result.vendor.name if result.vendor else 'N/A'}")
 
-    # 2. Manual Verification
-    # You can also verify an existing result manually
-    print("\n--- Manual Verification ---")
-    bad_result = {"invoice_number": "WRONG", "total": 0}
-    
-    verified_result = processor.verify(
-        file_path="invoice.pdf",
-        result=bad_result,
-        schema=INVOICE_US
-    )
-    print("Fixed Result:", verified_result)
 
 async def async_main():
     """Asynchronous verification example."""
     print("\n--- Asynchronous Verification ---")
     
-    processor = DocumentProcessor(provider="gemini")
+    processor = DocumentProcessor(
+        provider=GeminiProvider(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            model="gemini-2.5-flash"
+        )
+    )
+    
+    pdf_path = os.path.join(os.path.dirname(__file__), "order.pdf")
     
     # Async verification
     result = await processor.aprocess(
-        file_path="invoice.pdf",
+        file_path=pdf_path,
         prompt="Extract data",
-        schema=INVOICE_US,
+        model=INVOICE_US,
         verify=True
     )
-    print("Async Verified Result:", result)
+    print(f"Async Verified Result: {result.invoice_number}")
+
 
 if __name__ == "__main__":
-    # Create a dummy file if not exists for demo
-    if not os.path.exists("invoice.pdf"):
-        with open("invoice.pdf", "w") as f:
-            f.write("Dummy PDF content")
-            
     try:
         main()
         asyncio.run(async_main())
     except Exception as e:
-        print(f"Error (expected if no API key/file): {e}")
+        print(f"Error: {e}")

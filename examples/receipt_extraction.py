@@ -55,6 +55,8 @@ Guidelines:
 
 
 def extract_receipt(file_path: str):
+    # "gemini" is a shortcut for registered providers (uses GEMINI_API_KEY or GOOGLE_API_KEY env vars)
+    # For explicit control, use: GeminiProvider(api_key="...", model="...")
     processor = DocumentProcessor(provider="gemini")
     return processor.process(file_path, receipt_prompt, receipt_schema)
 

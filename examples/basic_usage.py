@@ -4,7 +4,7 @@ Basic strutex usage example.
 
 Demonstrates:
 - Schema definition with Object, String, Number, Array
-- DocumentProcessor creation and usage
+- DocumentProcessor creation with explicit provider
 - Processing a PDF to extract structured data
 """
 
@@ -13,6 +13,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from strutex import DocumentProcessor, Object, String, Number, Array, Integer
+from strutex import GeminiProvider
 
 
 def main():
@@ -43,10 +44,12 @@ def main():
     # ===================
     # 2. Create the Processor
     # ===================
+    # Use explicit provider instance for full control over API key
     processor = DocumentProcessor(
-        provider="gemini",
-        model_name="gemini-2.5-flash",
-        # api_key="your-key"  # Or set GOOGLE_API_KEY env var
+        provider=GeminiProvider(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            model="gemini-2.5-flash"
+        )
     )
     
     # ===================

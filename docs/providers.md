@@ -8,14 +8,14 @@ LLM providers handle the actual document processing via their respective APIs.
 
 strutex includes 6 production-ready providers:
 
-| Provider            | Cost | Priority | Capabilities             | Env Variable        |
-| ------------------- | ---- | -------- | ------------------------ | ------------------- |
-| `GeminiProvider`    | 1.0  | 50       | vision                   | `GOOGLE_API_KEY`    |
-| `OpenAIProvider`    | 2.0  | 60       | vision, function_calling | `OPENAI_API_KEY`    |
-| `AnthropicProvider` | 1.5  | 55       | vision, large_context    | `ANTHROPIC_API_KEY` |
-| `OllamaProvider`    | 0.0  | 40       | vision, local            | `OLLAMA_HOST`       |
-| `GroqProvider`      | 0.3  | 45       | fast, vision             | `GROQ_API_KEY`      |
-| `LangdockProvider`  | 1.0  | 55       | enterprise, multi_model  | `LANGDOCK_API_KEY`  |
+| Provider            | Cost | Priority | Capabilities             | Env Variable                        |
+| ------------------- | ---- | -------- | ------------------------ | ----------------------------------- |
+| `GeminiProvider`    | 1.0  | 50       | vision                   | `GEMINI_API_KEY` / `GOOGLE_API_KEY` |
+| `OpenAIProvider`    | 2.0  | 60       | vision, function_calling | `OPENAI_API_KEY`                    |
+| `AnthropicProvider` | 1.5  | 55       | vision, large_context    | `ANTHROPIC_API_KEY`                 |
+| `OllamaProvider`    | 0.0  | 40       | vision, local            | `OLLAMA_HOST`                       |
+| `GroqProvider`      | 0.3  | 45       | fast, vision             | `GROQ_API_KEY`                      |
+| `LangdockProvider`  | 1.0  | 55       | enterprise, multi_model  | `LANGDOCK_API_KEY`                  |
 
 ---
 
@@ -26,16 +26,18 @@ Google's Gemini models (default provider).
 ```python
 from strutex import DocumentProcessor, GeminiProvider
 
-# Via string
+# String shortcut (uses GEMINI_API_KEY or GOOGLE_API_KEY env vars)
 processor = DocumentProcessor(provider="gemini")
 
-# Via instance (more control)
+# Explicit instance (recommended for production)
 provider = GeminiProvider(
-    api_key="...",  # or set GOOGLE_API_KEY
+    api_key="...",  # or set GEMINI_API_KEY / GOOGLE_API_KEY
     model="gemini-2.5-flash"
 )
 processor = DocumentProcessor(provider=provider)
 ```
+
+> **Note:** String providers like `provider="gemini"` are convenience shortcuts for registered providers. They assume the correct environment variables are set. For production, explicit provider instances are recommended.
 
 **Features:**
 

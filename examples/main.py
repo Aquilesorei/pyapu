@@ -1,16 +1,21 @@
+"""
+Main strutex usage example.
+
+A simple example showing the core workflow with explicit provider configuration.
+"""
+
 import os
+import sys
 
-from dotenv import load_dotenv
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from strutex.processor import DocumentProcessor
-from strutex.types import Object, String, Number, Array
+from strutex import DocumentProcessor, GeminiProvider
+from strutex import Object, String, Number, Array
 
-load_dotenv()
 
-# 1. Define schema using the new Clean Syntax
+# 1. Define schema using the clean syntax
 order_schema = Object(
     description="Order confirmation data",
-    # Logic: 'required' is automatically inferred as ["order_id", "total_amount", "items"]
     properties={
         "order_id": String(description="The unique order ID"),
         "total_amount": Number,
@@ -26,33 +31,41 @@ order_schema = Object(
 )
 
 
+# 2. Create processor with explicit provider instance
 processor = DocumentProcessor(
-    provider="gemini",  # Use the registered entry point name
-    model_name="gemini-2.5-flash",
-    api_key= os.getenv('GEMINI_API_KEY')
+    provider=GeminiProvider(
+        api_key=os.getenv("GEMINI_API_KEY"),
+        model="gemini-2.5-flash"
+    )
 )
 
 
+# 3. Process the document
+pdf_path = os.path.join(os.path.dirname(__file__), "order.pdf")
+
+if not os.path.exists(pdf_path):
+    print(f"Sample PDF not found: {pdf_path}")
+    exit(1)
+
 try:
     result = processor.process(
-        file_path="order.pdf",
+        file_path=pdf_path,
         prompt="Extract the order details strictly according to the schema.",
         schema=order_schema
     )
-    print(result)
-
-    #  4. Output the Validated Data
-    # The 'result' is now a standard Python dictionary
-    print("--- Extraction Successful ---")
-    print(f"Order ID: {result['order_id']}")
-    print(f"Total Amount: {result['total_amount']}")
+    
+    # 4. Output the extracted data
+    print("=" * 50)
+    print("EXTRACTION RESULTS")
+    print("=" * 50)
+    print(f"Order ID: {result.get('order_id', 'N/A')}")
+    print(f"Total Amount: {result.get('total_amount', 0)}")
 
     print("\nLine Items:")
     for item in result.get('items', []):
-        print(f"- {item['item_name']}: {item['price']}")
+        print(f"  - {item.get('item_name')}: {item.get('price')}")
 
 except FileNotFoundError:
     print("Error: The file 'order.pdf' was not found.")
 except Exception as e:
     print(f"An error occurred during processing: {e}")
-

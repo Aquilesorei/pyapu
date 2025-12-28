@@ -82,29 +82,34 @@ print(result["invoice_number"])
 
 ## Choosing a Provider
 
+String providers are **shortcuts for registered providers** that use environment variables:
+
 ```python
-# Default: Gemini (uses GOOGLE_API_KEY env var)
+# Default: Gemini (uses GEMINI_API_KEY or GOOGLE_API_KEY env var)
 result = strutex.extract("doc.pdf", model=Schema)
 
-# OpenAI
+# OpenAI (uses OPENAI_API_KEY)
 result = strutex.extract("doc.pdf", model=Schema, provider="openai")
 
-# Anthropic
+# Anthropic (uses ANTHROPIC_API_KEY)
 result = strutex.extract("doc.pdf", model=Schema, provider="anthropic")
 
-# Local with Ollama
+# Local with Ollama (no API key needed)
 result = strutex.extract("doc.pdf", model=Schema, provider="ollama")
 ```
+
+> **For production:** Use explicit provider instances for full control. See [Providers](providers.md).
 
 ---
 
 ## Environment Variables
 
-| Variable            | Description           |
-| ------------------- | --------------------- |
-| `GOOGLE_API_KEY`    | Google Gemini API key |
-| `OPENAI_API_KEY`    | OpenAI API key        |
-| `ANTHROPIC_API_KEY` | Anthropic API key     |
+| Variable            | Description                      |
+| ------------------- | -------------------------------- |
+| `GEMINI_API_KEY`    | Google Gemini API key (primary)  |
+| `GOOGLE_API_KEY`    | Google Gemini API key (fallback) |
+| `OPENAI_API_KEY`    | OpenAI API key                   |
+| `ANTHROPIC_API_KEY` | Anthropic API key                |
 
 ---
 
