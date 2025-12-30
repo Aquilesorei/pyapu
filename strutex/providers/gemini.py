@@ -5,10 +5,12 @@ Google Gemini provider implementation.
 import os
 from typing import Any, Optional
 
+from dotenv import load_dotenv
+
 from .base import Provider
 from ..types import Schema
 from ..adapters import SchemaAdapter
-
+load_dotenv()
 
 # Note: GeminiProvider is registered via entry point in pyproject.toml:
 # [tool.poetry.plugins."strutex.providers"]

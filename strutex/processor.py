@@ -281,7 +281,7 @@ class DocumentProcessor:
 
     def __del__(self):
         """Unregister hooks when processor is garbage collected."""
-        if self._hook_plugin_registered and self._hook_plugin:
+        if getattr(self, "_hook_plugin_registered", False) and getattr(self, "_hook_plugin", None):
             try:
                 from .plugins.hooks import get_plugin_manager
                 pm = get_plugin_manager()
