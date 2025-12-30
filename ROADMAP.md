@@ -8,24 +8,28 @@
 
 | Version    | Focus                 | Highlights                                                                    |
 | ---------- | --------------------- | ----------------------------------------------------------------------------- |
-| **v0.8.0** | Caching & Performance | Smart caching (Memory/SQLite), async processing, batch API, verification loop |
+| **v1.0.x** | Production Ready      | GLiNER extractor, Ollama vision support, pipeline documentation               |
+| v1.0.0     | Stable Release        | Full plugin system, multi-provider, verification loop, caching                |
+| v0.8.0     | Caching & Performance | Smart caching (Memory/SQLite), async processing, batch API, verification loop |
 | v0.7.0     | Multi-Provider        | OpenAI, Anthropic, Ollama, Groq + provider fallback chains                    |
 | v0.6.0     | Built-in Schemas      | 9 ready-to-use schemas (Invoice, Receipt, Bill of Lading, etc.)               |
 | v0.3.0     | Plugin System v2      | Auto-registration, lazy loading, CLI tooling                                  |
 
 ---
 
+## ✅ Completed Integrations
+
+- [x] **LlamaIndex**: `StrutexParser` node/loader
+- [x] **LangChain**: `StrutexLoader` + `StrutexOutputParser`
+- [x] **Haystack**: Integration module
+- [x] **Unstructured**: Fallback extractor
+- [x] **GLiNER**: Fast local entity extraction
+
+---
+
 ## 🔥 Coming Next
 
-### v0.8.5 — Ecosystem Integrations
-
-Make strutex work everywhere RAG is built:
-
-- **LlamaIndex**: `StrutexParser` node/loader
-- **LangChain**: `StrutexLoader` + `StrutexOutputParser`
-- **Comparison docs** vs competitors (Unstructured, MinerU, LlamaParse)
-
-### v0.9.0 — Reliability & Postprocessing
+### v1.1.0 — Reliability & Postprocessing
 
 Production-grade data quality:
 
@@ -33,13 +37,10 @@ Production-grade data quality:
 - **Postprocessor plugins** (date/number normalization)
 - **Hallucination detection** (multi-model voting)
 
-### v1.0.0 — Production Ready 
+### v1.2.0 — Enterprise Deployment
 
-Enterprise deployment features:
-
-- **REST API server** (FastAPI)
+- **REST API server** (FastAPI) — `strutex serve`
 - **Docker image** with OCR pre-configured
-- **Comprehensive CLI**: `strutex extract`, `strutex batch`, `strutex serve`
 - **Human-in-the-loop** callbacks for low-confidence results
 
 ---

@@ -181,5 +181,5 @@ if __name__ == "__main__":
     # Note: Actual processing requires a valid file and API key
     # result = processor.process("invoice.pdf", "Extract invoice data", schema)
     
-    print("\n✅ Examples loaded successfully!")
+    print("\nExamples loaded successfully!")
     print("To use: modify the processor.process() call with a real file.")

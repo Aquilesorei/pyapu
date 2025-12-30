@@ -651,8 +651,6 @@ class DocumentProcessor:
 
         mime_type = get_mime_type(file_path)
 
-        mime_type = get_mime_type(file_path)
-
         # Create context for hooks
         context: Dict[str, Any] = {
             "file_path": file_path,
@@ -682,6 +680,36 @@ class DocumentProcessor:
                 raise SecurityError(f"Input rejected: {input_result.reason}")
             prompt = input_result.text or prompt
 
+        # Check cache if enabled
+        cache_key = None
+        if self.cache is not None:
+            from .cache import CacheKey
+            cache_key = CacheKey.create(
+                file_path=file_path,
+                prompt=prompt,
+                schema=schema,
+                provider=self.provider_name,
+                model=getattr(self._provider, 'model', None),
+            )
+            cached_result = self.cache.get(cache_key)
+            if cached_result is not None:
+                logger.debug(f"Cache hit for {file_path}")
+                # Still run post-process hooks on cached results
+                if isinstance(cached_result, dict):
+                    post_results = call_hook(
+                        "post_process",
+                        result=cached_result,
+                        context=context
+                    )
+                    for hook_result in post_results:
+                        if hook_result is not None and isinstance(hook_result, dict):
+                            cached_result = hook_result
+                # Validate with Pydantic if needed
+                if pydantic_model is not None:
+                    from .pydantic_support import validate_with_pydantic
+                    cached_result = validate_with_pydantic(cached_result, pydantic_model)
+                return cached_result
+
         # Async Processing
         try:
             result = await self._provider.aprocess(
@@ -691,6 +719,12 @@ class DocumentProcessor:
                 mime_type=mime_type,
                 **kwargs
             )
+            
+            # Store in cache if enabled
+            if self.cache is not None and cache_key is not None:
+                self.cache.set(cache_key, result)
+                logger.debug(f"Cached result for {file_path}")
+                
         except Exception as e:
             # Run error hooks (sync)
             error_results = call_hook(
@@ -813,7 +847,8 @@ class DocumentProcessor:
                 batch_ctx.add_error(path, e)
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            executor.map(_process_one, file_paths)
+            # Must consume iterator to wait for all threads to complete
+            list(executor.map(_process_one, file_paths))
             
         return batch_ctx
 

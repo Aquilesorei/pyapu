@@ -67,7 +67,7 @@ def demo_injection_detector():
     print("Safe inputs:")
     for text in safe_inputs:
         result = detector.validate_input(text)
-        print(f"  ✅ '{text[:40]}...' - Valid: {result.valid}")
+        print(f"  '{text[:40]}...' - Valid: {result.valid}")
     
     # Malicious inputs
     malicious_inputs = [
@@ -80,7 +80,7 @@ def demo_injection_detector():
     print("\nMalicious inputs:")
     for text in malicious_inputs:
         result = detector.validate_input(text)
-        print(f"  ❌ '{text[:40]}...'")
+        print(f"  '{text[:40]}...'")
         print(f"     Valid: {result.valid}, Reason: {result.reason}")
 
 

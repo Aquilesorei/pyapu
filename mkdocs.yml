@@ -70,6 +70,7 @@ nav:
       - CLI Commands: cli.md
   - Architecture:
       - Extractors: extractors.md
+      - Postprocessors: postprocessors.md
       - Validators: validators.md
       - Input Sanitization: security.md
   - API Reference: api-reference.md

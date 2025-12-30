@@ -5,7 +5,7 @@ Converts Pydantic BaseModel classes to strutex Schema objects
 and validates extraction results against Pydantic models.
 """
 
-from typing import Any, Dict, Type, Union, get_type_hints, get_origin, get_args
+from typing import Any, Dict, Optional, Type, Union, get_type_hints, get_origin, get_args
 import inspect
 
 from .types import Schema, Type as StrutexType, String, Number, Integer, Boolean, Array, Object
@@ -66,9 +66,6 @@ def pydantic_to_schema(model: Type) -> Schema:
     )
 
 
-# ... imports ...
-from typing import Any, Dict, Type, Union, get_type_hints, get_origin, get_args, Optional, cast
-# ...
 
 def _python_type_to_schema(
     python_type: Any,

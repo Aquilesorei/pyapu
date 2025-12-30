@@ -123,16 +123,16 @@ Get notified after each extraction:
 ```python
 def log_step(step):
     if step.error:
-        print(f"❌ {step.file_path} failed: {step.error}")
+        print(f" {step.file_path} failed: {step.error}")
     else:
-        print(f"✅ {step.file_path} completed in {step.duration_ms:.0f}ms")
+        print(f" {step.file_path} completed in {step.duration_ms:.0f}ms")
 
 ctx = ProcessingContext()
 ctx.on_step(log_step)
 
 # Listener called after each extraction
 ctx.extract(processor, "doc.pdf", "Extract", schema)
-# Output: ✅ doc.pdf completed in 2150ms
+# Output:  doc.pdf completed in 2150ms
 ```
 
 ---

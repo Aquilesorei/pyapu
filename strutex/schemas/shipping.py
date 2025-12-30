@@ -41,7 +41,7 @@ class BillOfLading(BaseModel):
         >>> 
         >>> processor = DocumentProcessor()
         >>> bol = processor.process("bl.pdf", "Extract B/L", model=BILL_OF_LADING)
-        >>> print(f"B/L #{bol.bl_number}: {bol.port_of_loading} → {bol.port_of_discharge}")
+        >>> print(f"B/L #{bol.bl_number}: {bol.port_of_loading} -> {bol.port_of_discharge}")
     """
     
     # Document identification

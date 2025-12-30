@@ -112,6 +112,14 @@ from .cache import MemoryCache, SQLiteCache, FileCache, CacheKey
 # Schemas (ready-to-use Pydantic models)
 from . import schemas
 
+# Postprocessors
+from .postprocessors import (
+    DatePostprocessor,
+    NumberPostprocessor,
+    CurrencyNormalizer,
+    PostprocessorChain,
+)
+
 # Integrations (LangChain, LlamaIndex)
 from . import integrations
 
@@ -277,4 +285,10 @@ __all__ = [
     
     # Integrations module
     "integrations",
+    
+    # Postprocessors
+    "DatePostprocessor",
+    "NumberPostprocessor",
+    "CurrencyNormalizer",
+    "PostprocessorChain",
 ]

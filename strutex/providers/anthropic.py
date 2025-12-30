@@ -201,8 +201,11 @@ class AnthropicProvider(Provider, name="anthropic"):
                 sheets = excel_to_csv_sheets(file_path)
                 return "\n\n".join(f"Sheet: {name}\n{content}" 
                                   for name, content in sheets.items())
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.getLogger("strutex.providers.anthropic").warning(
+                f"Text extraction failed for {file_path} ({mime_type}): {e}"
+            )
         
         try:
             with open(file_path, "r", encoding="utf-8") as f:
