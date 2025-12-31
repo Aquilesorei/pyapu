@@ -19,7 +19,7 @@ def test_get_processor_factory():
         # Verify it instantiated the processor correctly
         MockProcessor.assert_called_once_with(
             provider="test",
-            model="fake-model",
+            model_name="fake-model",
             temperature=0.5
         )
         assert processor == MockProcessor.return_value

@@ -157,7 +157,7 @@ def create_app(
                 data = await processor.aprocess(
                     file_path=tmp_path,
                     prompt="Extract invoice details.",
-                    model=INVOICE_US
+                    schema=INVOICE_US
                 )
                 
                 return ExtractionResponse(

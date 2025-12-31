@@ -39,7 +39,7 @@ def _generate_date_formats(
         for p1, p2, p3 in numeric_patterns:
             formats.append(f"{p1}{sep}{p2}{sep}{p3}")
     
-    # No-separator formats (common in some systems)
+    # No-separator formats
     formats.extend([
         "%Y%m%d",   # 20240115
         "%d%m%Y",   # 15012024
@@ -47,7 +47,7 @@ def _generate_date_formats(
     ])
     
     if include_long_months:
-        # Text month formats (don't use numeric separators)
+        # Text month formats 
         text_patterns = [
             "%B %d, %Y",      # January 15, 2024
             "%b %d, %Y",      # Jan 15, 2024
