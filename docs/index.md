@@ -108,7 +108,7 @@ For power users and contributors:
 
 ---
 
-### 🏗️ Architecture
+### 🏗 Architecture
 
 Internal design and extension points:
 

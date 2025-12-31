@@ -50,7 +50,7 @@ class InputSanitizer(SecurityPlugin):
             invisible_pattern = r'[\u200b\u200c\u200d\u2060\u2061\u2062\u2063\u2064\ufeff]'
             sanitized = re.sub(invisible_pattern, '', sanitized)
         
-        # Collapse whitespace (multiple spaces/newlines → single)
+        # Collapse whitespace (multiple spaces/newlines -> single)
         if self.collapse_whitespace:
             # Collapse multiple spaces to single
             sanitized = re.sub(r' {2,}', ' ', sanitized)

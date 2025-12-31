@@ -61,10 +61,10 @@ class ProviderChain(Provider, name="chain", register=False):
         self.on_fallback = on_fallback
         self.stop_on_success = stop_on_success
         
-        # Compute capabilities from all providers
+        # Compute capabilities from all providers (safely)
         all_caps = set()
         for p in self.providers:
-            all_caps.update(p.capabilities)
+            all_caps.update(getattr(p, 'capabilities', []))
         self.capabilities = list(all_caps)
         
         # Track last used provider
@@ -257,7 +257,7 @@ def local_first_chain() -> ProviderChain:
     """
     Create a chain that prefers local providers.
     
-    Order: Ollama → Gemini → OpenAI
+    Order: Ollama -> Gemini -> OpenAI
     
     Example:
         processor = DocumentProcessor(provider=local_first_chain())
@@ -277,7 +277,7 @@ def cost_optimized_chain() -> ProviderChain:
     """
     Create a chain optimized for cost.
     
-    Order: Ollama (free) → Gemini → Anthropic → OpenAI
+    Order: Ollama (free) -> Gemini -> Anthropic -> OpenAI
     """
     from .ollama import OllamaProvider
     from .gemini import GeminiProvider

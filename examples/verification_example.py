@@ -44,7 +44,7 @@ def main():
         file_path=pdf_path,
         prompt="Extract invoice details",
         model=INVOICE_US,
-        verify=True  # 👈 Triggers self-correction
+        verify=True  #  Triggers self-correction
     )
     
     print(f"\nVerified Result:")

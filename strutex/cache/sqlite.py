@@ -53,6 +53,10 @@ class SQLiteCache(Cache):
         self.default_ttl = ttl
         self.max_size = max_size
         
+        # Track cache hits/misses (in-memory, resets on restart)
+        self._hits = 0
+        self._misses = 0
+        
         self._init_db()
     
     def _init_db(self) -> None:
@@ -93,6 +97,7 @@ class SQLiteCache(Cache):
             row = cursor.fetchone()
             
             if row is None:
+                self._misses += 1
                 return None
             
             result_json, expires_at, hit_count = row
@@ -101,6 +106,7 @@ class SQLiteCache(Cache):
             if expires_at is not None and now > expires_at:
                 conn.execute("DELETE FROM cache WHERE key = ?", (key_str,))
                 conn.commit()
+                self._misses += 1
                 logger.debug(f"Cache expired: {key_str[:32]}")
                 return None
             
@@ -111,6 +117,7 @@ class SQLiteCache(Cache):
             )
             conn.commit()
             
+            self._hits += 1
             logger.debug(f"Cache hit: {key_str[:32]}")
             return json.loads(result_json)
     
@@ -195,12 +202,19 @@ class SQLiteCache(Cache):
             )
             expired = cursor.fetchone()[0]
             
+            # Calculate hit rate
+            total = self._hits + self._misses
+            hit_rate = (self._hits / total * 100) if total > 0 else 0.0
+            
             return {
                 "type": "sqlite",
                 "path": str(self.db_path),
                 "size": size,
                 "max_size": self.max_size,
-                "total_hits": total_hits,
+                "hits": self._hits,
+                "misses": self._misses,
+                "hit_rate": round(hit_rate, 2),
+                "total_hits_persisted": total_hits,
                 "expired_pending": expired,
                 "ttl": self.default_ttl,
             }

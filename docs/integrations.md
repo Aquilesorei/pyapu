@@ -23,8 +23,78 @@ pip install strutex[haystack]
 # Unstructured.io fallback
 pip install strutex[fallback]
 
+# FastAPI server support
+pip install strutex[server]
+
 # All integrations
 pip install strutex[all]
+```
+
+---
+
+## FastAPI
+
+Build structured extraction APIs in minutes with native FastAPI helpers.
+
+### Native Integration
+
+Use `get_processor` for dependency injection and `process_upload` for safe file handling:
+
+```python
+from fastapi import FastAPI, Depends, UploadFile, File
+from strutex.integrations.fastapi import get_processor, process_upload
+from strutex.schemas import INVOICE_US
+
+app = FastAPI()
+
+# Inject processor (configurable via env vars or args)
+get_doc_processor = get_processor(provider="openai", model="gpt-4o")
+
+@app.post("/extract")
+async def extract(
+    file: UploadFile = File(...),
+    processor = Depends(get_doc_processor)
+):
+    # process_upload handles temp file lifecycle automatically
+    async with process_upload(file) as tmp_path:
+        return await processor.aprocess(
+            tmp_path,
+            "Extract invoice",
+            model=INVOICE_US
+        )
+```
+
+Run with `uvicorn`:
+
+```bash
+uvicorn main:app --reload
+```
+
+### Features
+
+- **Async by default**: Leveraging `aprocess` for non-blocking I/O.
+- **Dependency Injection**: Easy to swap providers or mock for testing.
+- **Type Safety**: Full Pydantic support for requests and responses.
+- **Swagger UI**: Automatic docs at `/docs`.
+
+### Built-in Server (CLI)
+
+Strutex comes with a production-ready server out of the box.
+
+Start it with:
+
+```bash
+strutex serve --host 0.0.0.0 --port 8000 --model gpt-4o
+```
+
+**Generic Endpoint**: `POST /extract`
+Extract ANY data structure by passing a JSON schema.
+
+```bash
+curl -X POST "http://localhost:8000/extract" \
+  -F "file=@mydoc.pdf" \
+  -F "prompt=Extract summary" \
+  -F 'schema={"type": "object", "properties": {"summary": {"type": "string"}}}'
 ```
 
 ---

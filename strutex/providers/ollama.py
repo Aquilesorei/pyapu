@@ -256,8 +256,11 @@ Respond ONLY with the JSON object, no additional text or markdown."""
             elif mime_type in ("text/plain", "text/csv"):
                 with open(file_path, "r", encoding="utf-8") as f:
                     return f.read()
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.getLogger("strutex.providers.ollama").warning(
+                f"Text extraction failed for {file_path} ({mime_type}): {e}"
+            )
         return None
     
     def _extract_json(self, text: str) -> Optional[dict]:

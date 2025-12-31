@@ -16,6 +16,9 @@ import json
 import sys
 from typing import Optional
 
+from dotenv import load_dotenv
+
+load_dotenv()
 try:
     import click
     CLICK_AVAILABLE = True
@@ -215,7 +218,7 @@ def run_example(name: Optional[str], list_examples: bool):
         
         for example in examples:
             basename = example.replace(".py", "")
-            click.echo(f"  • {basename}")
+            click.echo(f"  - {basename}")
         
         click.echo(f"\nRun with: strutex example <name>")
         return
@@ -322,14 +325,14 @@ def list_plugins(
             for info in plugins_list:
                 # Health indicator
                 if info.get("healthy") is True:
-                    health = click.style("✓", fg="green")
+                    health = click.style("[OK]", fg="green")
                 elif info.get("healthy") is False:
-                    health = click.style("✗", fg="red")
+                    health = click.style("[ERR]", fg="red")
                 else:
                     health = click.style("?", fg="yellow")
                 
                 # Loaded indicator
-                loaded = "●" if info.get("loaded") else "○"
+                loaded = "*" if info.get("loaded") else "-"
                 loaded = click.style(loaded, fg="blue" if info.get("loaded") else "white")
                 
                 # Version and priority
@@ -342,7 +345,7 @@ def list_plugins(
                 capabilities = info.get("capabilities", [])
                 if capabilities:
                     caps_str = ", ".join(capabilities)
-                    click.echo(f"       └─ capabilities: {caps_str}")
+                    click.echo(f"         - capabilities: {caps_str}")
 
 
 @plugins.command("info")
@@ -623,6 +626,27 @@ def build_prompt_interactive():
         with open(path, "w") as fp:
             fp.write(compiled)
         click.echo(f"Saved to: {path}")
+
+
+@cli.command("serve")
+@click.option("--host", default="127.0.0.1", help="Host to bind to.")
+@click.option("--port", default=8000, help="Port to bind to.")
+@click.option("--provider", default="gemini", help="LLM Provider to use.")
+@click.option("--model", default="gemini-3-flash-preview", help="Model name.")
+def serve_command(host, port, provider, model):
+    """Start the Strutex API server.
+    
+    Starts a FastAPI server with endpoints for document extraction.
+    Requires 'server' extra: pip install strutex[server]
+    """
+    try:
+        from .server import start_server
+    except ImportError:
+        click.echo("Error: server dependencies not installed.", err=True)
+        click.echo("Install with: pip install strutex[server]", err=True)
+        sys.exit(1)
+        
+    start_server(host=host, port=port, provider=provider, model=model)
 
 
 def main():

@@ -46,7 +46,7 @@ def example_prebuilt_chains():
     print("Example 2: Pre-built Chains")
     print("=" * 60)
     
-    # Local-first: Ollama → Gemini → OpenAI
+    # Local-first: Ollama -> Gemini -> OpenAI
     local_chain = local_first_chain()
     print(f"Local-first chain: {local_chain}")
     
@@ -73,7 +73,7 @@ def example_fallback_callback():
             "error": str(error)
         }
         fallback_log.append(entry)
-        print(f"  ⚠️  {entry['provider']} failed: {error}")
+        print(f"   {entry['provider']} failed: {error}")
     
     chain = ProviderChain(
         providers=[OllamaProvider(), GeminiProvider()],

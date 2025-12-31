@@ -10,7 +10,7 @@
 ```bash
 pip install strutex
 ```
-
+@
 ---
 
 ## The Simplest Example

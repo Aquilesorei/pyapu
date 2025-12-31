@@ -16,7 +16,7 @@ All notable changes to strutex will be documented here.
 
 ## v0.8.0 (December 26, 2025)
 
-### 🚀 New Features
+###  New Features
 
 **Core Processing Enhancements**
 
@@ -50,7 +50,7 @@ All notable changes to strutex will be documented here.
 - `stream_to_string()` / `stream_with_callback()` utilities
 - Async streaming support
 
-### 📁 New Files
+###  New Files
 
 - `strutex/extractors/pdf.py` — PDF Extractor (pdfplumber)
 - `strutex/providers/hybrid.py` — Hybrid Provider
@@ -71,7 +71,7 @@ All notable changes to strutex will be documented here.
 
 ## v0.7.0 (December 26, 2025)
 
-### 🚀 New Features
+###  New Features
 
 **Multi-Provider Support**
 
@@ -95,7 +95,7 @@ All notable changes to strutex will be documented here.
 - `with_retry()` decorator for sync/async functions
 - `RateLimiter` — Simple rate limiting for API calls
 
-### 📁 New Files
+###  New Files
 
 - `strutex/providers/openai.py` — OpenAI provider
 - `strutex/providers/anthropic.py` — Anthropic provider
@@ -111,7 +111,7 @@ All notable changes to strutex will be documented here.
 
 ## v0.6.0 (December 26, 2025)
 
-### 🚀 New Features
+###  New Features
 
 **Built-in Schemas Module**
 
@@ -135,7 +135,7 @@ All notable changes to strutex will be documented here.
 - mypy type checking (non-blocking)
 - Coverage badge in README
 
-### 📁 New Files
+###  New Files
 
 - `strutex/schemas/__init__.py` — Schema exports
 - `strutex/schemas/invoice.py` — Invoice schemas
@@ -153,7 +153,7 @@ All notable changes to strutex will be documented here.
 
 ## v0.3.0 (December 23, 2025)
 
-### 🚀 New Features
+###  New Features
 
 **Plugin System v2**
 
@@ -190,7 +190,7 @@ All notable changes to strutex will be documented here.
 - Automated docs deployment via GitHub Actions
 - New changelog page
 
-### 📁 New Files
+### New Files
 
 - `strutex/plugins/protocol.py` — Protocol-typed interfaces
 - `strutex/plugins/hooks.py` — Pluggy hook specifications
@@ -204,7 +204,7 @@ All notable changes to strutex will be documented here.
 - `docs/hooks.md` — Hooks system documentation
 - `docs/cli.md` — CLI commands documentation
 
-### ✏️ Updated Files
+### Updated Files
 
 - `strutex/plugins/registry.py` — Complete rewrite for lazy loading
 - `strutex/plugins/base.py` — Added version, priority, cost, health_check to all base classes
@@ -215,7 +215,7 @@ All notable changes to strutex will be documented here.
 - `docs/plugins.md` — Rewritten for v0.3.0 features
 - `examples/plugin_example.py` — Updated to showcase v2 features
 
-### ⚠️ Deprecations
+### Deprecations
 
 - `@register` decorator now emits `DeprecationWarning`
   - Use entry points in `pyproject.toml` instead:
@@ -224,7 +224,7 @@ All notable changes to strutex will be documented here.
     my_provider = "my_package:MyProvider"
     ```
 
-### 📦 New Dependencies
+### New Dependencies
 
 - `pluggy ^1.5.0` — Hook system (battle-tested, from pytest team)
 - `click ^8.1.0` — CLI framework

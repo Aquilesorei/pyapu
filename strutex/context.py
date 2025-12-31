@@ -36,7 +36,7 @@ class ProcessingContext:
     Maintains state, history, and coordination across multiple
     extraction steps. Useful for:
     - Multi-page document processing
-    - Chained extractions (extract → validate → enrich)
+    - Chained extractions (extract -> validate -> enrich)
     - Aggregating results from multiple documents
     - Tracking extraction history and metrics
     
@@ -391,8 +391,15 @@ class BatchContext(ProcessingContext):
         super().__init__(context_id, metadata)
         self.total_documents = total_documents
         
-    def add_result(self, file_path: str, result: Any, metadata: Optional[Dict[str, Any]] = None) -> None:
-        """Manually add a successful result to history."""
+    def add_result(self, file_path: str, result: Any, metadata: Optional[Dict[str, Any]] = None, duration_ms: float = 0.0) -> None:
+        """Manually add a successful result to history.
+        
+        Args:
+            file_path: Path to the processed document
+            result: Extraction result
+            metadata: Optional metadata dict
+            duration_ms: Processing duration in milliseconds (default: 0.0)
+        """
         step_id = f"{self.context_id}-{len(self._history) + 1}"
         step = ExtractionStep(
             step_id=step_id,
@@ -401,13 +408,20 @@ class BatchContext(ProcessingContext):
             provider="unknown",
             result=result,
             metadata=metadata or {},
-            duration_ms=0.0 # Unknown duration when added manually
+            duration_ms=duration_ms
         )
         self._history.append(step)
         self._notify_listeners(step)
         
-    def add_error(self, file_path: str, error: Exception, metadata: Optional[Dict[str, Any]] = None) -> None:
-        """Manually add a failure to history."""
+    def add_error(self, file_path: str, error: Exception, metadata: Optional[Dict[str, Any]] = None, duration_ms: float = 0.0) -> None:
+        """Manually add a failure to history.
+        
+        Args:
+            file_path: Path to the failed document
+            error: The exception that occurred
+            metadata: Optional metadata dict
+            duration_ms: Processing duration in milliseconds (default: 0.0)
+        """
         step_id = f"{self.context_id}-{len(self._history) + 1}"
         step = ExtractionStep(
             step_id=step_id,
@@ -416,7 +430,7 @@ class BatchContext(ProcessingContext):
             provider="unknown",
             error=str(error),
             metadata=metadata or {},
-            duration_ms=0.0
+            duration_ms=duration_ms
         )
         self._history.append(step)
         self._notify_listeners(step)

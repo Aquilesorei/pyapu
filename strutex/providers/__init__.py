@@ -13,7 +13,7 @@ Available Providers:
 
 Provider Chain:
 - ProviderChain: Automatic fallback between providers
-- local_first_chain(): Ollama → Gemini → OpenAI
+- local_first_chain(): Ollama -> Gemini -> OpenAI
 - cost_optimized_chain(): Ordered by cost
 """
 

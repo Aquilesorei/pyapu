@@ -157,7 +157,7 @@ Begin extraction:"""
         """
         Extract text with multi-level fallback.
         
-        Hierarchy: Digital → OCR → Vision AI
+        Hierarchy: Digital -> OCR -> Vision AI
         """
         if not _PDFPLUMBER_AVAILABLE:
             error_msg = "pdfplumber is required. Install with: pip install pdfplumber"
@@ -317,11 +317,18 @@ Begin extraction:"""
                 temp_path = tmp.name
             
             try:
+                # Create a minimal schema for text extraction
+                # This ensures compatibility with providers that require structured output
+                from ..types import Object, String
+                text_schema = Object(properties={
+                    "text": String(description="The extracted text content from the document")
+                })
+                
                 # Use provider to extract text from image
                 result = self.vision_provider.process(
                     file_path=temp_path,
                     prompt=self.vision_prompt,
-                    schema=None,
+                    schema=text_schema,
                     mime_type="image/png",
                 )
                 

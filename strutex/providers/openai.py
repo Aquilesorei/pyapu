@@ -253,8 +253,11 @@ class OpenAIProvider(Provider, name="openai"):
             # Missing dependency for PDF/Excel extraction
             return f"[Missing dependency for {mime_type} extraction]"
         except Exception as e:
-             # Log warning but fallback to plain text read
-             pass
+            # Log warning but fallback to plain text read
+            import logging
+            logging.getLogger("strutex.providers.openai").warning(
+                f"Text extraction failed for {file_path} ({mime_type}): {e}"
+            )
         
         # Fallback: try to read as text
         try:
@@ -280,3 +283,90 @@ class OpenAIProvider(Provider, name="openai"):
             return bool(os.getenv("OPENAI_API_KEY"))
         except ImportError:
             return False
+    
+    async def aprocess(
+        self,
+        file_path: str,
+        prompt: str,
+        schema: Schema,
+        mime_type: str,
+        **kwargs
+    ) -> Any:
+        """
+        Async process using native AsyncOpenAI client.
+        
+        Uses the OpenAI async client for true non-blocking I/O,
+        avoiding the thread pool overhead of the base implementation.
+        
+        Args:
+            file_path: Path to the document
+            prompt: Extraction prompt
+            schema: Expected output schema
+            mime_type: MIME type of the file
+            
+        Returns:
+            Extracted data as dict
+        """
+        from openai import AsyncOpenAI
+        
+        if not self.api_key:
+            raise ValueError("Missing API Key for OpenAI. Set OPENAI_API_KEY env var.")
+        
+        async_client = AsyncOpenAI(
+            api_key=self.api_key,
+            base_url=self.base_url,
+            timeout=self.timeout
+        )
+        
+        # Convert schema to JSON schema
+        json_schema = SchemaAdapter.to_json_schema(schema)
+        
+        # Build messages (sync operation, fast)
+        messages = self._build_messages(file_path, prompt, mime_type, json_schema)
+        
+        # Make async request
+        try:
+            response = await async_client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                response_format={"type": "json_object"},
+                temperature=0.1,
+                max_tokens=4096
+            )
+        except Exception as e:
+            # Map OpenAI errors
+            error_str = str(e).lower()
+            
+            if "rate limit" in error_str or "429" in error_str:
+                from ..exceptions import RateLimitError
+                raise RateLimitError(
+                    f"OpenAI rate limit exceeded: {e}",
+                    provider="openai",
+                    details={"original_error": str(e)}
+                )
+            
+            if "authentication" in error_str or "api key" in error_str or "401" in error_str:
+                from ..exceptions import AuthenticationError
+                raise AuthenticationError(
+                    f"OpenAI authentication failed: {e}",
+                    provider="openai",
+                    details={"original_error": str(e)}
+                )
+            
+            from ..exceptions import ProviderError
+            raise ProviderError(
+                f"OpenAI async request failed: {e}",
+                provider="openai",
+                retryable="timeout" in error_str or "500" in error_str,
+                details={"original_error": str(e)}
+            ) from e
+        finally:
+            await async_client.close()
+        
+        # Parse response
+        content = response.choices[0].message.content
+        
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Failed to parse JSON from OpenAI response: {e}")

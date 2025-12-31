@@ -153,12 +153,12 @@ asyncio.run(stream_extract())
 
 | Provider          | Streaming Support |
 | ----------------- | ----------------- |
-| GeminiProvider    | ✅ Full           |
-| OpenAIProvider    | ✅ Full           |
-| AnthropicProvider | ✅ Full           |
-| OllamaProvider    | ✅ Full           |
-| GroqProvider      | ⚠️ Limited        |
-| ProviderChain     | ❌ No             |
+| GeminiProvider    |  Full           |
+| OpenAIProvider    |  Full           |
+| AnthropicProvider |  Full           |
+| OllamaProvider    |  Full           |
+| GroqProvider      |  Limited        |
+| ProviderChain     |  No             |
 
 ---
 

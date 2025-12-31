@@ -130,9 +130,9 @@ def example_step_listeners():
     # Add listener
     def log_step(step):
         if step.error:
-            print(f"❌ FAILED: {step.file_path} - {step.error}")
+            print(f"FAILED: {step.file_path} - {step.error}")
         else:
-            print(f"✅ SUCCESS: {step.file_path} ({step.duration_ms:.0f}ms)")
+            print(f"SUCCESS: {step.file_path} ({step.duration_ms:.0f}ms)")
     
     ctx.on_step(log_step)
     
@@ -143,7 +143,7 @@ def example_step_listeners():
     ctx.extract(processor, "doc.pdf", "Extract", schema)
     
     # Output:
-    # ✅ SUCCESS: doc.pdf (2150ms)
+    # SUCCESS: doc.pdf (2150ms)
     """)
 
 

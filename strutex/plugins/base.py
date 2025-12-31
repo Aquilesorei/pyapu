@@ -132,10 +132,26 @@ class Provider(ABC):
         **kwargs
     ) -> Any:
         """
-        Async version of process. Override for true async support.
-        Default implementation calls sync version.
+        Async version of process.
+        
+        Runs the sync process() method in a thread pool to avoid blocking
+        the event loop. Override this method for true native async support
+        using async SDKs (e.g., AsyncOpenAI, AsyncAnthropic).
+        
+        Args:
+            file_path: Path to the document file
+            prompt: Extraction prompt/instructions
+            schema: Expected output schema
+            mime_type: MIME type of the file
+            **kwargs: Provider-specific options
+            
+        Returns:
+            Extracted data matching the schema
         """
-        return self.process(file_path, prompt, schema, mime_type, **kwargs)
+        import asyncio
+        return await asyncio.to_thread(
+            self.process, file_path, prompt, schema, mime_type, **kwargs
+        )
     
     def has_capability(self, capability: str) -> bool:
         """Check if this provider has a specific capability."""

@@ -96,7 +96,7 @@ def with_fallback_to_cloud():
     """Try local first, fallback to cloud if Ollama fails."""
     from strutex.providers import GeminiProvider, ProviderChain
     
-    # Chain: Ollama → Gemini (cloud fallback)
+    # Chain: Ollama -> Gemini (cloud fallback)
     chain = ProviderChain([
         OllamaProvider(model="llama3.2-vision"),
         GeminiProvider(
@@ -132,5 +132,5 @@ if __name__ == "__main__":
         result = basic_extraction()
         print("\n Extraction successful!")
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
         print("   Is Ollama running? Try: `ollama serve`")

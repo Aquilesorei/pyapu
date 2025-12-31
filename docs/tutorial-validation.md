@@ -33,7 +33,7 @@ class Invoice(BaseModel):
 
 processor = DocumentProcessor(provider="gemini")
 result = processor.process("invoice.pdf", "Extract", model=Invoice)
-# ✅ Schema validation happens automatically
+# Schema validation happens automatically
 ```
 
 ### SumValidator
@@ -78,7 +78,7 @@ result = processor.process(
     file_path="invoice.pdf",
     prompt="Extract invoice",
     model=Invoice,
-    verify=True  # 🔄 LLM reviews and corrects errors
+    verify=True  #  LLM reviews and corrects errors
 )
 ```
 

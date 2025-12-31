@@ -104,7 +104,7 @@ def demo_plugin_listing():
     # Get detailed info
     for name in PluginRegistry.list_names("provider"):
         info = PluginRegistry.get_plugin_info("provider", name)
-        status = "●" if info.get("loaded") else "○"
+        status = "*" if info.get("loaded") else "-"
         version = info.get("version", "?")
         priority = info.get("priority", "?")
         print(f"  {status} {name:<20} v{version:<8} priority: {priority}")

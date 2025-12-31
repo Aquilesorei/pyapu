@@ -107,7 +107,7 @@ processor.process("invoice_copy.pdf", "Extract all", schema=InvoiceSchema)  # Sa
 
 ---
 
-## ⚠️ Cache Invalidation Pitfalls
+##  Cache Invalidation Pitfalls
 
 > [!WARNING]
 > Caching can cause stale data if you're not careful. Understand when caches invalidate.
@@ -116,20 +116,20 @@ processor.process("invoice_copy.pdf", "Extract all", schema=InvoiceSchema)  # Sa
 
 | Change                 | Invalidates? | Why                  |
 | ---------------------- | ------------ | -------------------- |
-| File content changes   | ✅ Yes       | Content hash changes |
-| Prompt changes         | ✅ Yes       | Prompt hash changes  |
-| Schema adds new fields | ✅ Yes       | Schema hash changes  |
-| Provider changes       | ✅ Yes       | Provider in key      |
-| Model changes          | ✅ Yes       | Model in key         |
+| File content changes   | Yes          | Content hash changes |
+| Prompt changes         | Yes          | Prompt hash changes  |
+| Schema adds new fields | Yes          | Schema hash changes  |
+| Provider changes       | Yes          | Provider in key      |
+| Model changes          | Yes          | Model in key         |
 
 ### When Cache Does NOT Invalidate
 
 | Change                          | Invalidates? | Risk                                             |
 | ------------------------------- | ------------ | ------------------------------------------------ |
-| **Field descriptions change**   | ❌ No        | Schema structure same, but extraction may differ |
-| **Pydantic validators change**  | ❌ No        | Post-processing logic not in key                 |
-| **Provider credentials change** | ❌ No        | Key uses provider name, not credentials          |
-| **Prompt template internals**   | ❌ No        | Only final prompt string is hashed               |
+| **Field descriptions change**   | No           | Schema structure same, but extraction may differ |
+| **Pydantic validators change**  | No           | Post-processing logic not in key                 |
+| **Provider credentials change** | No           | Key uses provider name, not credentials          |
+| **Prompt template internals**   | No           | Only final prompt string is hashed               |
 
 ### Safe Cache Usage
 
