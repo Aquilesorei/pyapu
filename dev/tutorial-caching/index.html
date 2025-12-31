@@ -832,12 +832,12 @@
   <a href="#cache-invalidation-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚠️ Cache Invalidation Pitfalls
+        Cache Invalidation Pitfalls
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="⚠️ Cache Invalidation Pitfalls">
+    <nav class="md-nav" aria-label="Cache Invalidation Pitfalls">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1881,6 +1881,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../postprocessors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postprocessors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../validators/" class="md-nav__link">
         
   
@@ -2093,12 +2121,12 @@
   <a href="#cache-invalidation-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚠️ Cache Invalidation Pitfalls
+        Cache Invalidation Pitfalls
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="⚠️ Cache Invalidation Pitfalls">
+    <nav class="md-nav" aria-label="Cache Invalidation Pitfalls">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2286,7 +2314,7 @@
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;invoice_copy.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;Extract all&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">InvoiceSchema</span><span class="p">)</span>  <span class="c1"># Same content</span>
 </span></code></pre></div>
 <hr />
-<h2 id="cache-invalidation-pitfalls">⚠️ Cache Invalidation Pitfalls<a class="headerlink" href="#cache-invalidation-pitfalls" title="Permanent link">&para;</a></h2>
+<h2 id="cache-invalidation-pitfalls">Cache Invalidation Pitfalls<a class="headerlink" href="#cache-invalidation-pitfalls" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>[!WARNING]
 Caching can cause stale data if you're not careful. Understand when caches invalidate.</p>
@@ -2303,27 +2331,27 @@ Caching can cause stale data if you're not careful. Understand when caches inval
 <tbody>
 <tr>
 <td>File content changes</td>
-<td>✅ Yes</td>
+<td>Yes</td>
 <td>Content hash changes</td>
 </tr>
 <tr>
 <td>Prompt changes</td>
-<td>✅ Yes</td>
+<td>Yes</td>
 <td>Prompt hash changes</td>
 </tr>
 <tr>
 <td>Schema adds new fields</td>
-<td>✅ Yes</td>
+<td>Yes</td>
 <td>Schema hash changes</td>
 </tr>
 <tr>
 <td>Provider changes</td>
-<td>✅ Yes</td>
+<td>Yes</td>
 <td>Provider in key</td>
 </tr>
 <tr>
 <td>Model changes</td>
-<td>✅ Yes</td>
+<td>Yes</td>
 <td>Model in key</td>
 </tr>
 </tbody>
@@ -2340,22 +2368,22 @@ Caching can cause stale data if you're not careful. Understand when caches inval
 <tbody>
 <tr>
 <td><strong>Field descriptions change</strong></td>
-<td>❌ No</td>
+<td>No</td>
 <td>Schema structure same, but extraction may differ</td>
 </tr>
 <tr>
 <td><strong>Pydantic validators change</strong></td>
-<td>❌ No</td>
+<td>No</td>
 <td>Post-processing logic not in key</td>
 </tr>
 <tr>
 <td><strong>Provider credentials change</strong></td>
-<td>❌ No</td>
+<td>No</td>
 <td>Key uses provider name, not credentials</td>
 </tr>
 <tr>
 <td><strong>Prompt template internals</strong></td>
-<td>❌ No</td>
+<td>No</td>
 <td>Only final prompt string is hashed</td>
 </tr>
 </tbody>
