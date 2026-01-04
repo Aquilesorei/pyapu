@@ -106,6 +106,16 @@ class OpenAIProvider(Provider, name="openai"):
         # Build messages
         messages = self._build_messages(file_path, prompt, mime_type, json_schema)
         
+        # Use OpenAI Structured Outputs for strict schema enforcement
+        response_format = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "extraction_result",
+                "strict": True,
+                "schema": json_schema
+            }
+        }
+        
         # Make request with retry
         @with_retry(config=self.retry_config)
         def call_api():
@@ -113,8 +123,8 @@ class OpenAIProvider(Provider, name="openai"):
                 return self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    response_format={"type": "json_object"},
-                    temperature=0.1,  # Low temp for more consistent extraction
+                    response_format=response_format,
+                    temperature=0.1,
                     max_tokens=4096
                 )
             except Exception as e:
@@ -324,12 +334,22 @@ class OpenAIProvider(Provider, name="openai"):
         # Build messages (sync operation, fast)
         messages = self._build_messages(file_path, prompt, mime_type, json_schema)
         
+        # Use OpenAI Structured Outputs for strict schema enforcement
+        response_format = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "extraction_result",
+                "strict": True,
+                "schema": json_schema
+            }
+        }
+        
         # Make async request
         try:
             response = await async_client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                response_format={"type": "json_object"},
+                response_format=response_format,
                 temperature=0.1,
                 max_tokens=4096
             )

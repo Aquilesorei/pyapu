@@ -37,8 +37,9 @@ class SchemaAdapter:
         schema_dict = {
             # OpenAI expects generic strings like "object", "string"
             "type": schema.type.value.lower(),
-            "description": schema.description
         }
+        if schema.description:
+            schema_dict["description"] = schema.description
 
         if schema.properties:
             schema_dict["properties"] = {

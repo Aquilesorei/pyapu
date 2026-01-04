@@ -47,6 +47,9 @@ gliner = { version = "^0.2.0", optional = true }
 fastapi = {version = "^0.128.0", optional = true}
 uvicorn = {version = "^0.40.0", optional = true}
 python-multipart = {version = "^0.0.21", optional = true}
+ollama = "^0.6.1"
+anthropic = "^0.75.0"
+groq = "^1.0.0"
 
 [tool.poetry.extras]
 cli = ["click"]

@@ -7,6 +7,7 @@ class that orchestrates document extraction using pluggable LLM providers.
 
 import logging
 import os
+from enum import StrEnum
 from typing import Any, Callable, Dict, List, Optional, Union, Type
 
 logger = logging.getLogger("strutex.processor")
@@ -108,6 +109,12 @@ try:
         _CallbackHookPlugin.on_error = hookimpl(_CallbackHookPlugin.on_error)  # type: ignore
 except ImportError:
     pass
+
+
+class ExtractionStrategy(StrEnum):
+    ONCE = "ONCE"
+    ENSEMBLE="ENSEMBLE" # semantic search
+    VOTE = "VOTE"
 
 
 class DocumentProcessor:

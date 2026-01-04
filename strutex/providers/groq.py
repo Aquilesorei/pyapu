@@ -121,13 +121,22 @@ class GroqProvider(Provider, name="groq"):
         """
         # Convert schema to JSON schema
         json_schema = SchemaAdapter.to_json_schema(schema)
-        schema_str = json.dumps(json_schema, indent=2)
         
         # Build messages based on file type and model capabilities
         if self._is_vision_model() and self._is_image(mime_type):
-            messages = self._build_vision_messages(file_path, prompt, mime_type, schema_str)
+            messages = self._build_vision_messages(file_path, prompt, mime_type)
         else:
-            messages = self._build_text_messages(file_path, prompt, mime_type, schema_str)
+            messages = self._build_text_messages(file_path, prompt, mime_type)
+        
+        # Use Tool Use for schema enforcement
+        tool = {
+            "type": "function",
+            "function": {
+                "name": "extract_data",
+                "description": "Extract structured data from the document according to the schema",
+                "parameters": json_schema
+            }
+        }
         
         # Make request with retry
         @with_retry(config=self.retry_config)
@@ -135,15 +144,21 @@ class GroqProvider(Provider, name="groq"):
             return self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                response_format={"type": "json_object"},
+                tools=[tool],
+                tool_choice={"type": "function", "function": {"name": "extract_data"}},
                 temperature=0.1,
                 max_tokens=4096
             )
         
         response = call_api()
         
-        # Parse response
-        content = response.choices[0].message.content
+        # Extract tool use result
+        tool_calls = response.choices[0].message.tool_calls
+        if tool_calls:
+            return json.loads(tool_calls[0].function.arguments)
+        
+        # Fallback: parse text
+        content = response.choices[0].message.content or ""
         
         try:
             return json.loads(content)
@@ -158,8 +173,7 @@ class GroqProvider(Provider, name="groq"):
         self,
         file_path: str,
         prompt: str,
-        mime_type: str,
-        schema_str: str
+        mime_type: str
     ) -> list:
         """Build messages for vision model."""
         with open(file_path, "rb") as f:
@@ -168,10 +182,7 @@ class GroqProvider(Provider, name="groq"):
         return [
             {
                 "role": "system",
-                "content": (
-                    "You are a document extraction assistant. "
-                    "Extract structured data and return valid JSON only."
-                )
+                "content": "You are a document extraction assistant. Use the extract_data tool."
             },
             {
                 "role": "user",
@@ -184,7 +195,7 @@ class GroqProvider(Provider, name="groq"):
                     },
                     {
                         "type": "text",
-                        "text": f"{prompt}\n\nRespond with JSON matching this schema:\n```json\n{schema_str}\n```"
+                        "text": prompt
                     }
                 ]
             }
@@ -194,8 +205,7 @@ class GroqProvider(Provider, name="groq"):
         self,
         file_path: str,
         prompt: str,
-        mime_type: str,
-        schema_str: str
+        mime_type: str
     ) -> list:
         """Build messages for text-based processing."""
         text_content = self._extract_text(file_path, mime_type)
@@ -203,18 +213,11 @@ class GroqProvider(Provider, name="groq"):
         return [
             {
                 "role": "system",
-                "content": (
-                    "You are a document extraction assistant. "
-                    "Extract structured data and return valid JSON only."
-                )
+                "content": "You are a document extraction assistant. Use the extract_data tool."
             },
             {
                 "role": "user",
-                "content": (
-                    f"Document content:\n{text_content}\n\n"
-                    f"{prompt}\n\n"
-                    f"Respond with JSON matching this schema:\n```json\n{schema_str}\n```"
-                )
+                "content": f"Document content:\n{text_content}\n\n{prompt}"
             }
         ]
     

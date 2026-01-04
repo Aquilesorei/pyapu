@@ -144,13 +144,13 @@ Respond ONLY with the JSON object, no additional text or markdown."""
         Returns:
             Extracted data as dict
         """
-        # Build prompt with schema
-        full_prompt = self._build_prompt_with_schema(prompt, schema)
+        # Convert schema to JSON schema
+        json_schema = SchemaAdapter.to_json_schema(schema)
         
         # Prepare the request
         messages: List[Dict[str, Any]] = [{
             "role": "user",
-            "content": full_prompt
+            "content": prompt
         }]
         
         # Handle different file types
@@ -168,18 +168,18 @@ Respond ONLY with the JSON object, no additional text or markdown."""
                 # Fall back to text extraction
                 text_content = self._extract_text(file_path, mime_type)
                 if text_content:
-                    messages[0]["content"] = f"Document content:\n{text_content}\n\n{full_prompt}"
+                    messages[0]["content"] = f"Document content:\n{text_content}\n\n{prompt}"
         else:
             # For non-visual files, extract text
             text_content = self._extract_text(file_path, mime_type)
             if text_content:
-                messages[0]["content"] = f"Document content:\n{text_content}\n\n{full_prompt}"
+                messages[0]["content"] = f"Document content:\n{text_content}\n\n{prompt}"
         
         payload = {
             "model": self.model,
             "messages": messages,
             "stream": False,
-            "format": "json"  # Request JSON output
+            "format": json_schema  # Ollama supports JSON Schema here since 0.5.0
         }
         
         # Add model options if specified
