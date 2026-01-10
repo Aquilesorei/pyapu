@@ -8,7 +8,9 @@
 
 | Version    | Focus                 | Highlights                                                                    |
 | ---------- | --------------------- | ----------------------------------------------------------------------------- |
-| **v1.0.x** | Production Ready      | GLiNER extractor, Ollama vision support, pipeline documentation               |
+| **v1.3.0** | Agentic Discovery     | AgenticProcessor (multi-step loops), tool-calling, autonomous extraction      |
+| **v1.2.0** | Enterprise Deployment | 6 New Processors (Sequential, Privacy, etc.), FastAPI server, advanced RAG    |
+| v1.1.0     | RAG & Reliability     | Built-in RAG (Qdrant/FastEmbed), LangGraph orchestration, confidence scores   |
 | v1.0.0     | Stable Release        | Full plugin system, multi-provider, verification loop, caching                |
 | v0.8.0     | Caching & Performance | Smart caching (Memory/SQLite), async processing, batch API, verification loop |
 | v0.7.0     | Multi-Provider        | OpenAI, Anthropic, Ollama, Groq + provider fallback chains                    |
@@ -24,24 +26,21 @@
 - [x] **Haystack**: Integration module
 - [x] **Unstructured**: Fallback extractor
 - [x] **GLiNER**: Fast local entity extraction
+- [x] **RAG**: Built-in Qdrant + FastEmbed support
 
 ---
 
 ## 🔥 Coming Next
 
-### v1.1.0 — Reliability & Postprocessing
+### v1.2.0 — Enterprise Deployment (In Progress)
 
 Production-grade data quality:
 
-- **Confidence scores** per extracted field
-- **Postprocessor plugins** (date/number normalization)
-- **Hallucination detection** (multi-model voting)
-
-### v1.2.0 — Enterprise Deployment
-
-- **REST API server** (FastAPI) — `strutex serve`
-- **Docker image** with OCR pre-configured
-- **Human-in-the-loop** callbacks for low-confidence results
+- [x] **Advanced Processors** (Fallback, Router, Ensemble, Sequential, Privacy, Active)
+- [x] **REST API server** (FastAPI) — `strutex serve`
+- [ ] **Docker image** with OCR pre-configured
+- [ ] **Human-in-the-loop** callbacks for low-confidence results
+- [ ] **Postprocessor plugins** (date/number normalization)
 
 ---
 

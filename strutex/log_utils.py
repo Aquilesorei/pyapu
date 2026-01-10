@@ -5,12 +5,12 @@ Provides a standardized logging setup with configurable handlers and levels.
 All strutex components should use `get_logger(__name__)` to obtain their logger.
 
 Example:
-    >>> from strutex.logging import get_logger
+    >>> from strutex.log_utils import get_logger
     >>> logger = get_logger(__name__)
     >>> logger.info("Processing document")
     
     # Configure logging level
-    >>> from strutex.logging import configure_logging
+    >>> from strutex.log_utils import configure_logging
     >>> configure_logging(level="DEBUG")
 """
 

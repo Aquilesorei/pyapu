@@ -633,7 +633,8 @@ def build_prompt_interactive():
 @click.option("--port", default=8000, help="Port to bind to.")
 @click.option("--provider", default="gemini", help="LLM Provider to use.")
 @click.option("--model", default="gemini-3-flash-preview", help="Model name.")
-def serve_command(host, port, provider, model):
+@click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging.")
+def serve_command(host, port, provider, model, verbose):
     """Start the Strutex API server.
     
     Starts a FastAPI server with endpoints for document extraction.
@@ -646,7 +647,70 @@ def serve_command(host, port, provider, model):
         click.echo("Install with: pip install strutex[server]", err=True)
         sys.exit(1)
         
+    if verbose:
+        import logging
+        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger("strutex").setLevel(logging.DEBUG)
+        
     start_server(host=host, port=port, provider=provider, model=model)
+
+
+@cli.group()
+def rag():
+    """Retrieval-Augmented Generation (RAG) commands."""
+    pass
+
+
+@rag.command("ingest")
+@click.argument("file_path", type=click.Path(exists=True))
+@click.option("--collection", "-c", help="Collection name to ingest into.")
+@click.option("--provider", default="gemini", help="LLM Provider to use.")
+@click.option("--model", help="Model name.")
+def rag_ingest_cmd(file_path, collection, provider, model):
+    """Ingest a document into the vector store."""
+    from .processor import DocumentProcessor
+    
+    try:
+        processor = DocumentProcessor(provider=provider, model_name=model)
+        click.echo(f"Ingesting {file_path}...")
+        processor.rag_ingest(file_path, collection_name=collection)
+        click.secho("Success: Document ingested.", fg="green")
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+
+@rag.command("query")
+@click.argument("query_text")
+@click.option("--collection", "-c", help="Collection name to query.")
+@click.option("--schema", "-s", type=click.Path(exists=True), help="JSON Schema file for structured output.")
+@click.option("--provider", default="gemini", help="LLM Provider to use.")
+@click.option("--model", help="Model name.")
+def rag_query_cmd(query_text, collection, schema, provider, model):
+    """Perform a RAG query/extraction."""
+    from .processor import DocumentProcessor
+    from .types import Schema
+    
+    try:
+        schema_obj = None
+        if schema:
+            with open(schema, "r") as f:
+                schema_dict = json.load(f)
+                schema_obj = Schema.from_dict(schema_dict)
+                
+        processor = DocumentProcessor(provider=provider, model_name=model)
+        click.echo(f"Querying: {query_text}")
+        
+        result = processor.rag_query(
+            query=query_text,
+            collection_name=collection,
+            schema=schema_obj
+        )
+        
+        click.echo(json.dumps(result, indent=2, ensure_ascii=False))
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
 
 
 def main():

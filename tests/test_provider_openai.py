@@ -135,7 +135,9 @@ class TestOpenAIProcess:
         
         mock_client.chat.completions.create.assert_called_once()
         kwargs = mock_client.chat.completions.create.call_args[1]
-        assert kwargs["response_format"] == {"type": "json_object"}
+        # Verify Structured Outputs format (strict schema enforcement)
+        assert kwargs["response_format"]["type"] == "json_schema"
+        assert kwargs["response_format"]["json_schema"]["strict"] is True
 
     def test_process_json_fail(self, provider):
         mock_client = MagicMock()

@@ -436,6 +436,11 @@ class BatchContext(ProcessingContext):
         self._notify_listeners(step)
     
     @property
+    def results(self) -> Dict[str, Any]:
+        """Dictionary mapping file paths to their extraction results."""
+        return {s.file_path: s.result for s in self._history if s.result is not None}
+
+    @property
     def progress(self) -> int:
         """Number of documents processed."""
         return len(self._history)

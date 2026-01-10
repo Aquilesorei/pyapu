@@ -32,7 +32,12 @@ class SchemaValidator(Validator, name="schema"):
         """
         self.strict = strict
     
-    def validate(self, data: Dict[str, Any], schema: Optional[Schema] = None) -> ValidationResult:
+    def validate(
+        self,
+        data: Dict[str, Any],
+        schema: Optional[Schema] = None,
+        source_text: Optional[str] = None
+    ) -> ValidationResult:
         """
         Validate data against a schema.
         

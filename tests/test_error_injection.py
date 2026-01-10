@@ -139,7 +139,7 @@ class TestValidationChainErrors:
         """Strict chain should stop on first validation failure."""
         
         class AlwaysFailValidator(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 return ValidationResult(
                     valid=False,
                     data=data,
@@ -147,7 +147,7 @@ class TestValidationChainErrors:
                 )
         
         class ShouldNotRunValidator(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 raise AssertionError("This validator should not run in strict mode")
         
         chain = ValidationChain(
@@ -165,7 +165,7 @@ class TestValidationChainErrors:
         """Lenient chain should collect all validation errors."""
         
         class FailValidator1(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 return ValidationResult(
                     valid=False,
                     data=data,
@@ -173,7 +173,7 @@ class TestValidationChainErrors:
                 )
         
         class FailValidator2(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 return ValidationResult(
                     valid=False,
                     data=data,
@@ -196,12 +196,12 @@ class TestValidationChainErrors:
         """Chain should pass modified data to next validator."""
         
         class NormalizingValidator(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 normalized = {k.lower(): v for k, v in data.items()}
                 return ValidationResult(valid=True, data=normalized)
         
         class CheckingValidator(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 # Should receive normalized (lowercased) keys
                 if "name" in data:
                     return ValidationResult(valid=True, data=data)
@@ -244,7 +244,7 @@ class TestProviderErrorHandling:
             pass
         
         class FailingProvider(Validator, register=False):
-            def validate(self, data, schema=None):
+            def validate(self, data, schema=None, **kwargs):
                 raise CustomError("Custom provider error")
         
         validator = FailingProvider()

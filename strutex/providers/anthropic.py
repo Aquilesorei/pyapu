@@ -103,10 +103,16 @@ class AnthropicProvider(Provider, name="anthropic"):
         """
         # Convert schema to JSON schema
         json_schema = SchemaAdapter.to_json_schema(schema)
-        schema_str = json.dumps(json_schema, indent=2)
         
         # Build message content
-        content = self._build_content(file_path, prompt, mime_type, schema_str)
+        content = self._build_content(file_path, prompt, mime_type)
+        
+        # Use Tool Use for schema enforcement (Anthropic's structured output)
+        tool = {
+            "name": "extract_data",
+            "description": "Extract structured data from the document according to the schema",
+            "input_schema": json_schema
+        }
         
         # Make request with retry
         @with_retry(config=self.retry_config)
@@ -116,43 +122,39 @@ class AnthropicProvider(Provider, name="anthropic"):
                 max_tokens=4096,
                 system=(
                     "You are a document extraction assistant. "
-                    "Extract structured data from documents and return valid JSON only. "
-                    "Follow the provided schema exactly. "
-                    "Do not include any text before or after the JSON."
+                    "Use the extract_data tool to return structured data from the document."
                 ),
+                tools=[tool],
+                tool_choice={"type": "tool", "name": "extract_data"},
                 messages=[{"role": "user", "content": content}]
             )
         
         response = call_api()
         
-        # Parse response
-        response_text = response.content[0].text
+        # Extract tool use result from response
+        for block in response.content:
+            if block.type == "tool_use" and block.name == "extract_data":
+                return block.input
         
-        try:
-            return json.loads(response_text)
-        except json.JSONDecodeError:
-            # Try to extract JSON from response
-            extracted = self._extract_json(response_text)
-            if extracted:
-                return extracted
-            raise ValueError(
-                f"Failed to parse JSON from Claude response: {response_text[:500]}"
-            )
+        # Fallback: try to parse text response as JSON
+        for block in response.content:
+            if block.type == "text":
+                try:
+                    return json.loads(block.text)
+                except json.JSONDecodeError:
+                    extracted = self._extract_json(block.text)
+                    if extracted:
+                        return extracted
+        
+        raise ValueError("Claude did not return structured data via tool use")
     
     def _build_content(
         self,
         file_path: str,
         prompt: str,
-        mime_type: str,
-        schema_str: str
+        mime_type: str
     ) -> list:
         """Build message content for Claude."""
-        
-        text_prompt = (
-            f"{prompt}\n\n"
-            f"Respond with JSON matching this schema:\n```json\n{schema_str}\n```\n\n"
-            "Return ONLY the JSON object, no additional text."
-        )
         
         if self._is_image(mime_type):
             # Vision API
@@ -168,7 +170,7 @@ class AnthropicProvider(Provider, name="anthropic"):
                         "data": image_data
                     }
                 },
-                {"type": "text", "text": text_prompt}
+                {"type": "text", "text": prompt}
             ]
         else:
             # Text-based content
@@ -176,7 +178,7 @@ class AnthropicProvider(Provider, name="anthropic"):
             return [
                 {
                     "type": "text",
-                    "text": f"Document content:\n{text_content}\n\n{text_prompt}"
+                    "text": f"Document content:\n{text_content}\n\n{prompt}"
                 }
             ]
     

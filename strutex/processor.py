@@ -5,19 +5,20 @@ This module contains the core [`DocumentProcessor`][strutex.processor.DocumentPr
 class that orchestrates document extraction using pluggable LLM providers.
 """
 
+import json
 import logging
 import os
+from enum import StrEnum
 from typing import Any, Callable, Dict, List, Optional, Union, Type
 
 logger = logging.getLogger("strutex.processor")
 
 from .documents import get_mime_type
 from .types import Schema
-from .plugins.registry import PluginRegistry
-from .plugins.base import SecurityPlugin, SecurityResult
-from .context import BatchContext, ProcessingContext
-from .exceptions import StrutexError, SecurityError
+from .context import BatchContext
+from .exceptions import SecurityError
 from .providers.base import Provider
+from .plugins.base import SecurityPlugin, Validator
 
 # Type aliases for hook callbacks
 PreProcessCallback = Callable[[str, str, Any, str, Dict[str, Any]], Optional[Dict[str, Any]]]
@@ -25,137 +26,38 @@ PostProcessCallback = Callable[[Dict[str, Any], Dict[str, Any]], Optional[Dict[s
 ErrorCallback = Callable[[Exception, str, Dict[str, Any]], Optional[Dict[str, Any]]]
 
 
-class _CallbackHookPlugin:
-    """
-    Wrapper that converts callback functions into a pluggy-compatible plugin.
-    
-    This allows callbacks registered via DocumentProcessor to integrate with
-    the global pluggy hook system.
-    """
-    
-    def __init__(
-        self,
-        pre_process_hooks: List[PreProcessCallback],
-        post_process_hooks: List[PostProcessCallback],
-        error_hooks: List[ErrorCallback],
-    ):
-        self._pre_process_hooks = pre_process_hooks
-        self._post_process_hooks = post_process_hooks
-        self._error_hooks = error_hooks
-    
-    def pre_process(
-        self,
-        file_path: str,
-        prompt: str,
-        schema: Any,
-        mime_type: str,
-        context: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
-        """Execute all pre-process callbacks."""
-        result = None
-        for hook in self._pre_process_hooks:
-            try:
-                hook_result = hook(file_path, prompt, schema, mime_type, context)
-                if hook_result and isinstance(hook_result, dict):
-                    result = hook_result
-                    # Update prompt if modified
-                    if "prompt" in hook_result:
-                        prompt = hook_result["prompt"]
-            except Exception as e:
-                logger.error(f"Error in pre-process hook: {e}")
-                # Hooks should not break processing
-        return result
-    
-    def post_process(
-        self,
-        result: Dict[str, Any],
-        context: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
-        """Execute all post-process callbacks."""
-        for hook in self._post_process_hooks:
-            try:
-                modified = hook(result, context)
-                if modified is not None and isinstance(modified, dict):
-                    result = modified
-            except Exception as e:
-                logger.error(f"Error in post-process hook: {e}")
-        return result
-    
-    def on_error(
-        self,
-        error: Exception,
-        file_path: str,
-        context: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
-        """Execute error callbacks until one returns a fallback."""
-        for hook in self._error_hooks:
-            try:
-                fallback = hook(error, file_path, context)
-                if fallback is not None:
-                    return fallback
-            except Exception as e:
-                logger.error(f"Error in error hook: {e}")
-        return None
+class ExtractionStrategy(StrEnum):
+    ONCE = "ONCE"
+    ENSEMBLE="ENSEMBLE" # semantic search
+    VOTE = "VOTE"
+    RAG = "RAG"
 
 
-# Apply hookimpl markers to _CallbackHookPlugin methods
-# This must be done at class definition time, not instance time
-try:
-    from .plugins.hooks import hookimpl, PLUGGY_AVAILABLE
-    if PLUGGY_AVAILABLE:
-        _CallbackHookPlugin.pre_process = hookimpl(_CallbackHookPlugin.pre_process)  # type: ignore
-        _CallbackHookPlugin.post_process = hookimpl(_CallbackHookPlugin.post_process)  # type: ignore
-        _CallbackHookPlugin.on_error = hookimpl(_CallbackHookPlugin.on_error)  # type: ignore
-except ImportError:
-    pass
+from .processors import (
+    Processor,
+    SimpleProcessor, 
+    VerifiedProcessor, 
+    RagProcessor, 
+    BatchProcessor,
+    FallbackProcessor,
+    RouterProcessor,
+    EnsembleProcessor,
+    SequentialProcessor,
+    PrivacyProcessor,
+    ActiveLearningProcessor,
+    AgenticProcessor
+)
 
 
 class DocumentProcessor:
     """
-    Main document processing class for extracting structured data from documents.
+    Facade for document processing, providing backwards compatibility.
 
-    The `DocumentProcessor` orchestrates document extraction using pluggable providers,
-    with optional security layer and Pydantic model support. It automatically detects
-    file types, applies security checks, and validates output against schemas.
-
-    Attributes:
-        security: Optional security plugin/chain for input/output validation.
-
-    Example:
-        Basic usage with schema:
-
-        ```python
-        from strutex import DocumentProcessor, Object, String, Number
-
-        schema = Object(properties={
-            "invoice_number": String(),
-            "total": Number()
-        })
-
-        processor = DocumentProcessor(provider="gemini")
-        result = processor.process("invoice.pdf", "Extract data", schema)
-        print(result["invoice_number"])
-        ```
-
-        With callbacks:
-
-        ```python
-        processor = DocumentProcessor(
-            provider="gemini",
-            on_post_process=lambda result, ctx: {**result, "processed": True}
-        )
-        ```
-
-        With decorator:
-
-        ```python
-        processor = DocumentProcessor()
-
-        @processor.on_post_process
-        def add_timestamp(result, context):
-            result["timestamp"] = datetime.now().isoformat()
-            return result
-        ```
+    This class delegates to specialized processor implementations:
+    - SimpleProcessor: For single-call extraction.
+    - VerifiedProcessor: For extraction with verification.
+    - RagProcessor: For retrieval-augmented generation.
+    - BatchProcessor: For parallel processing.
     """
 
     def __init__(
@@ -168,187 +70,98 @@ class DocumentProcessor:
         on_pre_process: Optional[PreProcessCallback] = None,
         on_post_process: Optional[PostProcessCallback] = None,
         on_error: Optional[ErrorCallback] = None,
+        validators: Optional[List[Validator]] = None,
     ):
-        """
-        Initialize the document processor.
-
-        Args:
-            provider: Provider name (e.g., "gemini", "openai") or a
-                [`Provider`][strutex.plugins.base.Provider] instance.
-            model_name: LLM model name to use (only when provider is a string).
-            api_key: API key for the provider. Falls back to environment variables
-                (e.g., `GOOGLE_API_KEY` for Gemini).
-            security: Optional [`SecurityPlugin`][strutex.plugins.base.SecurityPlugin]
-                or [`SecurityChain`][strutex.security.chain.SecurityChain] for
-                input/output validation. Security is opt-in.
-            cache: Optional cache instance (MemoryCache, SQLiteCache, etc.) for
-                caching extraction results to avoid redundant API calls.
-            on_pre_process: Callback called before processing. Receives
-                (file_path, prompt, schema, mime_type, context) and can return
-                a dict with modified values.
-            on_post_process: Callback called after processing. Receives
-                (result, context) and can return a modified result dict.
-            on_error: Callback called on error. Receives (error, file_path, context)
-                and can return a fallback result or None to propagate the error.
-
-        Raises:
-            ValueError: If the specified provider is not found in the registry.
-
-        Example:
-            ```python
-            # Using callbacks
-            processor = DocumentProcessor(
-                provider="gemini",
-                on_post_process=lambda result, ctx: normalize_dates(result)
-            )
-            
-            # With caching
-            from strutex import MemoryCache
-            processor = DocumentProcessor(
-                provider="gemini",
-                cache=MemoryCache()
-            )
-            ```
-        """
-        self.security = security
-        self.cache = cache
-
-        # Hook storage: callbacks first, then decorated hooks
-        self._pre_process_hooks: List[PreProcessCallback] = []
-        self._post_process_hooks: List[PostProcessCallback] = []
-        self._error_hooks: List[ErrorCallback] = []
+        """Initialize the document processor facade."""
+        # Generic config for all internal processors
+        self._config = {
+            "provider": provider,
+            "model_name": model_name,
+            "api_key": api_key,
+            "security": security,
+            "cache": cache,
+            "validators": validators,
+            "on_pre_process": on_pre_process,
+            "on_post_process": on_post_process,
+            "on_error": on_error,
+        }
         
-        # Pluggy integration
-        self._hook_plugin: Optional[_CallbackHookPlugin] = None
-        self._hook_plugin_registered = False
+        # Lazy-loaded processors
+        self._simple: Optional[SimpleProcessor] = None
+        self._verified: Optional[VerifiedProcessor] = None
+        self._rag: Optional[RagProcessor] = None
+        self._batch: Optional[BatchProcessor] = None
+        self._fallback: Optional[FallbackProcessor] = None
+        self._router: Optional[RouterProcessor] = None
+        self._ensemble: Optional[EnsembleProcessor] = None
+        self._sequential: Optional[SequentialProcessor] = None
+        self._privacy: Optional[PrivacyProcessor] = None
+        self._active: Optional[ActiveLearningProcessor] = None
+        self._agentic: Optional[AgenticProcessor] = None
 
-        # Add initial callbacks if provided
-        if on_pre_process:
-            self._pre_process_hooks.append(on_pre_process)
-        if on_post_process:
-            self._post_process_hooks.append(on_post_process)
-        if on_error:
-            self._error_hooks.append(on_error)
+    @property
+    def simple(self) -> SimpleProcessor:
+        """Get the simple processor instance."""
+        if self._simple is None:
+            self._simple = SimpleProcessor(**self._config)
+        return self._simple
 
-        # Resolve provider
-        if isinstance(provider, str):
-            self.provider_name = provider.lower()
+    @property
+    def verified(self) -> VerifiedProcessor:
+        """Get the verified processor instance."""
+        if self._verified is None:
+            self._verified = VerifiedProcessor(**self._config)
+        return self._verified
 
-            # Try to get from registry
-            provider_cls = PluginRegistry.get("provider", self.provider_name)
+    @property
+    def rag(self) -> RagProcessor:
+        """Get the RAG processor instance."""
+        if self._rag is None:
+            self._rag = RagProcessor(**self._config)
+        return self._rag
 
-            if provider_cls:
-                self._provider = provider_cls(api_key=api_key, model=model_name)
-            else:
-                # Fallback for backward compatibility
-                if self.provider_name in ("google", "gemini"):
-                    from .providers.gemini import GeminiProvider
-                    self._provider = GeminiProvider(api_key=api_key, model=model_name)
-                else:
-                    raise ValueError(f"Unknown provider: {provider}. Available: {list(PluginRegistry.list('provider').keys())}")
-        else:
-            # Provider instance passed directly
-            self._provider = provider
-            # Try to get name from provider instance
-            self.provider_name = getattr(provider, 'name', type(provider).__name__)
+    @property
+    def batch(self) -> BatchProcessor:
+        """Get the batch processor instance."""
+        if self._batch is None:
+            self._batch = BatchProcessor(**self._config)
+        return self._batch
 
-    def _ensure_hooks_registered(self) -> None:
-        """Register callback hooks with pluggy if not already done."""
-        if self._hook_plugin_registered:
-            return
-            
-        # Only register if we have any hooks
-        if not (self._pre_process_hooks or self._post_process_hooks or self._error_hooks):
-            return
-            
-        from .plugins.hooks import get_plugin_manager, PLUGGY_AVAILABLE
-        
-        if not PLUGGY_AVAILABLE:
-            return
-            
-        pm = get_plugin_manager()
-        if pm is None:
-            return
-            
-        # Create and register the callback wrapper plugin
-        self._hook_plugin = _CallbackHookPlugin(
-            pre_process_hooks=self._pre_process_hooks,
-            post_process_hooks=self._post_process_hooks,
-            error_hooks=self._error_hooks,
-        )
-        pm.register(self._hook_plugin)
-        self._hook_plugin_registered = True
+    def create_fallback(self, configs: List[Dict[str, Any]]) -> FallbackProcessor:
+        """Create a custom fallback processor."""
+        return FallbackProcessor(configs=configs, **self._config)
 
-    def __del__(self):
-        """Unregister hooks when processor is garbage collected."""
-        if getattr(self, "_hook_plugin_registered", False) and getattr(self, "_hook_plugin", None):
-            try:
-                from .plugins.hooks import get_plugin_manager
-                pm = get_plugin_manager()
-                if pm:
-                    pm.unregister(self._hook_plugin)
-            except Exception:
-                pass  # Ignore errors during cleanup
+    def create_router(self, routes: Dict[str, Processor], **kwargs) -> RouterProcessor:
+        """Create a custom router processor."""
+        return RouterProcessor(routes=routes, **self._config, **kwargs)
 
-    # ==================== Decorator Methods ====================
+    def create_ensemble(self, providers: List[Processor], **kwargs) -> EnsembleProcessor:
+        """Create a custom ensemble processor."""
+        return EnsembleProcessor(providers=providers, **self._config, **kwargs)
 
-    def on_pre_process(self, func: PreProcessCallback) -> PreProcessCallback:
-        """
-        Decorator to register a pre-process hook.
+    def create_sequential(self, **kwargs) -> SequentialProcessor:
+        """Create a custom sequential processor."""
+        return SequentialProcessor(**self._config, **kwargs)
 
-        The hook receives (file_path, prompt, schema, mime_type, context) and
-        can return a dict with modified values for 'prompt' or other parameters.
+    def create_privacy(self, **kwargs) -> PrivacyProcessor:
+        """Create a custom privacy processor."""
+        return PrivacyProcessor(**self._config, **kwargs)
 
-        Example:
-            ```python
-            @processor.on_pre_process
-            def add_instructions(file_path, prompt, schema, mime_type, context):
-                return {"prompt": prompt + "\\nBe precise."}
-            ```
-        """
-        self._pre_process_hooks.append(func)
-        self._hook_plugin_registered = False  # Force re-registration
-        return func
+    @property
+    def agentic(self) -> AgenticProcessor:
+        """Get the agentic processor instance."""
+        if self._agentic is None:
+            self._agentic = AgenticProcessor(**self._config)
+        return self._agentic
 
-    def on_post_process(self, func: PostProcessCallback) -> PostProcessCallback:
-        """
-        Decorator to register a post-process hook.
+    def create_active(self, **kwargs) -> ActiveLearningProcessor:
+        """Create a custom active learning processor."""
+        return ActiveLearningProcessor(**self._config, **kwargs)
 
-        The hook receives (result, context) and can return a modified result dict.
-
-        Example:
-            ```python
-            @processor.on_post_process
-            def normalize_dates(result, context):
-                result["date"] = parse_date(result.get("date"))
-                return result
-            ```
-        """
-        self._post_process_hooks.append(func)
-        self._hook_plugin_registered = False  # Force re-registration
-        return func
-
-    def on_error(self, func: ErrorCallback) -> ErrorCallback:
-        """
-        Decorator to register an error hook.
-
-        The hook receives (error, file_path, context) and can return a fallback
-        result dict. Return None to propagate the original error.
-
-        Example:
-            ```python
-            @processor.on_error
-            def handle_rate_limit(error, file_path, context):
-                if "rate limit" in str(error).lower():
-                    return {"error": "Rate limited, please retry"}
-                return None  # Propagate other errors
-            ```
-        """
-        self._error_hooks.append(func)
-        self._hook_plugin_registered = False  # Force re-registration
-        return func
-
-    # ==================== Main Processing ====================
+    @property
+    def _provider(self) -> Provider:
+        """Backwards compatibility for tests and internal access."""
+        return self.simple._provider
 
     def process(
         self,
@@ -360,254 +173,10 @@ class DocumentProcessor:
         verify: bool = False,
         **kwargs
     ) -> Any:
-        """
-        Process a document and extract structured data.
-
-        This method automatically detects the file type, applies security validation
-        (if enabled), sends the document to the LLM provider, and validates the output.
-
-        Args:
-            file_path: Absolute path to the source file (PDF, Excel, or Image).
-            prompt: Natural language instruction for extraction.
-            schema: A [`Schema`][strutex.Schema] definition. Mutually exclusive
-                with `model`.
-            model: A Pydantic `BaseModel` class. Mutually exclusive with `schema`.
-                If provided, returns a validated Pydantic instance.
-            security: Override security setting for this request.
-                - `True`: Use default security chain
-                - `False`: Disable security
-                - `SecurityPlugin`: Use custom security instance
-            verify: If `True`, enables self-correction loop where the LLM audits its own
-                result.
-            **kwargs: Additional arguments passed to the provider (e.g. `temperature`).
-
-        Returns:
-            Extracted data as a dict (if `schema` used) or Pydantic model (if `model` used).
-                - `SecurityPlugin`: Use specific plugin
-                - `None`: Use processor default
-            verify: If True, performs a second pass to verify and correct the result.
-            context: Optional ProcessingContext for state tracking.
-            **kwargs: Additional provider-specific options.
-
-        Returns:
-            Extracted data as a dictionary, or a Pydantic model instance if `model`
-            was provided.
-
-        Raises:
-            FileNotFoundError: If `file_path` does not exist.
-            ValueError: If neither `schema` nor `model` is provided.
-            SecurityError: If security validation fails (input or output rejected).
-
-        Example:
-            ```python
-            result = processor.process(
-                file_path="invoice.pdf",
-                prompt="Extract invoice number and total amount",
-                schema=invoice_schema
-            )
-            print(result["total"])
-            ```
-        """
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File not found: {file_path}")
-
-        # Ensure hooks are registered with pluggy
-        self._ensure_hooks_registered()
-
-        # Handle Pydantic model
-        pydantic_model = None
-        if model is not None:
-            from .pydantic_support import pydantic_to_schema
-            schema = pydantic_to_schema(model)
-            pydantic_model = model
-
-        if schema is None:
-            raise ValueError("Either 'schema' or 'model' must be provided")
-
-        # Detect MIME type
-        mime_type = get_mime_type(file_path)
-
-        # Create context for hooks
-        context: Dict[str, Any] = {
-            "file_path": file_path,
-            "mime_type": mime_type,
-            "kwargs": kwargs,
-        }
-
-        # Run pre-process hooks via pluggy
-        from .plugins.hooks import call_hook
-        pre_results = call_hook(
-            "pre_process",
-            file_path=file_path,
-            prompt=prompt,
-            schema=schema,
-            mime_type=mime_type,
-            context=context
-        )
-        # Apply any prompt modifications from hooks
-        for hook_result in pre_results:
-            if hook_result and isinstance(hook_result, dict) and "prompt" in hook_result:
-                prompt = hook_result["prompt"]
-
-        # Handle security
-        effective_security = self._resolve_security(security)
-
-        # Apply input security if enabled
-        if effective_security:
-            input_result = effective_security.validate_input(prompt)
-            if not input_result.valid:
-                raise SecurityError(f"Input rejected: {input_result.reason}")
-            prompt = input_result.text or prompt
-
-        # Check cache if enabled
-        cache_key = None
-        if self.cache is not None:
-            from .cache import CacheKey
-            cache_key = CacheKey.create(
-                file_path=file_path,
-                prompt=prompt,
-                schema=schema,
-                provider=self.provider_name,
-                model=getattr(self._provider, 'model', None),
-            )
-            cached_result = self.cache.get(cache_key)
-            if cached_result is not None:
-                logger.debug(f"Cache hit for {file_path}")
-                # Still run post-process hooks on cached results
-                if isinstance(cached_result, dict):
-                    post_results = call_hook(
-                        "post_process",
-                        result=cached_result,
-                        context=context
-                    )
-                    for hook_result in post_results:
-                        if hook_result is not None and isinstance(hook_result, dict):
-                            cached_result = hook_result
-                # Validate with Pydantic if needed
-                if pydantic_model is not None:
-                    from .pydantic_support import validate_with_pydantic
-                    cached_result = validate_with_pydantic(cached_result, pydantic_model)
-                return cached_result
-
-        # Process with provider (with error handling)
-        try:
-            result = self._provider.process(
-                file_path=file_path,
-                prompt=prompt,
-                schema=schema,
-                mime_type=mime_type,
-                **kwargs
-            )
-            
-            # Store in cache if enabled
-            if self.cache is not None and cache_key is not None:
-                self.cache.set(cache_key, result)
-                logger.debug(f"Cached result for {file_path}")
-                
-        except Exception as e:
-            # Run error hooks via pluggy
-            error_results = call_hook(
-                "on_error",
-                error=e,
-                file_path=file_path,
-                context=context
-            )
-            # Use first non-None fallback
-            fallback = None
-            for hook_result in error_results:
-                if hook_result is not None:
-                    fallback = hook_result
-                    break
-            
-            if fallback is not None:
-                result = fallback
-            else:
-                raise  # Re-raise if no hook handled it
-
-        # Apply output security if enabled
-        if effective_security and isinstance(result, dict):
-            output_result = effective_security.validate_output(result)
-            if not output_result.valid:
-                raise SecurityError(f"Output rejected: {output_result.reason}")
-            result = output_result.data or result
-
-        # Run post-process hooks via pluggy
-        if isinstance(result, dict):
-            post_results = call_hook(
-                "post_process",
-                result=result,
-                context=context
-            )
-            # Apply modifications from hooks
-            for hook_result in post_results:
-                if hook_result is not None and isinstance(hook_result, dict):
-                    result = hook_result
-
-        # Validate with Pydantic if model was provided
-        if pydantic_model is not None:
-            from .pydantic_support import validate_with_pydantic
-            result = validate_with_pydantic(result, pydantic_model)
-            
-        # Optional Verification Step
+        """Process a document (delegates to Simple or Verified processor)."""
         if verify:
-            result = self.verify(file_path, result, schema=schema, model=model, **kwargs)
-
-        return result
-
-    def verify(
-        self,
-        file_path: str,
-        result: Any,
-        schema: Optional[Schema] = None,
-        model: Optional[Type] = None,
-        verify_prompt: Optional[str] = None,
-        **kwargs
-    ) -> Any:
-        """
-        Verify the extracted result against the document.
-        
-        Args:
-            file_path: Path to the source document
-            result: The result to verify (dict or Pydantic model)
-            schema: The schema used for extraction
-            model: The Pydantic model used for extraction
-            verify_prompt: Optional custom verification prompt
-            **kwargs: Provider options
-            
-        Returns:
-            Verified (and potentially corrected) result
-        """
-        import json
-        
-        # Prepare verification prompt
-        if verify_prompt is None:
-            verify_prompt = (
-                "You are a strict data auditor. Your task is to verify the extracted data "
-                "against the document provided. \n"
-                "Review the data below. If it contains errors or missing fields that exist "
-                "in the document, CORRECT them. If the data is correct, return it as is.\n"
-                "Return the final validated JSON strictly adhering to the schema."
-            )
-            
-        # Serialize result for prompt
-        if hasattr(result, "model_dump_json"):
-            result_str = result.model_dump_json()
-        elif isinstance(result, dict):
-            result_str = json.dumps(result, default=str)
-        else:
-            result_str = str(result)
-            
-        full_prompt = f"{verify_prompt}\n\n[EXTRACTED DATA TO VERIFY]:\n{result_str}"
-        
-        # Call process recursively but disable verification to avoid loop
-        return self.process(
-            file_path=file_path,
-            prompt=full_prompt,
-            schema=schema,
-            model=model,
-            verify=False,
-            **kwargs
-        )
+            return self.verified.process(file_path, prompt, schema, model, security=security, **kwargs)
+        return self.simple.process(file_path, prompt, schema, model, security=security, **kwargs)
 
     async def aprocess(
         self,
@@ -619,160 +188,12 @@ class DocumentProcessor:
         verify: bool = False,
         **kwargs
     ) -> Any:
-        """
-        Async version of `process`.
-        
-        Args:
-            file_path: Absolute path to the source file
-            prompt: Extraction instruction
-            schema: Schema definition
-            model: Pydantic model
-            security: Security configuration
-            **kwargs: Provider options
-            
-        Returns:
-            Extracted data or Pydantic instance
-        """
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File not found: {file_path}")
-
-        # Hooks currently run synchronously - in future we may add async hooks
-        self._ensure_hooks_registered()
-
-        # Handle Pydantic model
-        pydantic_model = None
-        if model is not None:
-            from .pydantic_support import pydantic_to_schema
-            schema = pydantic_to_schema(model)
-            pydantic_model = model
-
-        if schema is None:
-            raise ValueError("Either 'schema' or 'model' must be provided")
-
-        mime_type = get_mime_type(file_path)
-
-        # Create context for hooks
-        context: Dict[str, Any] = {
-            "file_path": file_path,
-            "mime_type": mime_type,
-            "kwargs": kwargs,
-        }
-
-        # Run pre-process hooks (sync)
-        from .plugins.hooks import call_hook
-        pre_results = call_hook(
-            "pre_process",
-            file_path=file_path,
-            prompt=prompt,
-            schema=schema,
-            mime_type=mime_type,
-            context=context
-        )
-        for hook_result in pre_results:
-            if hook_result and isinstance(hook_result, dict) and "prompt" in hook_result:
-                prompt = hook_result["prompt"]
-
-        # Security
-        effective_security = self._resolve_security(security)
-        if effective_security:
-            input_result = effective_security.validate_input(prompt)
-            if not input_result.valid:
-                raise SecurityError(f"Input rejected: {input_result.reason}")
-            prompt = input_result.text or prompt
-
-        # Check cache if enabled
-        cache_key = None
-        if self.cache is not None:
-            from .cache import CacheKey
-            cache_key = CacheKey.create(
-                file_path=file_path,
-                prompt=prompt,
-                schema=schema,
-                provider=self.provider_name,
-                model=getattr(self._provider, 'model', None),
-            )
-            cached_result = self.cache.get(cache_key)
-            if cached_result is not None:
-                logger.debug(f"Cache hit for {file_path}")
-                # Still run post-process hooks on cached results
-                if isinstance(cached_result, dict):
-                    post_results = call_hook(
-                        "post_process",
-                        result=cached_result,
-                        context=context
-                    )
-                    for hook_result in post_results:
-                        if hook_result is not None and isinstance(hook_result, dict):
-                            cached_result = hook_result
-                # Validate with Pydantic if needed
-                if pydantic_model is not None:
-                    from .pydantic_support import validate_with_pydantic
-                    cached_result = validate_with_pydantic(cached_result, pydantic_model)
-                return cached_result
-
-        # Async Processing
-        try:
-            result = await self._provider.aprocess(
-                file_path=file_path,
-                prompt=prompt,
-                schema=schema,
-                mime_type=mime_type,
-                **kwargs
-            )
-            
-            # Store in cache if enabled
-            if self.cache is not None and cache_key is not None:
-                self.cache.set(cache_key, result)
-                logger.debug(f"Cached result for {file_path}")
-                
-        except Exception as e:
-            # Run error hooks (sync)
-            error_results = call_hook(
-                "on_error",
-                error=e,
-                file_path=file_path,
-                context=context
-            )
-            fallback = None
-            for hook_result in error_results:
-                if hook_result is not None:
-                    fallback = hook_result
-                    break
-            
-            if fallback is not None:
-                result = fallback
-            else:
-                raise
-
-        # Security output
-        if effective_security and isinstance(result, dict):
-            output_result = effective_security.validate_output(result)
-            if not output_result.valid:
-                raise SecurityError(f"Output rejected: {output_result.reason}")
-            result = output_result.data or result
-
-        # Post-process (sync)
-        if isinstance(result, dict):
-            post_results = call_hook(
-                "post_process",
-                result=result,
-                context=context
-            )
-            for hook_result in post_results:
-                if hook_result is not None and isinstance(hook_result, dict):
-                    result = hook_result
-
-        # Validation
-        if pydantic_model is not None:
-            from .pydantic_support import validate_with_pydantic
-            result = validate_with_pydantic(result, pydantic_model)
-
+        """Async process a document."""
         if verify:
-            result = await self.averify(file_path, result, schema=schema, model=model, **kwargs)
+            return await self.verified.aprocess(file_path, prompt, schema, model, security=security, **kwargs)
+        return await self.simple.aprocess(file_path, prompt, schema, model, security=security, **kwargs)
 
-        return result
-
-    async def averify(
+    def verify(
         self,
         file_path: str,
         result: Any,
@@ -781,35 +202,26 @@ class DocumentProcessor:
         verify_prompt: Optional[str] = None,
         **kwargs
     ) -> Any:
-        """Async version of verify."""
-        import json
-        
-        if verify_prompt is None:
-            verify_prompt = (
-                "You are a strict data auditor. Your task is to verify the extracted data "
-                "against the document provided. \n"
-                "Review the data below. If it contains errors or missing fields that exist "
-                "in the document, CORRECT them. If the data is correct, return it as is.\n"
-                "Return the final validated JSON strictly adhering to the schema."
-            )
-            
-        if hasattr(result, "model_dump_json"):
-            result_str = result.model_dump_json()
-        elif isinstance(result, dict):
-            result_str = json.dumps(result, default=str)
-        else:
-            result_str = str(result)
-            
-        full_prompt = f"{verify_prompt}\n\n[EXTRACTED DATA TO VERIFY]:\n{result_str}"
-        
-        return await self.aprocess(
-            file_path=file_path,
-            prompt=full_prompt,
-            schema=schema,
-            model=model,
-            verify=False,
-            **kwargs
-        )
+        """Verify an existing result."""
+        # Create a temporary verified processor with specific prompt if needed
+        proc = self.verified
+        if verify_prompt:
+            proc = VerifiedProcessor(**{**self._config, "verify_prompt": verify_prompt})
+        return proc._verify(file_path, result, schema or proc._convert_pydantic(model)[0], get_mime_type(file_path), **kwargs)
+
+    def rag_ingest(self, file_path: str, collection_name: Optional[str] = None):
+        """Ingest document for RAG."""
+        return self.rag.ingest(file_path, collection=collection_name)
+
+    def rag_query(
+        self, 
+        query: str, 
+        collection_name: Optional[str] = None,
+        schema: Optional[Schema] = None,
+        model: Optional[Type] = None
+    ) -> Any:
+        """Perform RAG query."""
+        return self.rag.query(query, collection=collection_name, schema=schema, model=model)
 
     def process_batch(
         self,
@@ -820,37 +232,10 @@ class DocumentProcessor:
         max_workers: int = 4,
         **kwargs
     ) -> BatchContext:
-        """
-        Process multiple documents in parallel using threads.
-        
-        Args:
-            file_paths: List of file paths to process
-            prompt: Extraction prompt
-            schema: Output schema
-            model: Pydantic model
-            max_workers: Number of concurrent threads
-            **kwargs: Provider options
-            
-        Returns:
-            BatchContext containing results and stats
-        """
-        import concurrent.futures
-        from .context import BatchContext
-        
-        batch_ctx = BatchContext(total_documents=len(file_paths))
-        
-        def _process_one(path: str):
-            try:
-                result = self.process(path, prompt, schema, model, **kwargs)
-                batch_ctx.add_result(path, result)
-            except Exception as e:
-                batch_ctx.add_error(path, e)
-
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            # Must consume iterator to wait for all threads to complete
-            list(executor.map(_process_one, file_paths))
-            
-        return batch_ctx
+        """Process documents in batch."""
+        # Update batch processor workers if different
+        self.batch.max_workers = max_workers
+        return self.batch.process_batch(file_paths, prompt, schema, model, **kwargs)
 
     async def aprocess_batch(
         self,
@@ -861,53 +246,38 @@ class DocumentProcessor:
         max_concurrency: int = 4,
         **kwargs
     ) -> BatchContext:
-        """
-        Async process multiple documents in parallel.
-        
-        Args:
-            file_paths: List of file paths
-            prompt: Extraction prompt
-            schema: Output schema
-            model: Pydantic model
-            max_concurrency: Max concurrent async tasks
-            **kwargs: Provider options
-            
-        Returns:
-            BatchContext containing results and stats
-        """
-        import asyncio
-        from .context import BatchContext
-        
-        batch_ctx = BatchContext(total_documents=len(file_paths))
-        semaphore = asyncio.Semaphore(max_concurrency)
-        
-        async def _aprocess_one(path: str):
-            async with semaphore:
-                try:
-                    result = await self.aprocess(path, prompt, schema, model, **kwargs)
-                    batch_ctx.add_result(path, result)
-                except Exception as e:
-                    batch_ctx.add_error(path, e)
-        
-        tasks = [_aprocess_one(path) for path in file_paths]
-        await asyncio.gather(*tasks)
-        
-        return batch_ctx
+        """Async process documents in batch."""
+        self.batch.max_workers = max_concurrency
+        return await self.batch.aprocess_batch(file_paths, prompt, schema, model, **kwargs)
 
-    def _resolve_security(
-        self,
-        override: Optional[Union[SecurityPlugin, bool]]
-    ) -> Optional[SecurityPlugin]:
-        """Resolve which security plugin to use."""
-        if override is False:
-            return None
-        elif override is True:
-            from .security import default_security_chain
-            return default_security_chain()
-        elif override is not None:
-            return override
-        else:
-            return self.security  # Use instance default
+    # Decorators map to simple processor hooks (shared config would be better but this works for compatibility)
+    def on_pre_process(self, func: PreProcessCallback) -> PreProcessCallback:
+        """Register pre-process hook."""
+        self._config["on_pre_process"] = func
+        # If processors already exist, update them
+        if self._simple: self._simple.on_pre_process(func)
+        if self._verified: self._verified.on_pre_process(func)
+        if self._rag: self._rag.on_pre_process(func)
+        if self._batch: self._batch.on_pre_process(func)
+        return func
+
+    def on_post_process(self, func: PostProcessCallback) -> PostProcessCallback:
+        """Register post-process hook."""
+        self._config["on_post_process"] = func
+        if self._simple: self._simple.on_post_process(func)
+        if self._verified: self._verified.on_post_process(func)
+        if self._rag: self._rag.on_post_process(func)
+        if self._batch: self._batch.on_post_process(func)
+        return func
+
+    def on_error(self, func: ErrorCallback) -> ErrorCallback:
+        """Register error hook."""
+        self._config["on_error"] = func
+        if self._simple: self._simple.on_error(func)
+        if self._verified: self._verified.on_error(func)
+        if self._rag: self._rag.on_error(func)
+        if self._batch: self._batch.on_error(func)
+        return func
 
 
 class SecurityError(Exception):

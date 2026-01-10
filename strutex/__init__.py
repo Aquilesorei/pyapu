@@ -98,7 +98,7 @@ from .security import (
 from .pydantic_support import pydantic_to_schema, validate_with_pydantic
 
 # Logging
-from .logging import get_logger, configure_logging, set_level
+from .log_utils import get_logger, configure_logging, set_level
 
 # Context (stateful workflows)
 from .context import ProcessingContext, BatchContext
@@ -122,6 +122,23 @@ from .postprocessors import (
 
 # Integrations (LangChain, LlamaIndex)
 from . import integrations
+
+# Processors (strategy-specific)
+from . import processors
+from .processors import (
+    Processor,
+    SimpleProcessor,
+    VerifiedProcessor,
+    RagProcessor,
+    BatchProcessor,
+    FallbackProcessor,
+    RouterProcessor,
+    EnsembleProcessor,
+    SequentialProcessor,
+    PrivacyProcessor,
+    ActiveLearningProcessor,
+    AgenticProcessor,
+)
 
 # Type hints
 from typing import Any, Dict, Optional, Union, TYPE_CHECKING, Type as TypingType
@@ -178,6 +195,18 @@ __all__ = [
     # Core
     "extract",
     "DocumentProcessor",
+    "Processor",
+    "SimpleProcessor",
+    "VerifiedProcessor",
+    "RagProcessor",
+    "BatchProcessor",
+    "FallbackProcessor",
+    "RouterProcessor",
+    "EnsembleProcessor",
+    "SequentialProcessor",
+    "PrivacyProcessor",
+    "ActiveLearningProcessor",
+    "AgenticProcessor",
     "StructuredPrompt",
     
     # Exceptions

@@ -53,12 +53,13 @@ def create_app(
     async def extract_generic(
         file: UploadFile = File(...),
         prompt: str = File("Extract data from this document."),
-        schema: Optional[str] = File(
+        json_schema: Optional[str] = File(
             '{"type": "object", "properties": {"summary": {"type": "string"}}}',
-            description="JSON Schema string"
+            description="JSON Schema string",
+            alias="schema"
         ),
-        provider: Optional[str] = Form(provider, description="LLM Provider override"),
-        model: Optional[str] = Form(model, description="Model name override"),
+        provider: Optional[str] = Form(None, description="LLM Provider override"),
+        model: Optional[str] = Form(None, description="Model name override"),
         processor: DocumentProcessor = Depends(get_doc_processor)
     ):
         """
@@ -97,9 +98,9 @@ def create_app(
             try:
                 # Parse schema if provided
                 schema_obj = None
-                if schema:
+                if json_schema:
                     try:
-                        schema_dict = json.loads(schema)
+                        schema_dict = json.loads(json_schema)
                         schema_obj = Schema.from_dict(schema_dict)
                     except json.JSONDecodeError as e:
                          return ExtractionResponse(
@@ -172,6 +173,63 @@ def create_app(
                     error=str(e),
                     meta={"filename": file.filename}
                 )
+
+    @app.post("/rag/ingest", tags=["RAG"])
+    async def rag_ingest(
+        file: UploadFile = File(...),
+        collection: Optional[str] = Form(None, description="Collection name"),
+        processor: DocumentProcessor = Depends(get_doc_processor)
+    ):
+        """
+        Ingest a document into the RAG vector store.
+        """
+        async with process_upload(file) as tmp_path:
+            try:
+                processor.rag_ingest(tmp_path, collection_name=collection)
+                return {"success": True, "message": f"Document '{file.filename}' ingested successfully."}
+            except Exception as e:
+                return {"success": False, "error": str(e)}
+
+    @app.post("/rag/query", response_model=ExtractionResponse, tags=["RAG"])
+    async def rag_query(
+        query: str = Form(..., description="Query or instruction"),
+        collection: Optional[str] = Form(None, description="Collection name"),
+        json_schema: Optional[str] = Form(
+            None, 
+            description="JSON Schema string for structured output",
+            alias="schema"
+        ),
+        processor: DocumentProcessor = Depends(get_doc_processor)
+    ):
+        """
+        Perform a RAG-based query/extraction.
+        """
+        import json
+        from .types import Schema
+        
+        try:
+            schema_obj = None
+            if json_schema:
+                schema_dict = json.loads(json_schema)
+                schema_obj = Schema.from_dict(schema_dict)
+                
+            data = processor.rag_query(
+                query=query,
+                collection_name=collection,
+                schema=schema_obj
+            )
+            
+            return ExtractionResponse(
+                success=True,
+                data=data if isinstance(data, dict) else {"data": data},
+                meta={"collection": collection or "default"}
+            )
+        except Exception as e:
+            return ExtractionResponse(
+                success=False,
+                error=str(e),
+                meta={"collection": collection or "default"}
+            )
 
     return app
 
