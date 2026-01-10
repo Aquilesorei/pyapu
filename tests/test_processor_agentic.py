@@ -25,7 +25,10 @@ def cleanup_sample():
     if os.path.exists(SAMPLE_FILE):
         os.remove(SAMPLE_FILE)
 
-async def test_agentic():
+def test_agentic():
+    asyncio.run(_test_agentic())
+
+async def _test_agentic():
     setup_sample()
     print("🚀 Testing AgenticProcessor with LangGraph...")
     

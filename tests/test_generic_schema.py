@@ -1,12 +1,15 @@
 
+import asyncio
 import pytest
 import unittest.mock
 from strutex import DocumentProcessor
 from strutex.types import Schema, Object, String, Number
 from unittest.mock import MagicMock, AsyncMock
 
-@pytest.mark.asyncio
-async def test_generic_schema_processing():
+def test_generic_schema_processing():
+    asyncio.run(_test_generic_schema_processing())
+
+async def _test_generic_schema_processing():
     # 1. Create a Schema from dict (simulating server behavior)
     schema_dict = {
         "type": "object",
@@ -22,9 +25,15 @@ async def test_generic_schema_processing():
     assert isinstance(schema_obj.properties["invoice_no"], String)
 
     # 2. Mock Provider
-    mock_provider = MagicMock()
+    from strutex.plugins.base import Provider
+    class MockProvider(Provider, register=False):
+        def process(self, *args, **kwargs): pass
+        async def aprocess(self, *args, **kwargs): pass
+
+    mock_provider = MockProvider()
     mock_provider.name = "mock"
     mock_provider.process = MagicMock(return_value={"invoice_no": "INV-001", "total": 100.0})
+    mock_provider.aprocess = AsyncMock(return_value={"invoice_no": "INV-001", "total": 100.0})
     
     # 3. Initialize Processor with mock
     processor = DocumentProcessor(provider=mock_provider)

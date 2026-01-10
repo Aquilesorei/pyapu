@@ -26,7 +26,10 @@ class CorrectiveMockProvider(Provider, name="mock"):
     def process(self, *args, **kwargs) -> Any:
         return asyncio.run(self.aprocess(*args, **kwargs))
 
-async def test_v1_3_5_corrective_rag_loop():
+def test_v1_3_5_corrective_rag_loop():
+    asyncio.run(_test_v1_3_5_corrective_rag_loop())
+
+async def _test_v1_3_5_corrective_rag_loop():
     print("🚀 Verifying v1.3.5 Corrective RAG Flow (Mock)")
     
     TEST_FILE = "v1_3_5_corrective_test.txt"
