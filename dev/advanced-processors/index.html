@@ -10,9 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://strutex.readthedocs.io/dev/processor-architecture/">
+        <link rel="canonical" href="https://strutex.readthedocs.io/dev/advanced-processors/">
       
       
+        <link rel="prev" href="../integrations/">
+      
+      
+        <link rel="next" href="../rag/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>Processors - Strutex Documentation</title>
+        <title>Advanced Processors - Strutex Documentation</title>
       
     
     
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Processors
+              Advanced Processors
             
           </span>
         </div>
@@ -342,11 +346,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../plugins/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -1373,28 +1379,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -1412,7 +1421,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1422,6 +1431,258 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Processors
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Processors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-simpleprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. SimpleProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-verifiedprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. VerifiedProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ragprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. RagProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-batchprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. BatchProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-fallbackprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. FallbackProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-routerprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. RouterProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-ensembleprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. EnsembleProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-sequentialprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. SequentialProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-privacyprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. PrivacyProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-activelearningprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ActiveLearningProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-agenticprocessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. AgenticProcessor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-your-own-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Your Own Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Your Own Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-a-custom-debug-processor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: A custom "Debug" Processor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG & Vector Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
