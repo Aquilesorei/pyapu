@@ -10,7 +10,7 @@ import time
 import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Callable
-from datetime import datetime
+from datetime import datetime, timezone
 
 logger = logging.getLogger("strutex.context")
 
@@ -25,7 +25,7 @@ class ExtractionStep:
     result: Optional[Any] = None
     error: Optional[str] = None
     duration_ms: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -76,7 +76,7 @@ class ProcessingContext:
         self._state: Dict[str, Any] = {}
         self._history: List[ExtractionStep] = []
         self._listeners: List[Callable[[ExtractionStep], None]] = []
-        self._created_at = datetime.utcnow()
+        self._created_at = datetime.now(timezone.utc)
         
         logger.debug(f"Created ProcessingContext {self.context_id}")
     
