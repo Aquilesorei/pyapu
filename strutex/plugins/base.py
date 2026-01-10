@@ -256,13 +256,19 @@ class Validator(ABC):
         _auto_register(cls, PluginType.VALIDATOR, name=name, register=register)
     
     @abstractmethod
-    def validate(self, data: Dict[str, Any], schema: Optional[Schema] = None) -> "ValidationResult":
+    def validate(
+        self,
+        data: Dict[str, Any],
+        schema: Optional[Schema] = None,
+        source_text: Optional[str] = None
+    ) -> "ValidationResult":
         """
         Validate extracted data.
         
         Args:
             data: The extracted data to validate
             schema: Optional schema to validate against
+            source_text: Optional source text for provenance checks
             
         Returns:
             ValidationResult with status and any issues

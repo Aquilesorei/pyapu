@@ -109,7 +109,17 @@ class GeminiProvider(Provider):
                 ],
                 config=generate_config,
             )
-            return response.parsed
+            
+            if google_schema:
+                return response.parsed
+            else:
+                # If no schema, try to parse text as JSON if it looks like JSON
+                text = response.text
+                try:
+                    import json
+                    return json.loads(text)
+                except:
+                    return text
             
         except ImportError:
             raise

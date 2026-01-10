@@ -61,16 +61,26 @@ class Schema:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Schema':
-        """Reconstruct a Schema object from a dictionary."""
         # Detect type
         type_str = data.get("type")
         if not type_str:
-            # Fallback based on content
             if "properties" in data:
                 type_str = "object"
             elif "items" in data:
                 type_str = "array"
             else:
+                # Heuristic: If it's a non-empty dict and doesn't look like a standard schema
+                # (has no standard keywords like 'type', 'description', etc.)
+                # treat it as shorthand for an Object where keys are property names.
+                schema_keywords = {"type", "description", "properties", "items", "required", "enum", "nullable", "format"}
+                if data and not any(k in data for k in schema_keywords):
+                    properties = {}
+                    for k, v in data.items():
+                        # If value is a string, treat as shorthand for {"type": v}
+                        val_schema = {"type": v} if isinstance(v, str) else v
+                        properties[k] = cls.from_dict(val_schema)
+                    return Object(properties=properties)
+                
                 type_str = "string"
         
         # Handle list of types (e.g. ["string", "null"]) for nullable

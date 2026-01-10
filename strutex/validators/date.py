@@ -58,7 +58,12 @@ class DateValidator(Validator, name="date"):
         self.min_year = min_year
         self.max_year = max_year
     
-    def validate(self, data: Dict[str, Any], schema=None) -> ValidationResult:
+    def validate(
+        self,
+        data: Dict[str, Any],
+        schema=None,
+        source_text: Optional[str] = None
+    ) -> ValidationResult:
         """
         Validate date fields in the data.
         

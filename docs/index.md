@@ -41,23 +41,24 @@ print(result.invoice_number, result.total)
 
 Progressive learning path from basics to advanced:
 
-| #   | Page                                         | Description                                    |
-| --- | -------------------------------------------- | ---------------------------------------------- |
-| 1   | [Quickstart](tutorial-quickstart.md)         | First extraction in 5 minutes                  |
-| 2   | [Your First Schema](tutorial-schema.md)      | Define custom schemas (Pydantic & native)      |
-| 3   | [Switching Providers](tutorial-providers.md) | Configure GeminiProvider, OpenAIProvider, etc. |
-| 4   | [Adding Validation](tutorial-validation.md)  | Validators and verification loop               |
-| 5   | [Caching](tutorial-caching.md)               | MemoryCache, SQLiteCache, FileCache            |
-| 6   | [Processing Hooks](tutorial-hooks.md)        | Pre/post processing hooks                      |
-| 7   | [Input Sanitization](tutorial-security.md)   | Input cleaning, PII redaction                  |
-| 8   | [Batch & Async](tutorial-batch.md)           | process_batch, aprocess                        |
-| 9   | [Streaming](tutorial-streaming.md)           | Real-time extraction feedback                  |
-| 10  | [Error Handling](tutorial-error-handling.md) | Errors, retries, debugging                     |
-| 11  | [File Uploads](tutorial-document-input.md)   | BytesIO, Flask, FastAPI                        |
-| 12  | [Integrations](tutorial-integrations.md)     | LangChain, LlamaIndex (Experimental)           |
-| 13  | [Custom Plugins](tutorial-custom-plugins.md) | Create Provider, Extractor, SecurityPlugin     |
-| 14  | [Use Cases](tutorial-use-cases.md)           | Invoice, Receipt, Resume examples              |
-| 15  | [Prompt Engineering](tutorial-prompts.md)    | StructuredPrompt builder                       |
+| #   | Page                                           | Description                                    |
+| --- | ---------------------------------------------- | ---------------------------------------------- |
+| 1   | [Quickstart](tutorial-quickstart.md)           | First extraction in 5 minutes                  |
+| 2   | [Your First Schema](tutorial-schema.md)        | Define custom schemas (Pydantic & native)      |
+| 3   | [Switching Providers](tutorial-providers.md)   | Configure GeminiProvider, OpenAIProvider, etc. |
+| 4   | [Adding Validation](tutorial-validation.md)    | Validators and verification loop               |
+| 5   | [Caching](tutorial-caching.md)                 | MemoryCache, SQLiteCache, FileCache            |
+| 6   | [Processing Hooks](tutorial-hooks.md)          | Pre/post processing hooks                      |
+| 7   | [Input Sanitization](tutorial-security.md)     | Input cleaning, PII redaction                  |
+| 8   | [Batch & Async](tutorial-batch.md)             | process_batch, aprocess                        |
+| 9   | [Streaming](tutorial-streaming.md)             | Real-time extraction feedback                  |
+| 10  | [Error Handling](tutorial-error-handling.md)   | Errors, retries, debugging                     |
+| 11  | [File Uploads](tutorial-document-input.md)     | BytesIO, Flask, FastAPI                        |
+| 12  | [Integrations](tutorial-integrations.md)       | LangChain, LlamaIndex (Experimental)           |
+| 13  | [Custom Plugins](tutorial-custom-plugins.md)   | Create Provider, Extractor, SecurityPlugin     |
+| 14  | [The 10 Processors](processor-architecture.md) | Deep dive into all extraction strategies       |
+| 15  | [Use Cases](tutorial-use-cases.md)             | Invoice, Receipt, Resume examples              |
+| 16  | [Prompt Engineering](tutorial-prompts.md)      | StructuredPrompt builder                       |
 
 ---
 
@@ -69,6 +70,7 @@ Reference documentation for core features:
 | ----------- | -------------------------------------------------------------------------------------------------- |
 | **Schemas** | [Schema Types](schema-types.md) · [Built-in Schemas](schemas.md) · [Pydantic Support](pydantic.md) |
 | **Prompts** | [Prompt Builder](prompt-builder.md) · [Verification](verification.md)                              |
+| **RAG**     | [Retrieval-Augmented Generation](rag.md)                                                           |
 
 ---
 
@@ -98,13 +100,14 @@ Use with popular AI frameworks:
 
 For power users and contributors:
 
-| Page                             | Description                     |
-| -------------------------------- | ------------------------------- |
-| [Plugin System](plugins.md)      | Full plugin API reference       |
-| [Hooks Reference](hooks.md)      | Hook specifications             |
-| [Processing Context](context.md) | BatchContext, ProcessingContext |
-| [Streaming](streaming.md)        | Streaming API reference         |
-| [CLI Commands](cli.md)           | Command-line interface          |
+| Page                                           | Description                                     |
+| ---------------------------------------------- | ----------------------------------------------- |
+| [The 10 Processors](processor-architecture.md) | All extraction strategies (standard & advanced) |
+| [Plugins API](plugins.md)                      | Custom provider and extractor reference         |
+| [Hooks System](hooks.md)                       | Lifecycle hooks and event system                |
+| [CLI Reference](cli.md)                        | Advanced command-line usage                     |
+| [API Reference](api-reference.md)              | Autogenerated package reference                 |
+| [CLI Commands](cli.md)                         | Command-line interface                          |
 
 ---
 
@@ -136,6 +139,7 @@ pip install strutex
 
 # With integrations
 pip install strutex[langchain]
+pip install strutex[rag]
 pip install strutex[all]
 ```
 

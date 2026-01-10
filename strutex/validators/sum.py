@@ -49,7 +49,12 @@ class SumValidator(Validator, name="sum"):
         self.tolerance = tolerance
         self.strict = strict
     
-    def validate(self, data: Dict[str, Any], schema=None) -> ValidationResult:
+    def validate(
+        self,
+        data: Dict[str, Any],
+        schema=None,
+        source_text: Optional[str] = None
+    ) -> ValidationResult:
         """
         Validate that line items sum to the total.
         

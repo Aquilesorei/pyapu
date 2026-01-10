@@ -47,7 +47,8 @@ class ValidationChain:
     def validate(
         self,
         data: Dict[str, Any],
-        schema=None
+        schema=None,
+        source_text: Optional[str] = None
     ) -> ValidationResult:
         """
         Run all validators in the chain.
@@ -63,7 +64,7 @@ class ValidationChain:
         current_data = data
         
         for validator in self.validators:
-            result = validator.validate(current_data, schema)
+            result = validator.validate(current_data, schema, source_text=source_text)
             
             if not result.valid:
                 all_issues.extend(result.issues)

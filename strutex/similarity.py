@@ -1,5 +1,4 @@
 import numpy as np
-import ollama
 from enum import StrEnum
 
 
@@ -15,16 +14,40 @@ CURRENT_MODEL = EmbeddingModel.BGE_M3
 SIMILARITY_THRESHOLD = 0.75
 
 
+# Optional sentence-transformers for local fallback
+_TRANSFORMER_MODEL = None
+
 def get_embedding(text: str) -> np.ndarray:
     """Get the embedding vector for a given text."""
-    response = ollama.embeddings(model=CURRENT_MODEL, prompt=text)
-    return np.array(response['embedding'], dtype=np.float32)
+    try:
+        import ollama
+        response = ollama.embeddings(model=CURRENT_MODEL, prompt=text)
+        return np.array(response['embedding'], dtype=np.float32)
+    except (ImportError, Exception) as e:
+        # Fallback to sentence-transformers
+        global _TRANSFORMER_MODEL
+        try:
+            from sentence_transformers import SentenceTransformer
+            if _TRANSFORMER_MODEL is None:
+                # Use a lightweight fast model
+                _TRANSFORMER_MODEL = SentenceTransformer('all-MiniLM-L6-v2')
+            return _TRANSFORMER_MODEL.encode(text)
+        except ImportError:
+            raise RuntimeError(
+                "Embedding extraction failed. Ollama is unavailable and "
+                "sentence-transformers is not installed. "
+                "Install with: pip install sentence-transformers"
+            )
 
 
 def compute_similarity(text_a: str, text_b: str) -> float:
     """compute the similarity  score  of cosinus (0 à 1)"""
     vec_a = get_embedding(text_a)
     vec_b = get_embedding(text_b)
+
+    # Ensure numpy arrays
+    vec_a = np.array(vec_a)
+    vec_b = np.array(vec_b)
 
     dot = float(np.dot(vec_a, vec_b))
     norm_a = float(np.linalg.norm(vec_a))

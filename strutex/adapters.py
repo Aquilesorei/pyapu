@@ -8,6 +8,9 @@ class SchemaAdapter:
         from google.genai import types as g_types
 
         # Recursive conversion
+        if schema is None:
+            return None
+            
         props = {k: SchemaAdapter.to_google(v) for k, v in
                  schema.properties.items()} if schema.properties else None
         items = SchemaAdapter.to_google(schema.items) if schema.items else None
@@ -34,6 +37,9 @@ class SchemaAdapter:
     @staticmethod
     def to_openai(schema):
         """Converts Strutex schema -> OpenAI JSON Schema (Dict)"""
+        if schema is None:
+            return None
+            
         schema_dict = {
             # OpenAI expects generic strings like "object", "string"
             "type": schema.type.value.lower(),

@@ -10,8 +10,8 @@
 ```bash
 pip install strutex
 ```
-@
----
+
+## @
 
 ## The Simplest Example
 
@@ -258,6 +258,7 @@ def handle_rate_limit(error, file_path, context):
 ```bash
 pip install strutex[cli]          # CLI commands
 pip install strutex[ocr]          # OCR support
+pip install strutex[rag]          # RAG support (Qdrant, FastEmbed)
 pip install strutex[langchain]    # LangChain integration
 pip install strutex[llamaindex]   # LlamaIndex integration
 pip install strutex[all]          # Everything
@@ -289,6 +290,7 @@ pip install strutex[all]          # Everything
 - **Schema-Driven Extraction** — Define your output structure, get consistent JSON
 - **Verification & Self-Correction** — Built-in audit loop for high accuracy
 - **Security First** — Built-in input sanitization and output validation
+- **RAG Capabilities** — Built-in Retrieval-Augmented Generation with Qdrant and FastEmbed
 - **Framework Integrations** — LangChain, LlamaIndex, Haystack compatibility
 - **Caching** — Memory, SQLite, and file-based caching
 - **Async & Batch** — Process multiple documents in parallel
