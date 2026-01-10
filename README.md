@@ -40,6 +40,7 @@ print(invoice.invoice_number, invoice.total)
 | **Basic**         | `extract()`, schemas      | Most use cases — just extract data |
 | **Reliability**   | `verify=True`, validators | Production — ensure accuracy       |
 | **Scale**         | caching, async, batch     | High volume — reduce costs         |
+| **Architecture**  | agentic, router, fallback | Complex reasoning & robustness     |
 | **Extensibility** | plugins, hooks, CLI       | Advanced — extend anything         |
 
 > **Most users only need Level 1.** The rest is there when you need it.
@@ -162,7 +163,39 @@ asyncio.run(main())
 
 ---
 
-## Level 4: Extensibility
+## Level 4: Advanced Architectures
+
+Move beyond simple extraction with specialized processors for complex workflows.
+
+### Agentic RAG (Self-Correcting)
+
+The `AgenticProcessor` uses a planner-actor-optimizer loop to solve complex queries by actively searching, reading, and correcting itself.
+
+```python
+from strutex import AgenticProcessor
+
+processor = AgenticProcessor()
+# Automatically plans, searches, and compiles answer
+result = await processor.aprocess(
+    file_path="handbook.pdf",
+    prompt="What is the policy for jury duty based on the employee handbook?"
+)
+```
+
+### Specialized Processors
+
+Compose robust pipelines using built-in strategies:
+
+- **`FallbackProcessor`**: Switch providers if primary fails.
+- **`RouterProcessor`**: Route to different models based on document type.
+- **`EnsembleProcessor`**: Query multiple models and vote on the best answer.
+- **`PrivacyProcessor`**: Redact PII locally before sending to cloud LLMs.
+
+See [Advanced Processors Documentation](docs/advanced-processors.md) for details.
+
+---
+
+## Level 5: Extensibility
 
 ### Plugin System
 
@@ -319,6 +352,7 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan.
 - [x] v0.7.0 — Providers & Retries
 - [x] v0.8.0 — Async, Batch, Cache, Verification
 - [x] v0.8.1 — Documentation & Coverage Fixes
+- [x] v1.3.7 — Agentic RAG, Advanced Processors, & Full Async Support
 
 ---
 

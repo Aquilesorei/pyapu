@@ -63,6 +63,8 @@ nav:
       - Caching Reference: cache.md
   - Integrations (Experimental): integrations.md
   - Advanced:
+      - Advanced Processors: advanced-processors.md
+      - RAG & Vector Search: rag.md
       - Plugin System: plugins.md
       - Hooks Reference: hooks.md
       - Processing Context: context.md

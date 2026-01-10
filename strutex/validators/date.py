@@ -61,7 +61,7 @@ class DateValidator(Validator, name="date"):
     def validate(
         self,
         data: Dict[str, Any],
-        schema=None,
+        schema: Any = None,
         source_text: Optional[str] = None
     ) -> ValidationResult:
         """

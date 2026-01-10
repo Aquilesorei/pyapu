@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 
 class StructuredPrompt:
@@ -46,7 +46,7 @@ class StructuredPrompt:
         self.output_guidelines: List[str] = []
 
     @classmethod
-    def from_schema(cls, schema, persona: Optional[str] = None) -> "StructuredPrompt":
+    def from_schema(cls, schema: Any, persona: Optional[str] = None) -> "StructuredPrompt":
         """
         Create a StructuredPrompt with field rules auto-generated from a Pydantic schema.
         

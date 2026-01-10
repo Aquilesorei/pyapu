@@ -263,7 +263,7 @@ class MyProvider(Provider, name="custom"):
 # → Registered as "custom"
 ```
 
-### 2. Entry Points (For Packages)
+### 2. Entry Points (For Packages) {: #entry-points }
 
 For distributable packages, register in `pyproject.toml`:
 

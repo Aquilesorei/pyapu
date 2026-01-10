@@ -30,7 +30,7 @@ def _auto_register(
     plugin_type: str,
     name: Optional[str] = None,
     register: bool = True,
-    **kwargs
+    **kwargs: Any
 ) -> None:
     """
     Helper to auto-register a plugin class via __init_subclass__.
@@ -94,7 +94,7 @@ class Provider(ABC):
         cls,
         name: Optional[str] = None,
         register: bool = True,
-        **kwargs
+        **kwargs: Any
     ) -> None:
         super().__init_subclass__(**kwargs)
         _auto_register(cls, PluginType.PROVIDER, name=name, register=register)
@@ -106,7 +106,7 @@ class Provider(ABC):
         prompt: str,
         schema: Schema,
         mime_type: str,
-        **kwargs
+        **kwargs: Any
     ) -> Any:
         """
         Process a document and extract structured data.
@@ -129,7 +129,7 @@ class Provider(ABC):
         prompt: str,
         schema: Schema,
         mime_type: str,
-        **kwargs
+        **kwargs: Any
     ) -> Any:
         """
         Async version of process.
